@@ -1,0 +1,13 @@
+{
+  "globalNav": [
+    { "label": "Home", "href": "/" },
+    { "label": "Leaderboard", "href": "/leaderboard" },
+    { "label": "Blog", "href": "/blog" },
+    { "label": "Changelog", "href": "/changelog" },
+    { "label": "Rules", "href": "/rules" }
+  ],
+  "footerLinks": [
+    { "label": "GitHub", "href": "https://github.com/Kriegspiel" },
+    { "label": "Contact", "href": "mailto:email@kriegspiel.org" }
+  ]
+}

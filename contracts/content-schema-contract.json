@@ -1,0 +1,19 @@
+{
+  "requiredFields": [
+    "title",
+    "slug",
+    "summary",
+    "publishedAt",
+    "updatedAt",
+    "author",
+    "tags",
+    "draft"
+  ],
+  "versionRequiredFor": ["changelog", "rules"],
+  "sourceOfTruth": "../content",
+  "collections": {
+    "blog": "blog/*.md",
+    "changelog": "changelog/*.md",
+    "rules": "rules/*.md"
+  }
+}
