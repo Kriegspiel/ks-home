@@ -15,7 +15,11 @@
     "test:e2e": "node scripts/test-e2e-home-leaderboard.mjs",
     "test:smoke": "node scripts/test-smoke-routes.mjs",
     "test:a11y": "node scripts/test-a11y.mjs",
-    "test:visual": "node scripts/test-visual.mjs"
+    "test:visual": "node scripts/test-visual.mjs",
+    "test:e2e:blog-changelog": "node scripts/test-e2e-blog-changelog.mjs",
+    "content:trigger:simulate": "node scripts/content-trigger-simulate.mjs",
+    "sitemap:generate": "node scripts/sitemap-generate.mjs",
+    "feeds:generate": "node scripts/feeds-generate.mjs"
   },
   "devDependencies": {
     "c8": "^10.1.3"
