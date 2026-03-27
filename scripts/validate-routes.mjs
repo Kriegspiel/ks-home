@@ -4,11 +4,12 @@ import path from "node:path";
 const routes = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "contracts/routes.json"), "utf8"));
 const nav = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "contracts/navigation.json"), "utf8"));
 
-const missing = routes.requiredStaticRoutes.filter(
-  (route) => !nav.globalNav.some((link) => link.href === route) && route !== "/"
-);
+const globalLinks = new Set(nav.globalNav.map((link) => link.href));
+const footerLinks = new Set((nav.footerLinks || []).map((link) => link.href));
+
+const missing = routes.requiredStaticRoutes.filter((route) => route !== "/" && !globalLinks.has(route) && !footerLinks.has(route));
 if (missing.length > 0) {
-  console.error("missing required routes in global nav:", missing.join(", "));
+  console.error("missing required routes in global/footer navigation:", missing.join(", "));
   process.exit(1);
 }
 
