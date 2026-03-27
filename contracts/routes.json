@@ -1,0 +1,28 @@
+{
+  "requiredStaticRoutes": ["/", "/leaderboard", "/blog", "/changelog", "/rules"],
+  "requiredDynamicRoutes": ["/blog/:slug", "/changelog/:slug"],
+  "deprecations": [
+    {
+      "from": "/posts/:slug",
+      "to": "/blog/:slug",
+      "status": 308,
+      "reason": "Legacy blog route replaced by canonical /blog namespace"
+    },
+    {
+      "from": "/news/:slug",
+      "to": "/changelog/:slug",
+      "status": 308,
+      "reason": "Legacy changelog route replaced by canonical /changelog namespace"
+    },
+    {
+      "from": "/rules/old",
+      "to": null,
+      "status": 410,
+      "reason": "Retired rules endpoint removed permanently"
+    }
+  ],
+  "notFoundBehavior": {
+    "status": 404,
+    "fallbackRoute": "/404"
+  }
+}
