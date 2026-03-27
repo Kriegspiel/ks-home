@@ -139,13 +139,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Kriegspiel/content
-          path: ../content
+          path: content
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npm run content:trigger:simulate -- --from=../content --verify-static-regen
+      - run: npm run content:trigger:simulate -- --from=./content --verify-static-regen
 
   preview-deploy-website-pr:
     name: preview-deploy-website-pr
