@@ -10,7 +10,12 @@
     "routes:validate": "node scripts/validate-routes.mjs",
     "content:schema:check": "node scripts/check-content-schema.mjs",
     "content:source-contract:check": "node scripts/check-content-source-contract.mjs",
-    "build": "node scripts/build.mjs"
+    "build": "node scripts/build.mjs",
+    "test:coverage:check": "node scripts/run-tests.mjs",
+    "test:e2e": "node scripts/test-e2e-home-leaderboard.mjs",
+    "test:smoke": "node scripts/test-smoke-routes.mjs",
+    "test:a11y": "node scripts/test-a11y.mjs",
+    "test:visual": "node scripts/test-visual.mjs"
   },
   "devDependencies": {
     "c8": "^10.1.3"
