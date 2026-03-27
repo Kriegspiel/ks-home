@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/leaderboard",
+  "cachePolicy": {
+    "request": "no-store",
+    "staleThresholdMs": 900000
+  },
+  "requiredTopLevelFields": ["players"],
+  "optionalTopLevelFields": ["updatedAt"],
+  "playerFields": {
+    "handle": "string",
+    "rating": "number",
+    "gamesPlayed": "number",
+    "trend": "enum:up|down|flat"
+  }
+}
