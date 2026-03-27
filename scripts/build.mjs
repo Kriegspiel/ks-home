@@ -1,11 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { getContentRoot, loadCollection } from "../src/content-utils.mjs";
-import { renderHomePage, renderLeaderboardPage, renderSimplePage } from "../src/pages.mjs";
+import { renderHomePage, renderLeaderboardPage, renderSimplePage, renderBlogIndex, renderBlogDetail, renderBlogArchive, renderChangelogIndex, renderChangelogDetail } from "../src/pages.mjs";
 
 const dist = path.resolve(process.cwd(), "dist");
 const contentRoot = getContentRoot();
-
 const blogEntries = loadCollection(contentRoot, "blog");
 const changelogEntries = loadCollection(contentRoot, "changelog");
 const rulesEntries = loadCollection(contentRoot, "rules");
@@ -21,21 +21,23 @@ fs.mkdirSync(dist, { recursive: true });
 
 writePage(path.join(dist, "index.html"), renderHomePage({ rulesCount: rulesEntries.length, blogCount: blogEntries.length }));
 writePage(path.join(dist, "leaderboard/index.html"), renderLeaderboardPage(seedLeaderboard));
-writePage(path.join(dist, "blog/index.html"), renderSimplePage("Blog"));
-writePage(path.join(dist, "changelog/index.html"), renderSimplePage("Changelog"));
+writePage(path.join(dist, "blog/index.html"), renderBlogIndex(blogEntries));
+writePage(path.join(dist, "blog/archive/index.html"), renderBlogArchive(blogEntries));
+writePage(path.join(dist, "changelog/index.html"), renderChangelogIndex(changelogEntries));
 writePage(path.join(dist, "rules/index.html"), renderSimplePage("Rules"));
 writePage(path.join(dist, "404.html"), renderSimplePage("Not Found"));
 
-for (const entry of blogEntries) {
-  writePage(path.join(dist, "blog", entry.metadata.slug, "index.html"), renderSimplePage(entry.metadata.title));
-}
-for (const entry of changelogEntries) {
-  writePage(path.join(dist, "changelog", entry.metadata.slug, "index.html"), renderSimplePage(entry.metadata.title));
-}
+for (const entry of blogEntries) writePage(path.join(dist, "blog", entry.metadata.slug, "index.html"), renderBlogDetail(entry));
+for (const entry of changelogEntries) writePage(path.join(dist, "changelog", entry.metadata.slug, "index.html"), renderChangelogDetail(entry));
 
-function writePage(filePath, html) {
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.writeFileSync(filePath, html, "utf8");
-}
+writeJson(path.join(dist, ".regen-manifest.json"), {
+  generatedAt: new Date().toISOString(),
+  sourceHash: createHash("sha256").update(JSON.stringify({ blog: blogEntries.map((e) => [e.file, e.metadata.updatedAt]), changelog: changelogEntries.map((e) => [e.file, e.metadata.updatedAt]) })).digest("hex"),
+  blogRoutes: blogEntries.map((entry) => `/blog/${entry.metadata.slug}`),
+  changelogRoutes: changelogEntries.map((entry) => `/changelog/${entry.metadata.slug}`)
+});
 
-console.log("build complete: marketing + leaderboard routes generated");
+console.log("build complete: blog + changelog + marketing routes generated");
+
+function writePage(filePath, html) { fs.mkdirSync(path.dirname(filePath), { recursive: true }); fs.writeFileSync(filePath, html, "utf8"); }
+function writeJson(filePath, value) { fs.mkdirSync(path.dirname(filePath), { recursive: true }); fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, "utf8"); }
