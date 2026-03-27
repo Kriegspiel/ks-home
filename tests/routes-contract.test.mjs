@@ -4,8 +4,8 @@ import fs from "node:fs";
 
 const routes = JSON.parse(fs.readFileSync(new URL("../contracts/routes.json", import.meta.url), "utf8"));
 
-test("required route set includes slice 910 public pages", () => {
-  for (const route of ["/", "/leaderboard", "/blog", "/changelog", "/rules"]) {
+test("required route set includes public + trust pages", () => {
+  for (const route of ["/", "/leaderboard", "/blog", "/changelog", "/rules", "/privacy", "/terms"]) {
     assert.ok(routes.requiredStaticRoutes.includes(route));
   }
 });

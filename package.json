@@ -19,7 +19,10 @@
     "test:e2e:blog-changelog": "node scripts/test-e2e-blog-changelog.mjs",
     "content:trigger:simulate": "node scripts/content-trigger-simulate.mjs",
     "sitemap:generate": "node scripts/sitemap-generate.mjs",
-    "feeds:generate": "node scripts/feeds-generate.mjs"
+    "feeds:generate": "node scripts/feeds-generate.mjs",
+    "seo:validate": "node scripts/seo-validate.mjs",
+    "structured-data:check": "node scripts/structured-data-check.mjs",
+    "analytics:contract:test": "node scripts/analytics-contract-test.mjs"
   },
   "devDependencies": {
     "c8": "^10.1.3"

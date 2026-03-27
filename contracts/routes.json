@@ -1,6 +1,17 @@
 {
-  "requiredStaticRoutes": ["/", "/leaderboard", "/blog", "/changelog", "/rules"],
-  "requiredDynamicRoutes": ["/blog/:slug", "/changelog/:slug"],
+  "requiredStaticRoutes": [
+    "/",
+    "/leaderboard",
+    "/blog",
+    "/changelog",
+    "/rules",
+    "/privacy",
+    "/terms"
+  ],
+  "requiredDynamicRoutes": [
+    "/blog/:slug",
+    "/changelog/:slug"
+  ],
   "deprecations": [
     {
       "from": "/posts/:slug",

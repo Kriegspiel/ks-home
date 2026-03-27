@@ -1,0 +1,8 @@
+{
+  "events": {
+    "home_cta_click": { "allowedFields": ["route", "placement"] },
+    "leaderboard_sort": { "allowedFields": ["route", "field"] },
+    "leaderboard_retry": { "allowedFields": ["route"] }
+  },
+  "disallowedFields": ["email", "ip", "name", "fullName", "phone", "address", "freeform", "message"]
+}
