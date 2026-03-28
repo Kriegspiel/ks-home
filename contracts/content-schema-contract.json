@@ -14,6 +14,7 @@
   "collections": {
     "blog": "blog/*.md",
     "changelog": "changelog/*.md",
-    "rules": "rules/*.md"
+    "rules": "rules/*.md",
+    "site": "site/*.md"
   }
 }

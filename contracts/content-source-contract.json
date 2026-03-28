@@ -1,10 +1,10 @@
 {
   "sourceRepo": "Kriegspiel/content",
   "sourcePath": "../content",
-  "consumedCollections": ["blog", "changelog", "rules"],
+  "consumedCollections": ["blog", "changelog", "rules", "site"],
   "policy": {
     "sourceOfTruthLocked": true,
     "generatedIn": "ks-home/dist",
-    "forbiddenLocalOverrides": ["content/blog", "content/changelog", "content/rules"]
+    "forbiddenLocalOverrides": ["content/blog", "content/changelog", "content/rules", "content/site"]
   }
 }

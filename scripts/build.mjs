@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
-import { getContentRoot, loadCollection } from "../src/content-utils.mjs";
+import { getContentRoot, loadCollection, loadSingletonEntry } from "../src/content-utils.mjs";
 import { renderHomePage, renderLeaderboardPage, renderSimplePage, renderBlogIndex, renderBlogDetail, renderBlogArchive, renderChangelogIndex, renderChangelogDetail, renderRulesPage, renderPrivacyPage, renderTermsPage } from "../src/pages.mjs";
 
 const dist = path.resolve(process.cwd(), "dist");
@@ -9,6 +9,7 @@ const contentRoot = getContentRoot();
 const blogEntries = loadCollection(contentRoot, "blog");
 const changelogEntries = loadCollection(contentRoot, "changelog");
 const rulesEntries = loadCollection(contentRoot, "rules");
+const homeEntry = loadSingletonEntry(contentRoot, "site", "home");
 
 const seedLeaderboard = [
   { handle: "RefereeFox", rating: 1968, gamesPlayed: 122, trend: "up" },
@@ -19,7 +20,7 @@ const seedLeaderboard = [
 fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
 
-writePage(path.join(dist, "index.html"), renderHomePage({ rulesCount: rulesEntries.length, blogCount: blogEntries.length }));
+writePage(path.join(dist, "index.html"), renderHomePage({ rulesCount: rulesEntries.length, blogCount: blogEntries.length, homeContent: homeEntry }));
 writePage(path.join(dist, "leaderboard/index.html"), renderLeaderboardPage(seedLeaderboard));
 writePage(path.join(dist, "blog/index.html"), renderBlogIndex(blogEntries));
 writePage(path.join(dist, "blog/archive/index.html"), renderBlogArchive(blogEntries));
@@ -34,7 +35,7 @@ for (const entry of changelogEntries) writePage(path.join(dist, "changelog", ent
 
 writeJson(path.join(dist, ".regen-manifest.json"), {
   generatedAt: new Date().toISOString(),
-  sourceHash: createHash("sha256").update(JSON.stringify({ blog: blogEntries.map((e) => [e.file, e.metadata.updatedAt]), changelog: changelogEntries.map((e) => [e.file, e.metadata.updatedAt]), rules: rulesEntries.map((e) => [e.file, e.metadata.updatedAt]) })).digest("hex"),
+  sourceHash: createHash("sha256").update(JSON.stringify({ blog: blogEntries.map((e) => [e.file, e.metadata.updatedAt]), changelog: changelogEntries.map((e) => [e.file, e.metadata.updatedAt]), rules: rulesEntries.map((e) => [e.file, e.metadata.updatedAt]), site: [homeEntry.file, homeEntry.metadata.updatedAt] })).digest("hex"),
   blogRoutes: blogEntries.map((entry) => `/blog/${entry.metadata.slug}`),
   changelogRoutes: changelogEntries.map((entry) => `/changelog/${entry.metadata.slug}`),
   ruleRoutes: ["/rules"]
