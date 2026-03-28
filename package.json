@@ -22,7 +22,8 @@
     "feeds:generate": "node scripts/feeds-generate.mjs",
     "seo:validate": "node scripts/seo-validate.mjs",
     "structured-data:check": "node scripts/structured-data-check.mjs",
-    "analytics:contract:test": "node scripts/analytics-contract-test.mjs"
+    "analytics:contract:test": "node scripts/analytics-contract-test.mjs",
+    "serve:prod": "node scripts/serve-static.mjs"
   },
   "devDependencies": {
     "c8": "^10.1.3"

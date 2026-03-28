@@ -26,4 +26,7 @@ npm run routes:validate
 npm run content:schema:check
 npm run content:source-contract:check
 npm run build
+npm run serve:prod -- --host 127.0.0.1 --port 4180
 ```
+
+The production deployment on rpi-server-02 serves the generated `dist/` output directly via `npm run serve:prod`; it does not use Vite preview.
