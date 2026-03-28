@@ -1,7 +1,7 @@
 import { getContentRoot, loadCollection, validateEntry } from "../src/content-utils.mjs";
 
 const contentRoot = getContentRoot();
-const collections = ["blog", "changelog", "rules"];
+const collections = ["blog", "changelog", "rules", "site"];
 const errors = [];
 let count = 0;
 

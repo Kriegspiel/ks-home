@@ -3,21 +3,69 @@ import assert from "node:assert/strict";
 import { renderHomePage, renderLeaderboardPage } from "../src/pages.mjs";
 import { normalizeLeaderboardPayload, sortEntries, trendMarker } from "../src/leaderboard.mjs";
 
+const homeContent = {
+  summary: "Homepage summary",
+  eyebrow: "Kriegspiel.org",
+  heroTitle: "Play hidden-information chess, properly online.",
+  heroLede: "Kriegspiel preserves uncertainty and referee semantics.",
+  heroPrimaryCtaLabel: "See leaderboard",
+  heroPrimaryCtaHref: "/leaderboard",
+  heroSecondaryCtaLabel: "Read rules",
+  heroSecondaryCtaHref: "/rules",
+  statsRulesLabel: "Rulesets",
+  statsUpdatesLabel: "Public updates",
+  statsThirdLabel: "Product feel",
+  statsThirdValue: "Sharper",
+  flowKicker: "Flow",
+  flowTitle: "How it works",
+  flowIntro: "The game keeps the referee in the loop while the interface keeps the friction low.",
+  flowStep1Title: "Queue for a match",
+  flowStep1Body: "Jump into a game without breaking the variant’s underlying structure.",
+  flowStep2Title: "Receive legal / no announcements",
+  flowStep2Body: "Moves are mediated by the referee, not by full board visibility.",
+  flowStep3Title: "Review the game narrative",
+  flowStep3Body: "Follow the hidden-information story after the dust settles.",
+  featuresKicker: "Why it feels different",
+  featuresTitle: "Key features",
+  featuresIntro: "Closer to the app’s product language, still clearly a public-facing landing page.",
+  feature1Title: "Asymmetric information preserved",
+  feature1Body: "Fog of war is the point.",
+  feature2Title: "Fast async-friendly play",
+  feature2Body: "Built for players who want serious variant structure without clunky ceremony.",
+  feature3Title: "Variant-specific referee output",
+  feature3Body: "Rules, updates, and play surfaces now feel like they belong to the same family.",
+  ctaKicker: "Ready to play?",
+  ctaTitle: "Learn the rules, then step into the queue.",
+  ctaBody: "Start with the documented rulesets, then move into the live product.",
+  ctaPrimaryLabel: "Read rules",
+  ctaPrimaryHref: "/rules",
+  ctaSecondaryLabel: "Open app",
+  ctaSecondaryHref: "https://app.kriegspiel.org/",
+  trustKicker: "Trust snapshot",
+  trustTitle: "Public docs and visible product progress",
+  trustRulesTitle: "Documented rulesets",
+  trustRulesBodyTemplate: "{{rulesCount}} rulesets are published.",
+  trustUpdatesTitle: "Shipped updates",
+  trustUpdatesBodyTemplate: "{{blogCount}} public updates are already live."
+};
+
 test("home page includes required sections and CTA telemetry", () => {
-  const html = renderHomePage({ rulesCount: 2, blogCount: 3 });
+  const html = renderHomePage({ rulesCount: 2, blogCount: 3, homeContent });
   for (const id of ["hero", "how-it-works", "key-features", "cta", "trust-snippet"]) {
-    assert.ok(html.includes(`id=\"${id}\"`), `missing section ${id}`);
+    assert.ok(html.includes(`id="${id}"`), `missing section ${id}`);
   }
-  assert.ok(html.includes("data-telemetry-event=\"home_cta_click\""));
+  assert.ok(html.includes('data-telemetry-event="home_cta_click"'));
+  assert.ok(html.includes("2 rulesets are published."));
+  assert.ok(html.includes("3 public updates are already live."));
 });
 
 test("leaderboard page includes resilient state containers and telemetry hooks", () => {
   const html = renderLeaderboardPage([{ handle: "A", rating: 10, gamesPlayed: 1, trend: "up" }]);
   for (const id of ["loading", "error", "empty", "stale-banner", "leaderboard-table"]) {
-    assert.ok(html.includes(`id=\"${id}\"`), `missing state ${id}`);
+    assert.ok(html.includes(`id="${id}"`), `missing state ${id}`);
   }
-  assert.ok(html.includes("data-telemetry-event=\"leaderboard_sort\""));
-  assert.ok(html.includes("data-telemetry-event=\"leaderboard_retry\""));
+  assert.ok(html.includes('data-telemetry-event="leaderboard_sort"'));
+  assert.ok(html.includes('data-telemetry-event="leaderboard_retry"'));
 });
 
 test("normalize payload handles malformed, invalid players, and stale states", () => {

@@ -4,6 +4,18 @@ import crypto from "node:crypto";
 
 export const REQUIRED_FIELDS = ["title", "slug", "summary", "publishedAt", "updatedAt", "author", "tags", "draft"];
 
+export const HOME_REQUIRED_FIELDS = [
+  "eyebrow", "heroTitle", "heroLede",
+  "heroPrimaryCtaLabel", "heroPrimaryCtaHref", "heroSecondaryCtaLabel", "heroSecondaryCtaHref",
+  "statsRulesLabel", "statsUpdatesLabel", "statsThirdLabel", "statsThirdValue",
+  "flowKicker", "flowTitle", "flowIntro",
+  "flowStep1Title", "flowStep1Body", "flowStep2Title", "flowStep2Body", "flowStep3Title", "flowStep3Body",
+  "featuresKicker", "featuresTitle", "featuresIntro",
+  "feature1Title", "feature1Body", "feature2Title", "feature2Body", "feature3Title", "feature3Body",
+  "ctaKicker", "ctaTitle", "ctaBody", "ctaPrimaryLabel", "ctaPrimaryHref", "ctaSecondaryLabel", "ctaSecondaryHref",
+  "trustKicker", "trustTitle", "trustRulesTitle", "trustRulesBodyTemplate", "trustUpdatesTitle", "trustUpdatesBodyTemplate"
+];
+
 export function parseFrontmatter(raw) {
   const lines = raw.split(/\r?\n/);
   if (lines[0] !== "---") return { metadata: {}, body: raw };
@@ -76,7 +88,8 @@ export function loadCollection(contentRoot, collection) {
 export function validateEntry(entry) {
   const issues = [];
   for (const field of REQUIRED_FIELDS) if (!(field in entry.metadata)) issues.push(`${entry.collection}/${entry.file}: missing required field ${field}`);
-  if (entry.collection !== "blog" && !("version" in entry.metadata)) issues.push(`${entry.collection}/${entry.file}: missing required field version for ${entry.collection}`);
+  if (["changelog", "rules"].includes(entry.collection) && !("version" in entry.metadata)) issues.push(`${entry.collection}/${entry.file}: missing required field version for ${entry.collection}`);
+  if (entry.collection === "site") for (const field of HOME_REQUIRED_FIELDS) if (!(field in entry.metadata)) issues.push(`${entry.collection}/${entry.file}: missing required field ${field}`);
   if (entry.metadata.tags && !Array.isArray(entry.metadata.tags)) issues.push(`${entry.collection}/${entry.file}: tags must be an array`);
   for (const dateField of ["publishedAt", "updatedAt"]) if (entry.metadata[dateField] && Number.isNaN(Date.parse(entry.metadata[dateField]))) issues.push(`${entry.collection}/${entry.file}: ${dateField} must be a valid date`);
   return issues;
@@ -85,3 +98,8 @@ export function validateEntry(entry) {
 export function getContentRoot() { return path.resolve(process.cwd(), process.env.KS_CONTENT_PATH || "../content"); }
 export function readingTimeMinutes(text) { const words = text.trim().split(/\s+/).filter(Boolean).length; return Math.max(1, Math.ceil(words / 220)); }
 export function hashFile(filePath) { return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex"); }
+export function loadSingletonEntry(contentRoot, collection, slug) {
+  const entry = loadCollection(contentRoot, collection).find((candidate) => candidate.metadata.slug === slug);
+  if (!entry) throw new Error(`missing required ${collection} entry with slug ${slug}`);
+  return entry;
+}
