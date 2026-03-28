@@ -59,13 +59,16 @@ test("home page includes required sections and CTA telemetry", () => {
   assert.ok(html.includes("3 public updates are already live."));
 });
 
-test("leaderboard page includes resilient state containers and telemetry hooks", () => {
+test("leaderboard page includes resilient state containers, telemetry hooks, and shared play CTA", () => {
   const html = renderLeaderboardPage([{ handle: "A", rating: 10, gamesPlayed: 1, trend: "up" }]);
   for (const id of ["loading", "error", "empty", "stale-banner", "leaderboard-table"]) {
     assert.ok(html.includes(`id="${id}"`), `missing state ${id}`);
   }
   assert.ok(html.includes('data-telemetry-event="leaderboard_sort"'));
   assert.ok(html.includes('data-telemetry-event="leaderboard_retry"'));
+  assert.ok(html.includes('class="site-header__play button-link button-link--primary"'));
+  assert.ok(html.includes('href="https://app.kriegspiel.org/"'));
+  assert.ok(html.includes('>Play</a>'));
 });
 
 test("normalize payload handles malformed, invalid players, and stale states", () => {
