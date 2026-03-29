@@ -1,0 +1,199 @@
+
+:root {
+  color-scheme: light;
+  --ks-bg: #f7efe3;
+  --ks-bg-strong: rgba(247, 239, 227, 0.92);
+  --ks-surface: rgba(255, 248, 240, 0.84);
+  --ks-surface-strong: rgba(255, 252, 247, 0.95);
+  --ks-text: #1e1611;
+  --ks-text-soft: rgba(30, 22, 17, 0.78);
+  --ks-border: rgba(85, 58, 34, 0.18);
+  --ks-shadow: 0 20px 45px rgba(20, 14, 10, 0.18);
+  --ks-overlay: rgba(244, 235, 223, 0.74);
+  --ks-logo-filter: drop-shadow(0 0 0.65rem rgba(255, 255, 255, 0.42));
+  --ks-logo-opacity: 0.92;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ks-bg: #100d0a;
+  --ks-bg-strong: rgba(16, 13, 10, 0.88);
+  --ks-surface: rgba(28, 23, 18, 0.84);
+  --ks-surface-strong: rgba(36, 29, 23, 0.92);
+  --ks-text: #f4ede4;
+  --ks-text-soft: rgba(244, 237, 228, 0.8);
+  --ks-border: rgba(244, 237, 228, 0.16);
+  --ks-shadow: 0 24px 55px rgba(0, 0, 0, 0.42);
+  --ks-overlay: rgba(7, 6, 5, 0.6);
+  --ks-logo-filter: drop-shadow(0 0 0.75rem rgba(0, 0, 0, 0.45)) brightness(0.92) contrast(1.08);
+  --ks-logo-opacity: 0.88;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  position: relative;
+  color: var(--ks-text);
+  background-color: var(--ks-bg);
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(180deg, var(--ks-overlay) 0%, rgba(0, 0, 0, 0.18) 100%);
+  pointer-events: none;
+}
+
+.navbar.ks-navbar {
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+  background: var(--ks-bg-strong) !important;
+  border-top: 1px solid var(--ks-border);
+  box-shadow: var(--ks-shadow);
+}
+
+.ks-branding {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ks-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--ks-text) !important;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ks-brand:hover,
+.ks-brand:focus {
+  color: var(--ks-text) !important;
+  text-decoration: none;
+}
+
+.ks-brand__wordmark {
+  line-height: 1;
+}
+
+.ks-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--ks-border);
+  background: var(--ks-surface-strong);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.14);
+}
+
+.ks-theme-toggle:hover,
+.ks-theme-toggle:focus {
+  background: var(--ks-surface);
+}
+
+.ks-theme-toggle:focus {
+  outline: 2px solid var(--ks-text);
+  outline-offset: 2px;
+}
+
+.ks-theme-toggle__logo {
+  width: 1.7rem;
+  height: 1.7rem;
+  display: block;
+  opacity: var(--ks-logo-opacity);
+  filter: var(--ks-logo-filter);
+}
+
+.navbar-dark .navbar-nav .nav-link,
+.navbar-dark .navbar-toggler,
+.navbar-dark .navbar-toggler-icon,
+.navbar-dark .navbar-brand {
+  color: var(--ks-text);
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: var(--ks-text-soft);
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link:focus {
+  color: var(--ks-text);
+}
+
+.navbar-dark .navbar-toggler {
+  border-color: var(--ks-border);
+}
+
+.navbar-dark .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(30,22,17,0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+:root[data-theme="dark"] .navbar-dark .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(244,237,228,0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+section {
+  position: relative;
+  z-index: 1;
+}
+
+.ks-hero {
+  margin-top: 3rem;
+  padding: 1.75rem 1.5rem;
+  border-radius: 1.5rem;
+  background: var(--ks-surface);
+  border: 1px solid var(--ks-border);
+  box-shadow: var(--ks-shadow);
+  backdrop-filter: blur(10px);
+}
+
+.ks-hero h1,
+.ks-hero p {
+  color: var(--ks-text);
+}
+
+.ks-hero p {
+  color: var(--ks-text-soft);
+}
+
+@media (max-width: 991.98px) {
+  .ks-navbar .container {
+    row-gap: 0.75rem;
+  }
+
+  .ks-branding {
+    max-width: calc(100% - 4.25rem);
+  }
+}
+
+@media (max-width: 575.98px) {
+  .ks-brand {
+    letter-spacing: 0.1em;
+    font-size: 0.88rem;
+  }
+
+  .ks-theme-toggle {
+    width: 2.55rem;
+    height: 2.55rem;
+  }
+
+  .ks-theme-toggle__logo {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .ks-hero {
+    margin-top: 1.5rem;
+    padding: 1.25rem 1rem;
+  }
+}
