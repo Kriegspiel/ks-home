@@ -8,7 +8,7 @@ const contentRoot = path.resolve(process.cwd(), "../content");
 test("source content collections exist and pass schema", () => {
   let docs = 0;
   const issues = [];
-  for (const collection of ["blog", "changelog", "rules"]) {
+  for (const collection of ["blog", "changelog", "rules", "site"]) {
     for (const entry of loadCollection(contentRoot, collection)) {
       docs += 1;
       issues.push(...validateEntry(entry));
