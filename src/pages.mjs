@@ -10,9 +10,7 @@ function absUrl(path = '/') { return `${SITE_URL}${path}`; }
 function parseFooterEntry(footerEntry) {
   const groups = [];
   let current = null;
-  for (const rawLine of String(footerEntry?.body || '').split(/
-?
-/)) {
+  for (const rawLine of String(footerEntry?.body || '').split(/\r?\n/)) {
     const line = rawLine.trim();
     if (!line) continue;
     const heading = line.match(/^#\s+(.+)$/);
