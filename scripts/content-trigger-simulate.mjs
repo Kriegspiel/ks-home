@@ -7,7 +7,7 @@ const fromArg = process.argv.find((arg) => arg.startsWith("--from="));
 const verify = process.argv.includes("--verify-static-regen");
 const fromPath = fromArg ? fromArg.split("=")[1] : "../content";
 assert.ok(fs.existsSync(path.resolve(process.cwd(), fromPath)), `missing content path ${fromPath}`);
-execSync("node scripts/build.mjs", { stdio: "pipe" });
+execSync("node scripts/build.mjs", { stdio: "pipe", env: { ...process.env, KS_CONTENT_PATH: fromPath } });
 const manifest = JSON.parse(fs.readFileSync(path.join(process.cwd(), "dist/.regen-manifest.json"), "utf8"));
 assert.ok(Array.isArray(manifest.blogRoutes));
 assert.ok(Array.isArray(manifest.changelogRoutes));
