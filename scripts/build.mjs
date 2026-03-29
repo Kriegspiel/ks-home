@@ -24,6 +24,13 @@ const seedLeaderboard = [
 fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
 copyStaticAsset('public_html/logo-theme-toggle.png', 'logo-theme-toggle.png');
+copyContentAsset('binary/logo/favicon.ico', 'favicon.ico');
+copyContentAsset('binary/logo/favicon-16x16.png', 'favicon-16x16.png');
+copyContentAsset('binary/logo/favicon-32x32.png', 'favicon-32x32.png');
+copyContentAsset('binary/logo/favicon-192.png', 'favicon-192.png');
+copyContentAsset('binary/logo/favicon-512.png', 'favicon-512.png');
+copyContentAsset('binary/logo/apple-touch-icon.png', 'apple-touch-icon.png');
+copyContentAsset('binary/logo/site.webmanifest', 'site.webmanifest');
 
 writePage(path.join(dist, 'index.html'), renderHomePage({ rulesCount: rulesEntries.length, blogCount: blogEntries.length, homeContent: homeEntry, footerEntry }));
 writePage(path.join(dist, 'leaderboard/index.html'), renderLeaderboardPage(seedLeaderboard, footerEntry));
@@ -56,3 +63,4 @@ function writePage(filePath, html) { fs.mkdirSync(path.dirname(filePath), { recu
 function writeJson(filePath, value) { fs.mkdirSync(path.dirname(filePath), { recursive: true }); fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8'); }
 
 function copyStaticAsset(fromRelative, toRelative) { const from = path.resolve(process.cwd(), fromRelative); const to = path.join(dist, toRelative); fs.mkdirSync(path.dirname(to), { recursive: true }); fs.copyFileSync(from, to); }
+function copyContentAsset(fromRelative, toRelative) { const from = path.join(contentRoot, fromRelative); const to = path.join(dist, toRelative); fs.mkdirSync(path.dirname(to), { recursive: true }); fs.copyFileSync(from, to); }
