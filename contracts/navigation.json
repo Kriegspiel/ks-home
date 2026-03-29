@@ -1,10 +1,6 @@
 {
   "globalNav": [
     {
-      "label": "Home",
-      "href": "/"
-    },
-    {
       "label": "Leaderboard",
       "href": "/leaderboard"
     },
@@ -13,30 +9,73 @@
       "href": "/blog"
     },
     {
-      "label": "Changelog",
-      "href": "/changelog"
-    },
-    {
       "label": "Rules",
       "href": "/rules"
+    },
+    {
+      "label": "Play",
+      "href": "https://app.kriegspiel.org/"
+    }
+  ],
+  "footerGroups": [
+    {
+      "title": "Legal",
+      "links": [
+        { "label": "Privacy", "href": "/privacy" },
+        { "label": "Terms", "href": "/terms" }
+      ]
+    },
+    {
+      "title": "Rules",
+      "links": [
+        { "label": "Berkeley", "href": "/rules/berkeley" },
+        { "label": "Wild 16", "href": "/rules/wild16" },
+        { "label": "Comparison", "href": "/rules/comparison/" }
+      ]
+    },
+    {
+      "title": "Communication",
+      "links": [
+        { "label": "Blog", "href": "/blog" },
+        { "label": "Changelog", "href": "/changelog" },
+        { "label": "About", "href": "/" }
+      ]
+    },
+    {
+      "title": "Game",
+      "links": [
+        { "label": "Leaderboard", "href": "/leaderboard" },
+        { "label": "Play", "href": "https://app.kriegspiel.org/" }
+      ]
+    },
+    {
+      "title": "Development",
+      "links": [
+        { "label": "API", "href": "https://app.kriegspiel.org/api/docs" },
+        { "label": "GitHub", "href": "https://github.com/Kriegspiel" }
+      ]
+    },
+    {
+      "title": "Social",
+      "links": [
+        { "label": "x.com (@kriegspiel_org)", "href": "https://x.com/kriegspiel_org" },
+        { "label": "GitHub", "href": "https://github.com/Kriegspiel" }
+      ]
     }
   ],
   "footerLinks": [
-    {
-      "label": "GitHub",
-      "href": "https://github.com/Kriegspiel"
-    },
-    {
-      "label": "Contact",
-      "href": "mailto:email@kriegspiel.org"
-    },
-    {
-      "label": "Privacy",
-      "href": "/privacy"
-    },
-    {
-      "label": "Terms",
-      "href": "/terms"
-    }
+    { "label": "Privacy", "href": "/privacy" },
+    { "label": "Terms", "href": "/terms" },
+    { "label": "Berkeley", "href": "/rules/berkeley" },
+    { "label": "Wild 16", "href": "/rules/wild16" },
+    { "label": "Comparison", "href": "/rules/comparison/" },
+    { "label": "Blog", "href": "/blog" },
+    { "label": "Changelog", "href": "/changelog" },
+    { "label": "About", "href": "/" },
+    { "label": "Leaderboard", "href": "/leaderboard" },
+    { "label": "Play", "href": "https://app.kriegspiel.org/" },
+    { "label": "API", "href": "https://app.kriegspiel.org/api/docs" },
+    { "label": "GitHub", "href": "https://github.com/Kriegspiel" },
+    { "label": "x.com (@kriegspiel_org)", "href": "https://x.com/kriegspiel_org" }
   ]
 }
