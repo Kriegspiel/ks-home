@@ -12,9 +12,9 @@
   "versionRequiredFor": ["changelog", "rules"],
   "sourceOfTruth": "../content",
   "collections": {
-    "blog": "blog/*.md",
+    "blog": "blog/*/README.md",
     "changelog": "changelog/*.md",
     "rules": "rules/*.md",
-    "site": "site/*.md"
+    "site": "site/*/README.md"
   }
 }
