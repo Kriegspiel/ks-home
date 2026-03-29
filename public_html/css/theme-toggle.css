@@ -10,8 +10,11 @@
   --ks-border: rgba(85, 58, 34, 0.18);
   --ks-shadow: 0 20px 45px rgba(20, 14, 10, 0.18);
   --ks-overlay: rgba(244, 235, 223, 0.74);
-  --ks-logo-filter: drop-shadow(0 0 0.65rem rgba(255, 255, 255, 0.42));
-  --ks-logo-opacity: 0.92;
+  --ks-logo-filter: drop-shadow(0 0 0.6rem rgba(255, 255, 255, 0.34));
+  --ks-logo-opacity: 0.9;
+  --ks-toggle-bg: color-mix(in srgb, var(--ks-bg) 78%, white 22%);
+  --ks-toggle-bg-hover: color-mix(in srgb, var(--ks-bg) 70%, white 30%);
+  --ks-toggle-shadow: 0 10px 24px rgba(20, 14, 10, 0.1);
 }
 
 :root[data-theme="dark"] {
@@ -27,6 +30,9 @@
   --ks-overlay: rgba(7, 6, 5, 0.6);
   --ks-logo-filter: drop-shadow(0 0 0.75rem rgba(0, 0, 0, 0.45)) brightness(0.92) contrast(1.08);
   --ks-logo-opacity: 0.88;
+  --ks-toggle-bg: var(--ks-surface-strong);
+  --ks-toggle-bg-hover: var(--ks-surface);
+  --ks-toggle-shadow: 0 10px 25px rgba(0, 0, 0, 0.14);
 }
 
 html,
@@ -92,13 +98,13 @@ body::before {
   padding: 0;
   border-radius: 999px;
   border: 1px solid var(--ks-border);
-  background: var(--ks-surface-strong);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.14);
+  background: var(--ks-toggle-bg);
+  box-shadow: var(--ks-toggle-shadow);
 }
 
 .ks-theme-toggle:hover,
 .ks-theme-toggle:focus {
-  background: var(--ks-surface);
+  background: var(--ks-toggle-bg-hover);
 }
 
 .ks-theme-toggle:focus {
@@ -151,7 +157,7 @@ section {
   margin-top: 3rem;
   padding: 1.75rem 1.5rem;
   border-radius: 1.5rem;
-  background: var(--ks-surface);
+  background: var(--ks-toggle-bg-hover);
   border: 1px solid var(--ks-border);
   box-shadow: var(--ks-shadow);
   backdrop-filter: blur(10px);
