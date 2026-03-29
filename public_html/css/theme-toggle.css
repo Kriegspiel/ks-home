@@ -10,11 +10,11 @@
   --ks-border: rgba(85, 58, 34, 0.18);
   --ks-shadow: 0 20px 45px rgba(20, 14, 10, 0.18);
   --ks-overlay: rgba(244, 235, 223, 0.74);
-  --ks-logo-filter: drop-shadow(0 0 0.6rem rgba(255, 255, 255, 0.34));
-  --ks-logo-opacity: 0.9;
-  --ks-toggle-bg: color-mix(in srgb, var(--ks-bg) 78%, white 22%);
-  --ks-toggle-bg-hover: color-mix(in srgb, var(--ks-bg) 70%, white 30%);
-  --ks-toggle-shadow: 0 10px 24px rgba(20, 14, 10, 0.1);
+  --ks-logo-filter: drop-shadow(0 0 0.45rem rgba(255, 255, 255, 0.22));
+  --ks-logo-opacity: 0.88;
+  --ks-toggle-bg: color-mix(in srgb, var(--ks-bg) 92%, white 8%);
+  --ks-toggle-bg-hover: color-mix(in srgb, var(--ks-bg) 88%, white 12%);
+  --ks-toggle-shadow: 0 8px 18px rgba(20, 14, 10, 0.06);
 }
 
 :root[data-theme="dark"] {
