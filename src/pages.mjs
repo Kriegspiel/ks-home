@@ -26,7 +26,12 @@ function parseFooterEntry(footerEntry) {
 }
 
 function renderFooter(footerEntry) {
-  const groups = parseFooterEntry(footerEntry);
+  const fallbackGroups = [
+    { title: 'Rules', links: [['/rules/berkeley', 'Berkeley'], ['/rules/wild16', 'Wild 16'], ['/rules/comparison/', 'Comparison']] },
+    { title: 'Communication', links: [['/blog', 'Blog'], ['/changelog', 'Changelog'], ['/', 'About']] },
+    { title: 'Social', links: [['https://x.com/kriegspiel_org', 'X.com (@kriegspiel_org)'], ['https://github.com/Kriegspiel', 'GitHub']] }
+  ];
+  const groups = footerEntry ? parseFooterEntry(footerEntry) : fallbackGroups;
   return `<div class="footer__meta"><div><a class="footer__brand" href="/">Kriegspiel.org</a><span>Hidden-information chess with referee semantics, modernized for the web.</span></div></div><div class="footer__grid">${groups.map(({ title, links }) => `<section class="footer__group" aria-label="${esc(title)}"><h2>${esc(title)}</h2><ul>${links.map(([href, label]) => `<li><a href="${esc(href)}">${esc(label)}</a></li>`).join('')}</ul></section>`).join('')}</div>`;
 }
 
