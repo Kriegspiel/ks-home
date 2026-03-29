@@ -19,7 +19,7 @@
   ],
   "footerGroups": [
     {
-      "title": "Legal",
+      "title": "Policy",
       "links": [
         { "label": "Privacy", "href": "/privacy" },
         { "label": "Terms", "href": "/terms" }
@@ -38,27 +38,27 @@
       "links": [
         { "label": "Blog", "href": "/blog" },
         { "label": "Changelog", "href": "/changelog" },
-        { "label": "About", "href": "/" }
+        { "label": "About", "href": "/about" }
       ]
     },
     {
       "title": "Game",
       "links": [
         { "label": "Leaderboard", "href": "/leaderboard" },
-        { "label": "Play", "href": "https://app.kriegspiel.org/" }
+        { "label": "Play online", "href": "https://app.kriegspiel.org/" }
       ]
     },
     {
       "title": "Development",
       "links": [
-        { "label": "API", "href": "https://app.kriegspiel.org/api/docs" },
+        { "label": "API docs", "href": "https://api.kriegspiel.org/docs" },
         { "label": "GitHub", "href": "https://github.com/Kriegspiel" }
       ]
     },
     {
       "title": "Social",
       "links": [
-        { "label": "x.com (@kriegspiel_org)", "href": "https://x.com/kriegspiel_org" },
+        { "label": "X.com", "href": "https://x.com/kriegspiel_org" },
         { "label": "GitHub", "href": "https://github.com/Kriegspiel" }
       ]
     }
@@ -71,11 +71,11 @@
     { "label": "Comparison", "href": "/rules/comparison/" },
     { "label": "Blog", "href": "/blog" },
     { "label": "Changelog", "href": "/changelog" },
-    { "label": "About", "href": "/" },
+    { "label": "About", "href": "/about" },
     { "label": "Leaderboard", "href": "/leaderboard" },
-    { "label": "Play", "href": "https://app.kriegspiel.org/" },
-    { "label": "API", "href": "https://app.kriegspiel.org/api/docs" },
+    { "label": "Play online", "href": "https://app.kriegspiel.org/" },
+    { "label": "API docs", "href": "https://api.kriegspiel.org/docs" },
     { "label": "GitHub", "href": "https://github.com/Kriegspiel" },
-    { "label": "x.com (@kriegspiel_org)", "href": "https://x.com/kriegspiel_org" }
+    { "label": "X.com", "href": "https://x.com/kriegspiel_org" }
   ]
 }
