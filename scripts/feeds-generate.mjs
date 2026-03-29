@@ -4,7 +4,7 @@ import path from "node:path";
 import { execSync } from "node:child_process";
 import { getContentRoot, loadCollection } from "../src/content-utils.mjs";
 
-execSync("node scripts/build.mjs", { stdio: "pipe" });
+execSync("node scripts/build.mjs", { stdio: "pipe", env: { ...process.env, KS_CONTENT_PATH: process.env.KS_CONTENT_PATH || "../content" } });
 const blog = loadCollection(getContentRoot(), "blog");
 const changelog = loadCollection(getContentRoot(), "changelog");
 const all = [...blog, ...changelog].sort((a, b) => String(b.metadata.publishedAt).localeCompare(String(a.metadata.publishedAt)));
