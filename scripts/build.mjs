@@ -23,6 +23,7 @@ const seedLeaderboard = [
 
 fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
+copyStaticAsset('public_html/logo-theme-toggle.png', 'logo-theme-toggle.png');
 
 writePage(path.join(dist, 'index.html'), renderHomePage({ rulesCount: rulesEntries.length, blogCount: blogEntries.length, homeContent: homeEntry, footerEntry }));
 writePage(path.join(dist, 'leaderboard/index.html'), renderLeaderboardPage(seedLeaderboard, footerEntry));
@@ -53,3 +54,5 @@ console.log('build complete: marketing + blog + changelog + rules routes generat
 
 function writePage(filePath, html) { fs.mkdirSync(path.dirname(filePath), { recursive: true }); fs.writeFileSync(filePath, html, 'utf8'); }
 function writeJson(filePath, value) { fs.mkdirSync(path.dirname(filePath), { recursive: true }); fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8'); }
+
+function copyStaticAsset(fromRelative, toRelative) { const from = path.resolve(process.cwd(), fromRelative); const to = path.join(dist, toRelative); fs.mkdirSync(path.dirname(to), { recursive: true }); fs.copyFileSync(from, to); }
