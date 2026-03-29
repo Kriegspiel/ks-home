@@ -1,23 +1,45 @@
-import test from "node:test";
-import assert from "node:assert/strict";
-import { renderRulesPage, renderSiteMarkdownPage } from "../src/pages.mjs";
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { renderRulesPage, renderRuleDetailPage, renderRulesComparisonPage, renderSiteMarkdownPage } from '../src/pages.mjs';
 
-test("rules page shows revision metadata and changelog links", () => {
+test('rules landing page shows Berkeley and Wild16 tiles plus comparison link', () => {
   const html = renderRulesPage([
-    { metadata: { title: "Berkeley", summary: "Rules", version: "1.0.0", revision: "rules-berkeley-r1", lastReviewedAt: "2026-03-27", changelogSlug: "2026-03-27-slice-940-trust-discoverability" }, body: "# Intro\n\n## Section One" }
+    { metadata: { slug: 'berkeley', title: 'Berkeley', summary: 'Rules', version: '1.0.0', revision: 'rules-berkeley-r1', lastReviewedAt: '2026-03-27', changelogSlug: '2026-03-27-slice-940-trust-discoverability' }, body: '# Intro\n\n## Section One' },
+    { metadata: { slug: 'wild16', title: 'Wild16', summary: 'Rules', version: '1.0.0', revision: 'rules-wild16-r1', lastReviewedAt: '2026-03-27', changelogSlug: '2026-03-27-slice-940-trust-discoverability' }, body: '# Intro\n\n## Section Two' }
   ], [
-    { metadata: { slug: "2026-03-27-slice-940-trust-discoverability" } }
+    { metadata: { slug: '2026-03-27-slice-940-trust-discoverability' } }
   ]);
-  assert.ok(html.includes("rules-berkeley-r1"));
-  assert.ok(html.includes("/changelog/2026-03-27-slice-940-trust-discoverability"));
-  assert.ok(html.includes("Semantic sections"));
+  assert.ok(html.includes('/rules/berkeley'));
+  assert.ok(html.includes('/rules/wild16'));
+  assert.ok(html.includes('/rules/comparison/'));
+  assert.ok(html.includes('rules-berkeley-r1'));
 });
 
-test("site markdown pages render policy content from content repo entries", () => {
-  const privacyHtml = renderSiteMarkdownPage({ metadata: { title: "Privacy Policy", summary: "Privacy notice", slug: "privacy" }, bodyHtml: "<p>Policy owner: legal@kriegspiel.org</p>" });
-  const termsHtml = renderSiteMarkdownPage({ metadata: { title: "Terms of Use", summary: "Terms notice", slug: "terms" }, bodyHtml: "<p>Policy owner: legal@kriegspiel.org</p>" });
-  assert.ok(privacyHtml.includes("Privacy Policy"));
-  assert.ok(privacyHtml.includes("legal@kriegspiel.org"));
-  assert.ok(termsHtml.includes("Terms of Use"));
-  assert.ok(termsHtml.includes("legal@kriegspiel.org"));
+test('rule detail page includes comparison and changelog navigation', () => {
+  const html = renderRuleDetailPage(
+    { metadata: { slug: 'berkeley', title: 'Berkeley', summary: 'Rules', version: '1.0.0', revision: 'rules-berkeley-r1', lastReviewedAt: '2026-03-27', publishedAt: '2026-03-27', updatedAt: '2026-03-27', author: 'Kriegspiel Team', changelogSlug: '2026-03-27-slice-940-trust-discoverability' }, body: '# Intro\n\n## Section One', bodyHtml: '<h1>Intro</h1>' },
+    [{ metadata: { slug: '2026-03-27-slice-940-trust-discoverability' } }]
+  );
+  assert.ok(html.includes('/rules/comparison/'));
+  assert.ok(html.includes('/changelog/2026-03-27-slice-940-trust-discoverability'));
+  assert.ok(html.includes('rules-berkeley-r1'));
+});
+
+test('comparison page links both published rulesets', () => {
+  const html = renderRulesComparisonPage([
+    { metadata: { slug: 'berkeley', summary: 'Berkeley summary' } },
+    { metadata: { slug: 'wild16', summary: 'Wild16 summary' } }
+  ]);
+  assert.ok(html.includes('/rules/berkeley'));
+  assert.ok(html.includes('/rules/wild16'));
+  assert.ok(html.includes('Published ruleset comparison'));
+});
+
+test('site markdown pages render policy content from content repo entries', () => {
+  const privacyHtml = renderSiteMarkdownPage({ metadata: { title: 'Privacy Policy', summary: 'Privacy notice', slug: 'privacy' }, bodyHtml: '<p>Policy owner: legal@kriegspiel.org</p>' });
+  const termsHtml = renderSiteMarkdownPage({ metadata: { title: 'Terms of Use', summary: 'Terms notice', slug: 'terms' }, bodyHtml: '<p>Policy owner: legal@kriegspiel.org</p>' });
+  assert.ok(privacyHtml.includes('Privacy Policy'));
+  assert.ok(privacyHtml.includes('legal@kriegspiel.org'));
+  assert.ok(termsHtml.includes('Terms of Use'));
+  assert.ok(termsHtml.includes('legal@kriegspiel.org'));
 });
