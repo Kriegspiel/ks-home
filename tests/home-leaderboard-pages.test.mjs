@@ -66,9 +66,20 @@ test("leaderboard page includes resilient state containers, telemetry hooks, and
   }
   assert.ok(html.includes('data-telemetry-event="leaderboard_sort"'));
   assert.ok(html.includes('data-telemetry-event="leaderboard_retry"'));
-  assert.ok(html.includes('class="site-header__play button-link button-link--primary"'));
+  assert.ok(html.includes('site-header__play'));
+  assert.ok(html.includes('button-link--primary'));
   assert.ok(html.includes('href="https://app.kriegspiel.org/"'));
-  assert.ok(html.includes('>Play</a>'));
+  assert.ok(html.includes('>play</a>'));
+  const navHtml = html.match(/<nav class="site-nav" aria-label="Primary">([\s\S]*?)<\/nav>/)?.[1] || '';
+  assert.ok(!navHtml.includes('>Home</a>'));
+  assert.ok(!navHtml.includes('>Changelog</a>'));
+  assert.ok(navHtml.includes('>leaderboard</a>'));
+  assert.ok(navHtml.includes('>Blog</a>'));
+  assert.ok(navHtml.includes('>rules</a>'));
+  assert.ok(navHtml.includes('>play</a>'));
+  assert.ok(html.includes('>Rules</h2>'));
+  assert.ok(html.includes('>Communication</h2>'));
+  assert.ok(html.includes('x.com (@kriegspiel_org)'));
 });
 
 test("normalize payload handles malformed, invalid players, and stale states", () => {

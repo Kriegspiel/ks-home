@@ -1,9 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import path from "node:path";
-import { loadCollection, validateEntry } from "../src/content-utils.mjs";
+import { getContentRoot, loadCollection, validateEntry } from "../src/content-utils.mjs";
 
-const contentRoot = path.resolve(process.cwd(), "../content");
+const contentRoot = getContentRoot();
 
 test("source content collections exist and pass schema", () => {
   let docs = 0;
