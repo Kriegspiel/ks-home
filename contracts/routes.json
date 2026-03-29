@@ -10,7 +10,8 @@
   ],
   "requiredDynamicRoutes": [
     "/blog/:slug",
-    "/changelog/:slug"
+    "/changelog/:slug",
+    "/rules/:slug"
   ],
   "deprecations": [
     {
@@ -24,6 +25,12 @@
       "to": "/changelog/:slug",
       "status": 308,
       "reason": "Legacy changelog route replaced by canonical /changelog namespace"
+    },
+    {
+      "from": "/rules/wild-16",
+      "to": "/rules/wild16",
+      "status": 308,
+      "reason": "Canonical Wild16 rules route dropped the hyphen to match product naming"
     },
     {
       "from": "/rules/old",
