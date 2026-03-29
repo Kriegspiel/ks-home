@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { renderRulesPage, renderPrivacyPage, renderTermsPage } from "../src/pages.mjs";
+import { renderRulesPage, renderSiteMarkdownPage } from "../src/pages.mjs";
 
 test("rules page shows revision metadata and changelog links", () => {
   const html = renderRulesPage([
@@ -13,9 +13,11 @@ test("rules page shows revision metadata and changelog links", () => {
   assert.ok(html.includes("Semantic sections"));
 });
 
-test("privacy and terms routes include policy owner", () => {
-  assert.ok(renderPrivacyPage().includes("Privacy Policy"));
-  assert.ok(renderPrivacyPage().includes("legal@kriegspiel.org"));
-  assert.ok(renderTermsPage().includes("Terms of Use"));
-  assert.ok(renderTermsPage().includes("legal@kriegspiel.org"));
+test("site markdown pages render policy content from content repo entries", () => {
+  const privacyHtml = renderSiteMarkdownPage({ metadata: { title: "Privacy Policy", summary: "Privacy notice", slug: "privacy" }, bodyHtml: "<p>Policy owner: legal@kriegspiel.org</p>" });
+  const termsHtml = renderSiteMarkdownPage({ metadata: { title: "Terms of Use", summary: "Terms notice", slug: "terms" }, bodyHtml: "<p>Policy owner: legal@kriegspiel.org</p>" });
+  assert.ok(privacyHtml.includes("Privacy Policy"));
+  assert.ok(privacyHtml.includes("legal@kriegspiel.org"));
+  assert.ok(termsHtml.includes("Terms of Use"));
+  assert.ok(termsHtml.includes("legal@kriegspiel.org"));
 });
