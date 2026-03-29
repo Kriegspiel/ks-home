@@ -3,6 +3,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 
 export const REQUIRED_FIELDS = ["title", "slug", "summary", "publishedAt", "updatedAt", "author", "tags", "draft"];
+export const FOLDER_ENTRY_COLLECTIONS = new Set(["blog", "site"]);
 
 export const HOME_REQUIRED_FIELDS = [
   "eyebrow", "heroTitle", "heroLede",
@@ -51,7 +52,11 @@ export function markdownToHtml(markdown) {
     if (/^##\s+/.test(trimmed)) return `<h2>${escapeHtml(trimmed.replace(/^##\s+/, ""))}</h2>`;
     if (/^#\s+/.test(trimmed)) return `<h1>${escapeHtml(trimmed.replace(/^#\s+/, ""))}</h1>`;
     if (/^-\s+/m.test(trimmed)) {
-      const items = trimmed.split(/\r?\n/).filter((line) => line.startsWith("- ")).map((line) => `<li>${inlineMarkdown(line.slice(2))}</li>`).join("");
+      const items = trimmed
+        .split(/\r?\n/)
+        .filter((line) => line.startsWith("- "))
+        .map((line) => `<li>${inlineMarkdown(line.slice(2))}</li>`)
+        .join("");
       return `<ul>${items}</ul>`;
     }
     return `<p>${inlineMarkdown(trimmed)}</p>`;
@@ -73,16 +78,27 @@ export function loadCollection(contentRoot, collection) {
   const dir = path.join(contentRoot, collection);
   if (!fs.existsSync(dir)) return [];
   const includeDrafts = ["1", "true"].includes(String(process.env.KS_PREVIEW_DRAFTS).toLowerCase());
-  return fs.readdirSync(dir)
-    .filter((file) => file.endsWith(".md") && file.toLowerCase() !== "readme.md")
-    .map((file) => {
-      const fullPath = path.join(dir, file);
-      const raw = fs.readFileSync(fullPath, "utf8");
-      const { metadata, body } = parseFrontmatter(raw);
-      return { collection, file, fullPath, metadata, body, bodyHtml: markdownToHtml(body.trim()) };
-    })
+  return walkCollection(contentRoot, dir, collection, FOLDER_ENTRY_COLLECTIONS.has(collection))
     .filter((entry) => includeDrafts || entry.metadata.draft !== true)
     .sort((a, b) => String(b.metadata.publishedAt).localeCompare(String(a.metadata.publishedAt)));
+}
+
+function walkCollection(contentRoot, currentDir, collection, allowFolderEntries) {
+  const entries = [];
+  for (const item of fs.readdirSync(currentDir, { withFileTypes: true })) {
+    const fullPath = path.join(currentDir, item.name);
+    if (item.isDirectory()) {
+      entries.push(...walkCollection(contentRoot, fullPath, collection, allowFolderEntries));
+      continue;
+    }
+    if (!item.isFile() || !item.name.endsWith(".md")) continue;
+    if (item.name.toLowerCase() === "readme.md" && !allowFolderEntries) continue;
+    const raw = fs.readFileSync(fullPath, "utf8");
+    const relativePath = path.relative(path.join(contentRoot, collection), fullPath);
+    const { metadata, body } = parseFrontmatter(raw);
+    entries.push({ collection, file: relativePath, fullPath, metadata, body, bodyHtml: markdownToHtml(body.trim()) });
+  }
+  return entries;
 }
 
 export function validateEntry(entry) {
