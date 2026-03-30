@@ -12,7 +12,7 @@ assert.ok(changelog.includes("Versioned release history"));
 assert.match(blog, /<link rel="icon" href="https:\/\/kriegspiel\.org\/favicon\.ico\?v=ks-org-20260330" sizes="any" \/>/);
 assert.match(blog, /<link rel="shortcut icon" href="https:\/\/kriegspiel\.org\/favicon\.ico\?v=ks-org-20260330" \/>/);
 assert.match(changelog, /<link rel="shortcut icon" href="https:\/\/kriegspiel\.org\/favicon\.ico\?v=ks-org-20260330" \/>/);
-assert.match(changelog, /<link rel="manifest" href="\/site\.webmanifest" \/>/);
+assert.match(changelog, /<link rel="manifest" href="https:\/\/kriegspiel\.org\/site\.webmanifest\?v=ks-org-20260330" \/>/);
 for (const route of ["dist/blog/welcome/index.html", "dist/changelog/2026-03-27-slice-910/index.html"]) {
   assert.ok(fs.existsSync(path.join(process.cwd(), route)), `missing detail route ${route}`);
 }
