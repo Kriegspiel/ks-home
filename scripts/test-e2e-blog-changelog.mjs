@@ -9,9 +9,9 @@ const changelog = fs.readFileSync(path.join(process.cwd(), "dist/changelog/index
 assert.ok(blog.includes("/blog/archive"));
 assert.ok(blog.includes("min read"));
 assert.ok(changelog.includes("Versioned release history"));
-assert.match(blog, /<link rel="icon" href="\/favicon\.ico" sizes="any" \/>/);
-assert.match(blog, /<link rel="shortcut icon" href="\/favicon\.ico" \/>/);
-assert.match(changelog, /<link rel="shortcut icon" href="\/favicon\.ico" \/>/);
+assert.match(blog, /<link rel="icon" href="https:\/\/kriegspiel\.org\/favicon\.ico\?v=ks-org-20260330" sizes="any" \/>/);
+assert.match(blog, /<link rel="shortcut icon" href="https:\/\/kriegspiel\.org\/favicon\.ico\?v=ks-org-20260330" \/>/);
+assert.match(changelog, /<link rel="shortcut icon" href="https:\/\/kriegspiel\.org\/favicon\.ico\?v=ks-org-20260330" \/>/);
 assert.match(changelog, /<link rel="manifest" href="\/site\.webmanifest" \/>/);
 for (const route of ["dist/blog/welcome/index.html", "dist/changelog/2026-03-27-slice-910/index.html"]) {
   assert.ok(fs.existsSync(path.join(process.cwd(), route)), `missing detail route ${route}`);
