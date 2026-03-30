@@ -4,25 +4,25 @@ import { renderRulesPage, renderRuleDetailPage, renderRulesComparisonPage, rende
 
 test('rules landing page shows Berkeley and Wild16 tiles plus comparison link', () => {
   const html = renderRulesPage([
-    { metadata: { slug: 'berkeley', title: 'Berkeley', summary: 'Rules', version: '1.0.0', revision: 'rules-berkeley-r1', lastReviewedAt: '2026-03-27', changelogSlug: '2026-03-27-slice-940-trust-discoverability' }, body: '# Intro\n\n## Section One' },
-    { metadata: { slug: 'wild16', title: 'Wild16', summary: 'Rules', version: '1.0.0', revision: 'rules-wild16-r1', lastReviewedAt: '2026-03-27', changelogSlug: '2026-03-27-slice-940-trust-discoverability' }, body: '# Intro\n\n## Section Two' }
-  ], [
-    { metadata: { slug: '2026-03-27-slice-940-trust-discoverability' } }
-  ]);
+    { metadata: { slug: 'berkeley', title: 'Berkeley', summary: 'Classic referee calls.' }, body: '# Intro\n\n## Section One' },
+    { metadata: { slug: 'wild16', title: 'Wild16', summary: 'ICC-style announcements.' }, body: '# Intro\n\n## Section Two' }
+  ], []);
   assert.ok(html.includes('/rules/berkeley'));
   assert.ok(html.includes('/rules/wild16'));
   assert.ok(html.includes('/rules/comparison/'));
-  assert.ok(html.includes('rules-berkeley-r1'));
+  assert.ok(!html.includes('rules-berkeley-r1'));
+  assert.ok(!html.includes('Linked changelog'));
 });
 
-test('rule detail page includes comparison and changelog navigation', () => {
+test('rule detail page keeps comparison navigation but removes metadata and toc clutter', () => {
   const html = renderRuleDetailPage(
     { metadata: { slug: 'berkeley', title: 'Berkeley', summary: 'Rules', version: '1.0.0', revision: 'rules-berkeley-r1', lastReviewedAt: '2026-03-27', publishedAt: '2026-03-27', updatedAt: '2026-03-27', author: 'Kriegspiel Team', changelogSlug: '2026-03-27-slice-940-trust-discoverability' }, body: '# Intro\n\n## Section One', bodyHtml: '<h1>Intro</h1>' },
     [{ metadata: { slug: '2026-03-27-slice-940-trust-discoverability' } }]
   );
   assert.ok(html.includes('/rules/comparison/'));
-  assert.ok(html.includes('/changelog/2026-03-27-slice-940-trust-discoverability'));
-  assert.ok(html.includes('rules-berkeley-r1'));
+  assert.ok(!html.includes('/changelog/2026-03-27-slice-940-trust-discoverability'));
+  assert.ok(!html.includes('rules-berkeley-r1'));
+  assert.ok(!html.includes('On this page'));
 });
 
 test('comparison page links both published rulesets', () => {
