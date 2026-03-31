@@ -32,6 +32,16 @@ copyContentAsset('binary/logo/favicon-512.png', 'favicon-512.png');
 copyContentAsset('binary/logo/apple-touch-icon.png', 'apple-touch-icon.png');
 copyContentAsset('binary/logo/site.webmanifest', 'site.webmanifest');
 
+for (const section of ['blog', 'blog/archive', 'changelog']) {
+  copyContentAsset('binary/logo/favicon.ico', `${section}/favicon.ico`);
+  copyContentAsset('binary/logo/favicon-16x16.png', `${section}/favicon-16x16.png`);
+  copyContentAsset('binary/logo/favicon-32x32.png', `${section}/favicon-32x32.png`);
+  copyContentAsset('binary/logo/favicon-192.png', `${section}/favicon-192.png`);
+  copyContentAsset('binary/logo/favicon-512.png', `${section}/favicon-512.png`);
+  copyContentAsset('binary/logo/apple-touch-icon.png', `${section}/apple-touch-icon.png`);
+  copyContentAsset('binary/logo/site.webmanifest', `${section}/site.webmanifest`);
+}
+
 writePage(path.join(dist, 'index.html'), renderHomePage({ rulesCount: rulesEntries.length, blogCount: blogEntries.length, homeContent: homeEntry, footerEntry }));
 writePage(path.join(dist, 'leaderboard/index.html'), renderLeaderboardPage(seedLeaderboard, footerEntry));
 writePage(path.join(dist, 'blog/index.html'), renderBlogIndex(blogEntries, footerEntry));
