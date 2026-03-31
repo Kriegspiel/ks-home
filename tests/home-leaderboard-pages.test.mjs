@@ -5,9 +5,9 @@ import { normalizeLeaderboardPayload, sortEntries, trendMarker } from "../src/le
 
 const homeContent = {
   summary: "Homepage summary",
-  eyebrow: "Kriegspiel.org",
+  eyebrow: "",
   heroTitle: "Play Hidden-Information Chess Online",
-  heroLede: "Simple, fun, and ready when you are.",
+  heroLede: "Simple, fun, and ready when you are. Jump into a game in your browser where you know your pieces, not your opponent’s board.",
   heroPrimaryCtaLabel: "Play now",
   heroPrimaryCtaHref: "https://app.kriegspiel.org/",
   heroSecondaryCtaLabel: "Learn the rules",
@@ -20,7 +20,7 @@ const homeContent = {
   flowTitle: "Start in under a minute",
   flowIntro: "No brochure tour. Just the basics you need before you click play.",
   flowStep1Title: "Join a game",
-  flowStep1Body: "Open the app and get matched without fuss.",
+  flowStep1Body: "Open it in your browser and get matched without fuss.",
   flowStep2Title: "Make your move",
   flowStep2Body: "The referee handles what each player is allowed to know.",
   flowStep3Title: "Stay in the mystery",
@@ -36,15 +36,15 @@ const homeContent = {
   feature3Body: "Rules, updates, and play surfaces now feel like they belong to the same family.",
   ctaKicker: "Ready to play?",
   ctaTitle: "Ready to play?",
-  ctaBody: "Open the app now, or skim the rules first if you want the quick version before your first game.",
+  ctaBody: "Jump in now, or read the rules first if you want a quick primer before your first game.",
   ctaPrimaryLabel: "Play now",
   ctaPrimaryHref: "https://app.kriegspiel.org/",
   ctaSecondaryLabel: "Read rules",
   ctaSecondaryHref: "/rules",
   trustKicker: "Trust snapshot",
   trustTitle: "One quick note",
-  trustRulesTitle: "Need the details?",
-  trustRulesBodyTemplate: "There are {{rulesCount}} published rulesets if you want the full specifics before you start.",
+  trustRulesTitle: "",
+  trustRulesBodyTemplate: "",
   trustUpdatesTitle: "Shipped updates",
   trustUpdatesBodyTemplate: "{{blogCount}} public updates are already live."
 };
@@ -59,7 +59,10 @@ test("home page keeps a simplified play-first layout with CTA telemetry", () => 
   assert.ok(html.includes('data-telemetry-event="home_cta_click"'));
   assert.ok(html.includes('>Play now<'));
   assert.ok(html.includes('Play Hidden-Information Chess Online'));
-  assert.ok(html.includes('There are 2 published rulesets if you want the full specifics before you start.'));
+  assert.ok(!html.includes('published rulesets'));
+  assert.ok(html.includes('hidden'));
+  assert.ok(html.includes('class="hero-card__eyebrow" hidden'));
+  assert.ok(!html.includes('class="hero-card__eyebrow">Kriegspiel.org<'));
   assert.ok(!html.includes('3 public updates are already live.'));
 });
 
