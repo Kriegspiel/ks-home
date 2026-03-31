@@ -6,25 +6,25 @@ import { normalizeLeaderboardPayload, sortEntries, trendMarker } from "../src/le
 const homeContent = {
   summary: "Homepage summary",
   eyebrow: "Kriegspiel.org",
-  heroTitle: "Play hidden-information chess, properly online.",
-  heroLede: "Kriegspiel preserves uncertainty and referee semantics.",
-  heroPrimaryCtaLabel: "See leaderboard",
-  heroPrimaryCtaHref: "/leaderboard",
-  heroSecondaryCtaLabel: "Read rules",
+  heroTitle: "Play Hidden-Information Chess Online",
+  heroLede: "Simple, fun, and ready when you are.",
+  heroPrimaryCtaLabel: "Play now",
+  heroPrimaryCtaHref: "https://app.kriegspiel.org/",
+  heroSecondaryCtaLabel: "Learn the rules",
   heroSecondaryCtaHref: "/rules",
-  statsRulesLabel: "Rulesets",
-  statsUpdatesLabel: "Public updates",
-  statsThirdLabel: "Product feel",
-  statsThirdValue: "Sharper",
+  statsRulesLabel: "Play style",
+  statsUpdatesLabel: "Turns",
+  statsThirdLabel: "Start",
+  statsThirdValue: "Right now",
   flowKicker: "Flow",
-  flowTitle: "How it works",
-  flowIntro: "The game keeps the referee in the loop while the interface keeps the friction low.",
-  flowStep1Title: "Queue for a match",
-  flowStep1Body: "Jump into a game without breaking the variant’s underlying structure.",
-  flowStep2Title: "Receive legal / no announcements",
-  flowStep2Body: "Moves are mediated by the referee, not by full board visibility.",
-  flowStep3Title: "Review the game narrative",
-  flowStep3Body: "Follow the hidden-information story after the dust settles.",
+  flowTitle: "Start in under a minute",
+  flowIntro: "No brochure tour. Just the basics you need before you click play.",
+  flowStep1Title: "Join a game",
+  flowStep1Body: "Open the app and get matched without fuss.",
+  flowStep2Title: "Make your move",
+  flowStep2Body: "The referee handles what each player is allowed to know.",
+  flowStep3Title: "Stay in the mystery",
+  flowStep3Body: "Every turn keeps the tension that makes Kriegspiel fun.",
   featuresKicker: "Why it feels different",
   featuresTitle: "Key features",
   featuresIntro: "Closer to the app’s product language, still clearly a public-facing landing page.",
@@ -35,28 +35,32 @@ const homeContent = {
   feature3Title: "Variant-specific referee output",
   feature3Body: "Rules, updates, and play surfaces now feel like they belong to the same family.",
   ctaKicker: "Ready to play?",
-  ctaTitle: "Learn the rules, then step into the queue.",
-  ctaBody: "Start with the documented rulesets, then move into the live product.",
-  ctaPrimaryLabel: "Read rules",
-  ctaPrimaryHref: "/rules",
-  ctaSecondaryLabel: "Open app",
-  ctaSecondaryHref: "https://app.kriegspiel.org/",
+  ctaTitle: "Ready to play?",
+  ctaBody: "Open the app now, or skim the rules first if you want the quick version before your first game.",
+  ctaPrimaryLabel: "Play now",
+  ctaPrimaryHref: "https://app.kriegspiel.org/",
+  ctaSecondaryLabel: "Read rules",
+  ctaSecondaryHref: "/rules",
   trustKicker: "Trust snapshot",
-  trustTitle: "Public docs and visible product progress",
-  trustRulesTitle: "Documented rulesets",
-  trustRulesBodyTemplate: "{{rulesCount}} rulesets are published.",
+  trustTitle: "One quick note",
+  trustRulesTitle: "Need the details?",
+  trustRulesBodyTemplate: "There are {{rulesCount}} published rulesets if you want the full specifics before you start.",
   trustUpdatesTitle: "Shipped updates",
   trustUpdatesBodyTemplate: "{{blogCount}} public updates are already live."
 };
 
-test("home page includes required sections and CTA telemetry", () => {
+test("home page keeps a simplified play-first layout with CTA telemetry", () => {
   const html = renderHomePage({ rulesCount: 2, blogCount: 3, homeContent });
-  for (const id of ["hero", "how-it-works", "key-features", "cta", "trust-snippet"]) {
+  for (const id of ["hero", "how-it-works", "cta"]) {
     assert.ok(html.includes(`id="${id}"`), `missing section ${id}`);
   }
+  assert.ok(!html.includes('id="key-features"'));
+  assert.ok(!html.includes('id="trust-snippet"'));
   assert.ok(html.includes('data-telemetry-event="home_cta_click"'));
-  assert.ok(html.includes("2 rulesets are published."));
-  assert.ok(html.includes("3 public updates are already live."));
+  assert.ok(html.includes('>Play now<'));
+  assert.ok(html.includes('Play Hidden-Information Chess Online'));
+  assert.ok(html.includes('There are 2 published rulesets if you want the full specifics before you start.'));
+  assert.ok(!html.includes('3 public updates are already live.'));
 });
 
 test("leaderboard page includes resilient state containers, telemetry hooks, and shared play CTA", () => {
