@@ -34,8 +34,8 @@
     if (button) {
       var nextTheme = theme === 'dark' ? 'light' : 'dark';
       button.setAttribute('aria-pressed', String(theme === 'dark'));
-      button.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
-      button.setAttribute('title', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+      button.setAttribute('aria-label', 'Toggle color theme');
+      button.removeAttribute('title');
       button.setAttribute('data-next-theme', nextTheme);
     }
   }
