@@ -1,9 +1,42 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
+import hljs from "highlight.js/lib/core";
+import bash from "highlight.js/lib/languages/bash";
+import css from "highlight.js/lib/languages/css";
+import javascript from "highlight.js/lib/languages/javascript";
+import json from "highlight.js/lib/languages/json";
+import plaintext from "highlight.js/lib/languages/plaintext";
+import python from "highlight.js/lib/languages/python";
+import shell from "highlight.js/lib/languages/shell";
+import typescript from "highlight.js/lib/languages/typescript";
+import xml from "highlight.js/lib/languages/xml";
+import yaml from "highlight.js/lib/languages/yaml";
 
 export const REQUIRED_FIELDS = ["title", "slug", "summary", "publishedAt", "updatedAt", "author", "tags", "draft"];
 export const FOLDER_ENTRY_COLLECTIONS = new Set(["blog", "site"]);
+
+const HIGHLIGHT_LANGUAGES = [
+  ["bash", bash],
+  ["sh", shell],
+  ["shell", shell],
+  ["css", css],
+  ["javascript", javascript],
+  ["js", javascript],
+  ["json", json],
+  ["plaintext", plaintext],
+  ["text", plaintext],
+  ["python", python],
+  ["py", python],
+  ["typescript", typescript],
+  ["ts", typescript],
+  ["html", xml],
+  ["xml", xml],
+  ["yaml", yaml],
+  ["yml", yaml]
+];
+
+for (const [name, language] of HIGHLIGHT_LANGUAGES) hljs.registerLanguage(name, language);
 
 export const HOME_REQUIRED_FIELDS = [
   "eyebrow", "heroTitle", "heroLede",
@@ -74,8 +107,7 @@ export function markdownToHtml(markdown, options = {}) {
 
   const flushCodeBlock = () => {
     if (codeFence === null) return;
-    const languageClass = codeFence ? ` class="language-${escapeAttribute(codeFence)}"` : "";
-    html.push(`<pre><code${languageClass}>${escapeHtml(codeLines.join("\n"))}</code></pre>`);
+    html.push(renderCodeBlock(codeLines.join("\n"), codeFence));
     codeFence = null;
     codeLines = [];
   };
@@ -169,8 +201,43 @@ function renderIncludedCodeBlock(argumentString, baseDir) {
   const language = args.lang || args.language || extToLanguage(path.extname(resolved));
   const label = args.title || args.label || path.basename(resolved);
   const code = fs.readFileSync(resolved, "utf8").replace(/\s+$/, "");
-  const languageClass = language ? ` class="language-${escapeAttribute(language)}"` : "";
-  return `<figure class="code-snippet"><figcaption>${escapeHtml(label)}</figcaption><pre><code${languageClass}>${escapeHtml(code)}</code></pre></figure>`;
+  return `<figure class="code-snippet"><figcaption>${escapeHtml(label)}</figcaption>${renderCodeBlock(code, language)}</figure>`;
+}
+
+function renderCodeBlock(source, languageHint) {
+  const code = String(source || "");
+  const language = normalizeHighlightLanguage(languageHint);
+  const languageClass = language ? ` language-${escapeAttribute(language)}` : "";
+  const highlighted = highlightCode(code, language);
+  return `<pre><code class="hljs${languageClass}">${highlighted}</code></pre>`;
+}
+
+function highlightCode(code, language) {
+  if (language && hljs.getLanguage(language)) {
+    return hljs.highlight(code, { language, ignoreIllegals: true }).value;
+  }
+  return escapeHtml(code);
+}
+
+function normalizeHighlightLanguage(language) {
+  const key = String(language || "").trim().toLowerCase();
+  if (!key) return "";
+  if (hljs.getLanguage(key)) return key;
+  const aliases = {
+    md: "plaintext",
+    markdown: "plaintext",
+    txt: "plaintext",
+    text: "plaintext",
+    zsh: "bash",
+    mjs: "javascript",
+    cjs: "javascript",
+    jsx: "javascript",
+    tsx: "typescript",
+    yml: "yaml",
+    html: "xml"
+  };
+  const normalized = aliases[key] || key;
+  return hljs.getLanguage(normalized) ? normalized : "";
 }
 
 function parseDirectiveArgs(argumentString) {
