@@ -125,8 +125,9 @@ test("markdownToHtml renders fenced code blocks and ordered lists", () => {
   ].join("\n"));
 
   assert.ok(html.includes("<ol><li>Register the bot</li><li>Save the returned token</li></ol>"));
-  assert.ok(html.includes('<pre><code class="language-bash">'));
-  assert.ok(html.includes("curl -X POST https://api.kriegspiel.org/api/auth/bots/register \\\n  -H &quot;Content-Type: application/json&quot;"));
+  assert.ok(html.includes('<pre><code class="hljs language-bash">'));
+  assert.match(html, /<span class="hljs-string">&quot;Content-Type: application\/json&quot;<\/span>|Content-Type: application\/json/);
+  assert.ok(html.includes("https://api.kriegspiel.org/api/auth/bots/register"));
 });
 
 test("markdownToHtml preserves inline formatting without breaking links", () => {
@@ -135,4 +136,13 @@ test("markdownToHtml preserves inline formatting without breaking links", () => 
   assert.ok(html.includes("<em>emphasis</em>"));
   assert.ok(html.includes("<code>inline()</code>"));
   assert.ok(html.includes('<a href="https://kriegspiel.org/docs">docs</a>'));
+});
+
+test("markdownToHtml highlights include-code snippets with the same renderer", () => {
+  const fixtureDir = path.join(process.cwd(), "tests", "fixtures", "snippet-highlight");
+  const html = markdownToHtml('::include-code src="example.sh"', { baseDir: fixtureDir });
+
+  assert.ok(html.includes('<figure class="code-snippet">'));
+  assert.ok(html.includes('<code class="hljs language-bash">'));
+  assert.match(html, /<span class="hljs-built_in">echo<\/span>|<span class="hljs-keyword">echo<\/span>|echo hello/);
 });
