@@ -46,34 +46,127 @@ function parseValue(value) {
 }
 
 export function markdownToHtml(markdown) {
-  return markdown.split(/\r?\n\r?\n/).map((block) => {
-    const trimmed = block.trim();
-    if (!trimmed) return "";
-    if (/^###\s+/.test(trimmed)) return `<h3>${escapeHtml(trimmed.replace(/^###\s+/, ""))}</h3>`;
-    if (/^##\s+/.test(trimmed)) return `<h2>${escapeHtml(trimmed.replace(/^##\s+/, ""))}</h2>`;
-    if (/^#\s+/.test(trimmed)) return `<h1>${escapeHtml(trimmed.replace(/^#\s+/, ""))}</h1>`;
-    if (/^-\s+/m.test(trimmed)) {
-      const items = trimmed
-        .split(/\r?\n/)
-        .filter((line) => line.startsWith("- "))
-        .map((line) => `<li>${inlineMarkdown(line.slice(2))}</li>`)
-        .join("");
-      return `<ul>${items}</ul>`;
+  const lines = String(markdown || "").split(/\r?\n/);
+  const html = [];
+  let paragraph = [];
+  let listType = null;
+  let listItems = [];
+  let codeFence = null;
+  let codeLines = [];
+
+  const flushParagraph = () => {
+    if (!paragraph.length) return;
+    html.push(`<p>${inlineMarkdown(paragraph.join(" "))}</p>`);
+    paragraph = [];
+  };
+
+  const flushList = () => {
+    if (!listType || !listItems.length) {
+      listType = null;
+      listItems = [];
+      return;
     }
-    return `<p>${inlineMarkdown(trimmed)}</p>`;
-  }).join("\n");
+    html.push(`<${listType}>${listItems.map((item) => `<li>${inlineMarkdown(item)}</li>`).join("")}</${listType}>`);
+    listType = null;
+    listItems = [];
+  };
+
+  const flushCodeBlock = () => {
+    if (codeFence === null) return;
+    const languageClass = codeFence ? ` class="language-${escapeAttribute(codeFence)}"` : "";
+    html.push(`<pre><code${languageClass}>${escapeHtml(codeLines.join("\n"))}</code></pre>`);
+    codeFence = null;
+    codeLines = [];
+  };
+
+  for (const rawLine of lines) {
+    const fenceMatch = rawLine.match(/^```\s*([^\s`]+)?\s*$/);
+    if (fenceMatch) {
+      flushParagraph();
+      flushList();
+      if (codeFence !== null) {
+        flushCodeBlock();
+      } else {
+        codeFence = fenceMatch[1] || "";
+        codeLines = [];
+      }
+      continue;
+    }
+
+    if (codeFence !== null) {
+      codeLines.push(rawLine);
+      continue;
+    }
+
+    const trimmed = rawLine.trim();
+    if (!trimmed) {
+      flushParagraph();
+      flushList();
+      continue;
+    }
+
+    const heading = trimmed.match(/^(#{1,3})\s+(.+)$/);
+    if (heading) {
+      flushParagraph();
+      flushList();
+      html.push(`<h${heading[1].length}>${inlineMarkdown(heading[2].trim())}</h${heading[1].length}>`);
+      continue;
+    }
+
+    const unordered = trimmed.match(/^-\s+(.+)$/);
+    if (unordered) {
+      flushParagraph();
+      if (listType && listType !== "ul") flushList();
+      listType = "ul";
+      listItems.push(unordered[1].trim());
+      continue;
+    }
+
+    const ordered = trimmed.match(/^\d+\.\s+(.+)$/);
+    if (ordered) {
+      flushParagraph();
+      if (listType && listType !== "ol") flushList();
+      listType = "ol";
+      listItems.push(ordered[1].trim());
+      continue;
+    }
+
+    flushList();
+    paragraph.push(trimmed);
+  }
+
+  flushParagraph();
+  flushList();
+  if (codeFence !== null) flushCodeBlock();
+  return html.join("\n");
 }
 
 function inlineMarkdown(text) {
-  return escapeHtml(text)
+  const tokens = [];
+  const placeholder = (html) => {
+    const token = `@@HTML${tokens.length}@@`;
+    tokens.push(html);
+    return token;
+  };
+
+  let rendered = escapeHtml(text)
+    .replace(/`([^`]+)`/g, (_, code) => placeholder(`<code>${escapeHtml(code)}</code>`))
+    .replace(/\[(.+?)\]\((.+?)\)/g, (_, label, href) => placeholder(`<a href="${escapeAttribute(href)}">${escapeHtml(label)}</a>`))
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-    .replace(/\*(?!\*)([^*]+?)\*(?!\*)/g, "<em>$1</em>")
-    .replace(/`(.+?)`/g, "<code>$1</code>")
-    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>');
+    .replace(/\*(?!\*)([^*]+?)\*(?!\*)/g, "<em>$1</em>");
+
+  tokens.forEach((html, index) => {
+    rendered = rendered.replace(`@@HTML${index}@@`, html);
+  });
+  return rendered;
 }
 
 function escapeHtml(value) {
-  return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
+  return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
+}
+
+function escapeAttribute(value) {
+  return escapeHtml(String(value).replace(/\s+/g, "-"));
 }
 
 export function loadCollection(contentRoot, collection) {
