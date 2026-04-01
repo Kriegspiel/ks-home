@@ -45,7 +45,8 @@ function parseValue(value) {
   return value.replace(/^"|"$/g, "");
 }
 
-export function markdownToHtml(markdown) {
+export function markdownToHtml(markdown, options = {}) {
+  const baseDir = options.baseDir ? path.resolve(options.baseDir) : null;
   const lines = String(markdown || "").split(/\r?\n/);
   const html = [];
   let paragraph = [];
@@ -105,6 +106,14 @@ export function markdownToHtml(markdown) {
       continue;
     }
 
+    const includeMatch = trimmed.match(/^::include-code\s+(.+)$/);
+    if (includeMatch) {
+      flushParagraph();
+      flushList();
+      html.push(renderIncludedCodeBlock(includeMatch[1], baseDir));
+      continue;
+    }
+
     const heading = trimmed.match(/^(#{1,3})\s+(.+)$/);
     if (heading) {
       flushParagraph();
@@ -139,6 +148,71 @@ export function markdownToHtml(markdown) {
   flushList();
   if (codeFence !== null) flushCodeBlock();
   return html.join("\n");
+}
+
+function renderIncludedCodeBlock(argumentString, baseDir) {
+  const args = parseDirectiveArgs(argumentString);
+  const source = args.src || args.path || args.file;
+  if (!source) throw new Error(`::include-code is missing required src/path/file argument: ${argumentString}`);
+  if (!baseDir) throw new Error(`::include-code cannot resolve ${source} without a base directory`);
+
+  const entryDir = path.resolve(baseDir);
+  const resolved = path.resolve(entryDir, source);
+  const relative = path.relative(entryDir, resolved);
+  if (relative.startsWith("..") || path.isAbsolute(relative)) {
+    throw new Error(`::include-code path escapes entry directory: ${source}`);
+  }
+  if (!fs.existsSync(resolved) || !fs.statSync(resolved).isFile()) {
+    throw new Error(`::include-code source not found: ${source}`);
+  }
+
+  const language = args.lang || args.language || extToLanguage(path.extname(resolved));
+  const label = args.title || args.label || path.basename(resolved);
+  const code = fs.readFileSync(resolved, "utf8").replace(/\s+$/, "");
+  const languageClass = language ? ` class="language-${escapeAttribute(language)}"` : "";
+  return `<figure class="code-snippet"><figcaption>${escapeHtml(label)}</figcaption><pre><code${languageClass}>${escapeHtml(code)}</code></pre></figure>`;
+}
+
+function parseDirectiveArgs(argumentString) {
+  const args = {};
+  const pattern = /(\w+)=(?:"([^"]+)"|'([^']+)'|(\S+))/g;
+  let match;
+  while ((match = pattern.exec(argumentString)) !== null) {
+    args[match[1]] = match[2] ?? match[3] ?? match[4] ?? "";
+  }
+  return args;
+}
+
+function extToLanguage(extension) {
+  const key = String(extension || "").toLowerCase();
+  const map = {
+    ".js": "javascript",
+    ".mjs": "javascript",
+    ".cjs": "javascript",
+    ".ts": "typescript",
+    ".tsx": "tsx",
+    ".jsx": "jsx",
+    ".json": "json",
+    ".sh": "bash",
+    ".bash": "bash",
+    ".zsh": "bash",
+    ".py": "python",
+    ".rb": "ruby",
+    ".go": "go",
+    ".rs": "rust",
+    ".java": "java",
+    ".kt": "kotlin",
+    ".swift": "swift",
+    ".html": "html",
+    ".css": "css",
+    ".sql": "sql",
+    ".yaml": "yaml",
+    ".yml": "yaml",
+    ".toml": "toml",
+    ".xml": "xml",
+    ".md": "markdown"
+  };
+  return map[key] || key.replace(/^\./, "");
 }
 
 function inlineMarkdown(text) {
@@ -192,7 +266,7 @@ function walkCollection(contentRoot, currentDir, collection, allowFolderEntries)
     const raw = fs.readFileSync(fullPath, "utf8");
     const relativePath = path.relative(path.join(contentRoot, collection), fullPath);
     const { metadata, body } = parseFrontmatter(raw);
-    entries.push({ collection, file: relativePath, fullPath, metadata, body, bodyHtml: markdownToHtml(body.trim()) });
+    entries.push({ collection, file: relativePath, fullPath, metadata, body, bodyHtml: markdownToHtml(body.trim(), { baseDir: path.dirname(fullPath) }) });
   }
   return entries;
 }
