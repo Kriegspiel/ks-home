@@ -155,7 +155,8 @@ function inlineMarkdown(text) {
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     .replace(/\*(?!\*)([^*]+?)\*(?!\*)/g, "<em>$1</em>");
 
-  tokens.forEach((html, index) => {
+  tokens.slice().reverse().forEach((html, offset) => {
+    const index = tokens.length - offset - 1;
     rendered = rendered.replace(`@@HTML${index}@@`, html);
   });
   return rendered;
