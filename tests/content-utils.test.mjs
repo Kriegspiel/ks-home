@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { loadCollection, parseFrontmatter, validateEntry } from "../src/content-utils.mjs";
+import { loadCollection, markdownToHtml, parseFrontmatter, validateEntry } from "../src/content-utils.mjs";
 
 test("parseFrontmatter parses booleans arrays and quoted values", () => {
   const raw = [
@@ -109,4 +109,30 @@ test("validateEntry accepts complete blog metadata without version", () => {
     }
   });
   assert.deepEqual(issues, []);
+});
+
+test("markdownToHtml renders fenced code blocks and ordered lists", () => {
+  const html = markdownToHtml([
+    "# Bot setup",
+    "",
+    "1. Register the bot",
+    "2. Save the returned token",
+    "",
+    "```bash",
+    "curl -X POST https://api.kriegspiel.org/api/auth/bots/register \\",
+    "  -H \"Content-Type: application/json\"",
+    "```"
+  ].join("\n"));
+
+  assert.ok(html.includes("<ol><li>Register the bot</li><li>Save the returned token</li></ol>"));
+  assert.ok(html.includes('<pre><code class="language-bash">'));
+  assert.ok(html.includes("curl -X POST https://api.kriegspiel.org/api/auth/bots/register \\\n  -H &quot;Content-Type: application/json&quot;"));
+});
+
+test("markdownToHtml preserves inline formatting without breaking links", () => {
+  const html = markdownToHtml("Use **bold**, *emphasis*, `inline()` and [docs](https://kriegspiel.org/docs).");
+  assert.ok(html.includes("<strong>bold</strong>"));
+  assert.ok(html.includes("<em>emphasis</em>"));
+  assert.ok(html.includes("<code>inline()</code>"));
+  assert.ok(html.includes('<a href="https://kriegspiel.org/docs">docs</a>'));
 });
