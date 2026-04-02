@@ -290,9 +290,11 @@ function inlineMarkdown(text) {
     return token;
   };
 
-  let rendered = escapeHtml(text)
+  let rendered = String(text || "")
     .replace(/`([^`]+)`/g, (_, code) => placeholder(`<code>${escapeHtml(code)}</code>`))
-    .replace(/\[(.+?)\]\((.+?)\)/g, (_, label, href) => placeholder(`<a href="${escapeAttribute(href)}">${escapeHtml(label)}</a>`))
+    .replace(/\[(.+?)\]\((.+?)\)/g, (_, label, href) => placeholder(`<a href="${escapeAttribute(href)}">${escapeHtml(label)}</a>`));
+
+  rendered = escapeHtml(rendered)
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     .replace(/\*(?!\*)([^*]+?)\*(?!\*)/g, "<em>$1</em>");
 
