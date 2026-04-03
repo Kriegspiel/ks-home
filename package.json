@@ -1,6 +1,6 @@
 {
   "name": "ks-home",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Kriegspiel website contracts and static generation foundation",
   "type": "module",
