@@ -18,7 +18,7 @@ assert.equal(fs.existsSync(path.join(distDir, 'blog', 'favicon-32x32.png')), tru
 assert.equal(fs.existsSync(path.join(distDir, 'blog', 'archive', 'favicon.ico')), true);
 assert.equal(fs.existsSync(path.join(distDir, 'changelog', 'favicon.ico')), true);
 assert.match(changelog, /<link rel="manifest" href="https:\/\/kriegspiel\.org\/site\.webmanifest\?v=ks-org-20260330" \/>/);
-for (const route of ["dist/blog/welcome/index.html", "dist/changelog/2026-03-27-slice-910/index.html"]) {
+for (const route of ["dist/blog/welcome/index.html", "dist/changelog/2026-03-27-slice-940-trust-discoverability/index.html", "dist/changelog/2026-04-01-v1-0-0/index.html", "dist/changelog/2026-04-02-v1-1-0/index.html"]) {
   assert.ok(fs.existsSync(path.join(process.cwd(), route)), `missing detail route ${route}`);
 }
 console.log("e2e ok: blog + changelog routes and linking");

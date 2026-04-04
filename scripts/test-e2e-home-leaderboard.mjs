@@ -22,7 +22,9 @@ if (/blog|changelog/.test(grep)) {
   assert.ok(blog.includes("/blog/archive"));
   assert.ok(changelog.includes("Versioned release history"));
   assert.ok(fs.existsSync(path.join(process.cwd(), "dist", "blog", "welcome", "index.html")));
-  assert.ok(fs.existsSync(path.join(process.cwd(), "dist", "changelog", "2026-03-27-slice-910", "index.html")));
+  assert.ok(fs.existsSync(path.join(process.cwd(), "dist", "changelog", "2026-03-27-slice-940-trust-discoverability", "index.html")));
+  assert.ok(fs.existsSync(path.join(process.cwd(), "dist", "changelog", "2026-04-01-v1-0-0", "index.html")));
+  assert.ok(fs.existsSync(path.join(process.cwd(), "dist", "changelog", "2026-04-02-v1-1-0", "index.html")));
 }
 
 console.log("e2e ok: " + grep);
