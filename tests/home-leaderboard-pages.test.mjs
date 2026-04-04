@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { renderHomePage, renderLeaderboardPage } from "../src/pages.mjs";
+import { renderHomePage, renderLeaderboardPage, renderPublicProfilePage } from "../src/pages.mjs";
 import { normalizeLeaderboardPayload, sortEntries, trendMarker } from "../src/leaderboard.mjs";
 
 const homeContent = {
@@ -67,7 +67,7 @@ test("home page keeps a simplified play-first layout with CTA telemetry", () => 
 });
 
 test("leaderboard page includes resilient state containers, telemetry hooks, and shared play CTA", () => {
-  const html = renderLeaderboardPage([{ handle: "A", rating: 10, gamesPlayed: 1, trend: "up" }]);
+  const html = renderLeaderboardPage([{ handle: "A", label: "A", profilePath: "/players/a", rating: 10, gamesPlayed: 1, trend: "up", isBot: true }]);
   for (const id of ["loading", "error", "empty", "stale-banner", "leaderboard-table"]) {
     assert.ok(html.includes(`id="${id}"`), `missing state ${id}`);
   }
@@ -77,6 +77,8 @@ test("leaderboard page includes resilient state containers, telemetry hooks, and
   assert.ok(html.includes('button-link--primary'));
   assert.ok(html.includes('href="https://app.kriegspiel.org/"'));
   assert.ok(html.includes('>Play</a>'));
+  assert.ok(html.includes('href="/players/a"'));
+  assert.ok(html.includes('(bot)'));
   const navHtml = html.match(/<nav class="site-nav" aria-label="Primary">([\s\S]*?)<\/nav>/)?.[1] || '';
   assert.ok(!navHtml.includes('>Home</a>'));
   assert.ok(!navHtml.includes('>Changelog</a>'));
@@ -87,6 +89,7 @@ test("leaderboard page includes resilient state containers, telemetry hooks, and
   assert.ok(html.includes('>Rules</h2>'));
   assert.ok(html.includes('>Communication</h2>'));
   assert.ok(html.includes('X.com (@kriegspiel_org)'));
+  assert.ok(html.includes('https://app.kriegspiel.org/leaderboard'));
 });
 
 test("normalize payload handles malformed, invalid players, and stale states", () => {
@@ -128,4 +131,28 @@ test("sorting supports rating and gamesPlayed asc/desc with tie-breakers", () =>
   assert.equal(trendMarker("up"), "↑");
   assert.equal(trendMarker("down"), "↓");
   assert.equal(trendMarker("other"), "→");
+});
+
+test("public profile page renders stats and elo history", () => {
+  const html = renderPublicProfilePage({
+    profile: {
+      username: "fil",
+      display_name: "fil",
+      role: "user",
+      is_bot: false,
+      profile: { bio: "Enjoys Kriegspiel.", avatar_url: null, country: "US" },
+      stats: { games_played: 7, games_won: 4, games_lost: 2, games_drawn: 1, elo: 1320, elo_peak: 1330 },
+      member_since: "2026-01-01T00:00:00.000Z",
+    },
+    games: [
+      { game_id: "g1", opponent: "rival", result: "win", played_at: "2026-02-01T00:00:00.000Z", elo_after: 1300, elo_delta: 12 },
+      { game_id: "g2", opponent: "other", result: "loss", played_at: "2026-02-02T00:00:00.000Z", elo_after: 1320, elo_delta: 20 },
+    ],
+  });
+
+  assert.ok(html.includes("Player profile for @fil."));
+  assert.ok(html.includes(">Elo<"));
+  assert.ok(html.includes(">Peak Elo<"));
+  assert.ok(html.includes("Elo rating over time"));
+  assert.ok(html.includes("Back to leaderboard"));
 });
