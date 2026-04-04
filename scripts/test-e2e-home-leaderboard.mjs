@@ -25,6 +25,7 @@ if (/blog|changelog/.test(grep)) {
   assert.ok(fs.existsSync(path.join(process.cwd(), "dist", "changelog", "2026-03-27-slice-940-trust-discoverability", "index.html")));
   assert.ok(fs.existsSync(path.join(process.cwd(), "dist", "changelog", "2026-04-01-v1-0-0", "index.html")));
   assert.ok(fs.existsSync(path.join(process.cwd(), "dist", "changelog", "2026-04-02-v1-1-0", "index.html")));
+  assert.ok(fs.existsSync(path.join(process.cwd(), "dist", "changelog", "2026-04-04-v1-2-0", "index.html")));
 }
 
 console.log("e2e ok: " + grep);
