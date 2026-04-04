@@ -68,11 +68,10 @@ test("home page keeps a simplified play-first layout with CTA telemetry", () => 
 
 test("leaderboard page includes resilient state containers, telemetry hooks, and shared play CTA", () => {
   const html = renderLeaderboardPage([{ handle: "A", label: "A", profilePath: "/players/a", rating: 10, gamesPlayed: 1, trend: "up", isBot: true }]);
-  for (const id of ["loading", "error", "empty", "stale-banner", "leaderboard-table"]) {
-    assert.ok(html.includes(`id="${id}"`), `missing state ${id}`);
-  }
+  assert.ok(html.includes('id="leaderboard-table"'));
+  assert.ok(!html.includes('Loading leaderboard…'));
+  assert.ok(!html.includes('id="retry"'));
   assert.ok(html.includes('data-telemetry-event="leaderboard_sort"'));
-  assert.ok(html.includes('data-telemetry-event="leaderboard_retry"'));
   assert.ok(html.includes('site-header__play'));
   assert.ok(html.includes('button-link--primary'));
   assert.ok(html.includes('href="https://app.kriegspiel.org/"'));
