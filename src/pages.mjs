@@ -138,9 +138,7 @@ export function renderLeaderboardPage(entries = [], footerEntry = null, generate
   const rows = sorted.map((entry, i) => {
     const label = entry.label || entry.handle;
     const badge = entry.isBot ? ' <small>(bot)</small>' : '';
-    const playerCell = entry.profilePath
-      ? `<a href="${esc(entry.profilePath)}">${esc(label)}</a>${badge}`
-      : `${esc(label)}${badge}`;
+    const playerCell = `${esc(label)}${badge}`;
     return `<tr><td>${i + 1}</td><td>${playerCell}</td><td>${entry.rating}</td><td>${entry.gamesPlayed}</td><td aria-label="trend">${trendMarker(entry.trend)}</td></tr>`;
   }).join('');
   const updatedAtLabel = formatUtcTimestamp(generatedAt);

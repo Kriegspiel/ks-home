@@ -76,7 +76,7 @@ test("leaderboard page includes resilient state containers, telemetry hooks, and
   assert.ok(html.includes('button-link--primary'));
   assert.ok(html.includes('href="https://app.kriegspiel.org/"'));
   assert.ok(html.includes('>Play</a>'));
-  assert.ok(html.includes('href="/players/a"'));
+  assert.ok(!html.includes('href="/players/a"'));
   assert.ok(html.includes('(bot)'));
   const navHtml = html.match(/<nav class="site-nav" aria-label="Primary">([\s\S]*?)<\/nav>/)?.[1] || '';
   assert.ok(!navHtml.includes('>Home</a>'));
