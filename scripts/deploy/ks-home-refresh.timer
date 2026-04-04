@@ -1,0 +1,10 @@
+[Unit]
+Description=Run ks-home static snapshot refresh every hour
+
+[Timer]
+OnCalendar=hourly
+Persistent=true
+Unit=ks-home-refresh.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,14 @@
+[Unit]
+Description=Refresh ks-home static site snapshot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=fil
+Group=fil
+WorkingDirectory=/home/fil/dev/kriegspiel/ks-home
+Environment=ROOT=/home/fil/dev/kriegspiel
+Environment=KS_API_BASE=https://api.kriegspiel.org
+ExecStart=/home/fil/dev/kriegspiel/ks-home/scripts/refresh-static-site.sh
+
