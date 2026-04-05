@@ -199,7 +199,20 @@ export const renderChangelogDetail = (entry, footerEntry = null) => renderShell(
 
 export function renderRulesPage(entries, changelogEntries, footerEntry = null) {
   const primary = entries.filter((entry) => ['berkeley', 'wild16'].includes(entry.metadata.slug));
-  const cards = primary.map((entry) => `<article class="surface-card rules-tile"><p class="rules-tile__eyebrow">Ruleset</p><h2>${prettyRuleLabel(entry.metadata.slug)}</h2><p>${esc(entry.metadata.summary)}</p><div class="rules-tile__actions"><a class="button-link button-link--primary" href="/rules/${entry.metadata.slug}">Read ${prettyRuleLabel(entry.metadata.slug)} rules</a></div></article>`).join('');
+  const ruleNotes = {
+    berkeley: {
+      summary: 'Classic referee-led Kriegspiel with clean announcements, standard hidden-information play, and the optional Any extension available today on the live app.',
+      status: 'Implemented, play today'
+    },
+    wild16: {
+      summary: 'A more announcement-heavy online style with pawn-tries reporting and ICC-inspired wording. The public rules are published, and playable support is coming soon.',
+      status: 'Work in progress, play soon'
+    }
+  };
+  const cards = primary.map((entry) => {
+    const note = ruleNotes[entry.metadata.slug] || { summary: entry.metadata.summary, status: '' };
+    return `<article class="surface-card rules-tile"><p class="rules-tile__eyebrow">Ruleset</p><h2>${prettyRuleLabel(entry.metadata.slug)}</h2><p>${esc(note.summary)}</p><ul class="rules-tile__meta"><li>${esc(note.status)}</li></ul><div class="rules-tile__actions"><a class="button-link button-link--primary" href="/rules/${entry.metadata.slug}">Read ${prettyRuleLabel(entry.metadata.slug)} rules</a></div></article>`;
+  }).join('');
   return renderShell({ footerEntry, title: 'Kriegspiel — Rules', description: 'Published rulesets and a quick comparison guide.', activeNav: '/rules', canonicalPath: '/rules', structuredData: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Kriegspiel Rules', url: absUrl('/rules') }, main: `<section class="content-section"><div class="section-heading"><h1>Rules</h1><p>Choose a published ruleset, then use the comparison page when you need the differences at a glance.</p></div><div class="feature-grid feature-grid--two rules-grid">${cards}</div><aside class="cta-panel rules-comparison-callout"><div><h2>Need the differences first?</h2><p>See the overall comparison before picking a ruleset.</p></div><div class="cta-panel__actions"><a class="button-link button-link--secondary" href="/rules/comparison/">Open rules comparison</a></div></aside></section>` });
 }
 
