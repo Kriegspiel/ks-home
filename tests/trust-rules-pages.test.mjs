@@ -10,6 +10,8 @@ test('rules landing page shows Berkeley and Wild16 tiles plus comparison link', 
   assert.ok(html.includes('/rules/berkeley'));
   assert.ok(html.includes('/rules/wild16'));
   assert.ok(html.includes('/rules/comparison/'));
+  assert.ok(html.includes('Implemented, play today'));
+  assert.ok(html.includes('Work in progress, play soon'));
   assert.ok(!html.includes('rules-berkeley-r1'));
   assert.ok(!html.includes('Linked changelog'));
 });
