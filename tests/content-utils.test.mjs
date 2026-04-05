@@ -138,6 +138,20 @@ test("markdownToHtml preserves inline formatting without breaking links", () => 
   assert.ok(html.includes('<a href="https://kriegspiel.org/docs">docs</a>'));
 });
 
+test("markdownToHtml renders markdown tables", () => {
+  const html = markdownToHtml([
+    "| Repository | What it does |",
+    "| --- | --- |",
+    "| [`bot-random`](https://github.com/Kriegspiel/bot-random) | Minimal random bot |",
+    "| [`bot-haiku`](https://github.com/Kriegspiel/bot-haiku) | Anthropic bot |"
+  ].join("\n"));
+
+  assert.ok(html.includes('<div class="table-wrap"><table>'));
+  assert.ok(html.includes("<th>Repository</th>"));
+  assert.ok(html.includes('<a href="https://github.com/Kriegspiel/bot-random"><code>bot-random</code></a>'));
+  assert.ok(html.includes("<td>Minimal random bot</td>"));
+});
+
 test("markdownToHtml highlights include-code snippets with the same renderer", () => {
   const fixtureDir = path.join(process.cwd(), "tests", "fixtures", "snippet-highlight");
   const html = markdownToHtml('::include-code src="example.sh"', { baseDir: fixtureDir });

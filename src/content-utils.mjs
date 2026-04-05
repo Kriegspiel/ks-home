@@ -112,7 +112,8 @@ export function markdownToHtml(markdown, options = {}) {
     codeLines = [];
   };
 
-  for (const rawLine of lines) {
+  for (let index = 0; index < lines.length; index += 1) {
+    const rawLine = lines[index];
     const fenceMatch = rawLine.match(/^```\s*([^\s`]+)?\s*$/);
     if (fenceMatch) {
       flushParagraph();
@@ -154,6 +155,23 @@ export function markdownToHtml(markdown, options = {}) {
       continue;
     }
 
+    const nextTrimmed = index + 1 < lines.length ? lines[index + 1].trim() : "";
+    if (trimmed.includes("|") && isMarkdownTableSeparator(nextTrimmed)) {
+      flushParagraph();
+      flushList();
+      const headerCells = parseTableCells(trimmed);
+      const rows = [];
+      index += 1;
+      while (index + 1 < lines.length) {
+        const rowTrimmed = lines[index + 1].trim();
+        if (!rowTrimmed || !rowTrimmed.includes("|")) break;
+        rows.push(parseTableCells(rowTrimmed));
+        index += 1;
+      }
+      html.push(renderMarkdownTable(headerCells, rows));
+      continue;
+    }
+
     const unordered = trimmed.match(/^-\s+(.+)$/);
     if (unordered) {
       flushParagraph();
@@ -180,6 +198,29 @@ export function markdownToHtml(markdown, options = {}) {
   flushList();
   if (codeFence !== null) flushCodeBlock();
   return html.join("\n");
+}
+
+function renderMarkdownTable(headerCells, rows) {
+  const columnCount = headerCells.length;
+  const normalize = (cells) => Array.from({ length: columnCount }, (_, index) => cells[index] || "");
+  const headHtml = `<thead><tr>${normalize(headerCells).map((cell) => `<th>${inlineMarkdown(cell)}</th>`).join("")}</tr></thead>`;
+  const bodyRows = rows
+    .map((cells) => `<tr>${normalize(cells).map((cell) => `<td>${inlineMarkdown(cell)}</td>`).join("")}</tr>`)
+    .join("");
+  return `<div class="table-wrap"><table>${headHtml}<tbody>${bodyRows}</tbody></table></div>`;
+}
+
+function isMarkdownTableSeparator(line) {
+  if (!line || !line.includes("|")) return false;
+  const cells = parseTableCells(line);
+  if (!cells.length) return false;
+  return cells.every((cell) => /^:?-{3,}:?$/.test(cell));
+}
+
+function parseTableCells(line) {
+  const trimmed = String(line || "").trim();
+  const withoutOuterPipes = trimmed.replace(/^\|/, "").replace(/\|$/, "");
+  return withoutOuterPipes.split("|").map((cell) => cell.trim());
 }
 
 function renderIncludedCodeBlock(argumentString, baseDir) {
