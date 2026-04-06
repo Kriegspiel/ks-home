@@ -2,13 +2,15 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { renderRulesPage, renderRuleDetailPage, renderRulesComparisonPage, renderSiteMarkdownPage } from '../src/pages.mjs';
 
-test('rules landing page shows Berkeley and Wild16 tiles plus comparison link', () => {
+test('rules landing page shows Berkeley and Wild 16 tiles plus comparison link', () => {
   const html = renderRulesPage([
     { metadata: { slug: 'berkeley', title: 'Berkeley', summary: 'Classic referee calls.' }, body: '# Intro\n\n## Section One' },
-    { metadata: { slug: 'wild16', title: 'Wild16', summary: 'ICC-style announcements.' }, body: '# Intro\n\n## Section Two' }
+    { metadata: { slug: 'wild16', title: 'Wild 16', summary: 'ICC-style announcements.' }, body: '# Intro\n\n## Section Two' }
   ], []);
   assert.ok(html.includes('/rules/berkeley'));
   assert.ok(html.includes('/rules/wild16'));
+  assert.ok(html.includes('Wild 16'));
+  assert.ok(html.includes('A more announcement-heavy online style with typed capture wording and pawn-tries reporting.'));
   assert.ok(html.includes('/rules/comparison/'));
   assert.ok(html.includes('Implemented, play today'));
   assert.ok(html.includes('Work in progress, play soon'));
