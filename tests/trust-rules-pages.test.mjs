@@ -10,7 +10,7 @@ test('rules landing page shows Berkeley and Wild 16 tiles plus comparison link',
   assert.ok(html.includes('/rules/berkeley'));
   assert.ok(html.includes('/rules/wild16'));
   assert.ok(html.includes('Wild 16'));
-  assert.ok(html.includes('A more announcement-heavy online style with typed capture wording and pawn-tries reporting.'));
+  assert.ok(html.includes('Different referee wording for captures, pawn tries, and illegal moves.'));
   assert.ok(html.includes('/rules/comparison/'));
   assert.ok(html.includes('Implemented, play today'));
   assert.ok(html.includes('Work in progress, play soon'));

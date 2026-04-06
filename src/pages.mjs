@@ -205,7 +205,7 @@ export function renderRulesPage(entries, changelogEntries, footerEntry = null) {
       status: 'Implemented, play today'
     },
     wild16: {
-      summary: 'A more announcement-heavy online style with typed capture wording and pawn-tries reporting. The rules are published here; for gameplay details, compare it with Berkeley first.',
+      summary: 'Different referee wording for captures, pawn tries, and illegal moves. Read it alongside Berkeley if you want the shared game flow with the Wild 16-specific calls.',
       status: 'Work in progress, play soon'
     }
   };
