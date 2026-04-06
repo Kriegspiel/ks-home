@@ -205,7 +205,7 @@ export function renderRulesPage(entries, changelogEntries, footerEntry = null) {
       status: 'Implemented, play today'
     },
     wild16: {
-      summary: 'Different referee wording for captures, pawn tries, and illegal moves. Read it alongside Berkeley if you want the shared game flow with the Wild 16-specific calls.',
+      summary: 'Different capture announcements and a built-in pawn-tries rule. Read it alongside Berkeley if you want the shared game flow with the Wild 16-specific calls.',
       status: 'Work in progress, play soon'
     }
   };
