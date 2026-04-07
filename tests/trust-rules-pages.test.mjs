@@ -37,6 +37,9 @@ test('comparison page links both published rulesets', () => {
   assert.ok(html.includes('/rules/berkeley'));
   assert.ok(html.includes('/rules/wild16'));
   assert.ok(html.includes('Published ruleset comparison'));
+  assert.ok(html.includes('Wild 16'));
+  assert.ok(!html.includes('Berkeley summary'));
+  assert.ok(!html.includes('Wild16 summary'));
 });
 
 test('site markdown pages render policy content from content repo entries', () => {
