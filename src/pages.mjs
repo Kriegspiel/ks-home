@@ -1,8 +1,10 @@
+import { readFileSync } from 'node:fs';
+
 import { sortEntries, trendMarker } from './leaderboard.mjs';
 import { readingTimeMinutes } from './content-utils.mjs';
 
 const SITE_URL = 'https://kriegspiel.org';
-const PACKAGE_VERSION = '1.0.11';
+const PACKAGE_VERSION = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version;
 
 function esc(v = '') { return String(v).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;'); }
 function absUrl(path = '/') { return `${SITE_URL}${path}`; }
