@@ -147,7 +147,6 @@ async function loadLeaderboardEntriesFromApi() {
     profilePath: player.profile_path || `/players/${player.username}`,
     rating: Number(player.elo || 1200),
     gamesPlayed: Number(player.games_played || 0),
-    trend: 'flat',
     isBot: Boolean(player.is_bot),
   }));
 }
