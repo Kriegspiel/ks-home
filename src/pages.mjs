@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 
-import { sortEntries, trendMarker } from './leaderboard.mjs';
+import { sortEntries } from './leaderboard.mjs';
 import { readingTimeMinutes } from './content-utils.mjs';
 
 const SITE_URL = 'https://kriegspiel.org';
@@ -137,15 +137,13 @@ export function renderHomePage({ rulesCount = 0, blogCount = 0, homeContent, foo
 }
 
 export function renderLeaderboardPage(entries = [], footerEntry = null, generatedAt = new Date().toISOString()) {
-  const sorted = sortEntries(entries, 'rating', 'desc');
+  const sorted = sortEntries(entries.filter((entry) => !entry.isBot), 'rating', 'desc');
   const rows = sorted.map((entry, i) => {
-    const label = entry.label || entry.handle;
-    const badge = entry.isBot ? ' <small>(bot)</small>' : '';
-    const playerCell = `${esc(label)}${badge}`;
-    return `<tr><td>${i + 1}</td><td>${playerCell}</td><td>${entry.rating}</td><td>${entry.gamesPlayed}</td><td aria-label="trend">${trendMarker(entry.trend)}</td></tr>`;
+    const playerCell = esc(entry.label || entry.handle);
+    return `<tr><td>${i + 1}</td><td>${playerCell}</td><td>${entry.rating}</td><td>${entry.gamesPlayed}</td></tr>`;
   }).join('');
   const updatedAtLabel = formatUtcTimestamp(generatedAt);
-  return renderShell({ footerEntry, title: 'Kriegspiel — Leaderboard', description: 'Top active players and listed bots by rating and activity.', activeNav: '/leaderboard', canonicalPath: '/leaderboard', main: `<section class="content-section"><div class="section-heading"><h1>Leaderboard</h1><p>Top active players and listed bots, refreshed hourly from the ranking API into a static snapshot.</p></div><div class="table-wrap"><table id="leaderboard-table"><caption>Top players by rating</caption><thead><tr><th>Rank</th><th>Player</th><th>Rating</th><th>Games</th><th>Trend</th></tr></thead><tbody>${rows}</tbody></table></div><p class="page-meta-stamp">More detailed and more recent leaderboard: <a class="text-link" href="https://app.kriegspiel.org/leaderboard">app.kriegspiel.org/leaderboard</a></p><p class="page-meta-stamp">Static snapshot updated ${updatedAtLabel}</p></section>` });
+  return renderShell({ footerEntry, title: 'Kriegspiel — Leaderboard', description: 'Top human players by overall rating.', activeNav: '/leaderboard', canonicalPath: '/leaderboard', main: `<section class="content-section"><div class="section-heading"><h1>Leaderboard</h1><p>Top human players by overall rating, refreshed hourly into a static snapshot.</p></div><div class="table-wrap"><table id="leaderboard-table"><caption>Top human players by overall rating</caption><thead><tr><th>Rank</th><th>Player</th><th>Overall rating</th><th>Games</th></tr></thead><tbody>${rows}</tbody></table></div><p class="page-meta-stamp">More detailed and more recent leaderboard: <a class="text-link" href="https://app.kriegspiel.org/leaderboard">app.kriegspiel.org/leaderboard</a></p><p class="page-meta-stamp">Static snapshot updated ${updatedAtLabel}</p></section>` });
 }
 
 export function renderPublicProfilePage({ profile, games = [], footerEntry = null }) {

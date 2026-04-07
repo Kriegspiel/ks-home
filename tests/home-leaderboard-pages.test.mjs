@@ -67,7 +67,7 @@ test("home page keeps a simplified play-first layout with CTA telemetry", () => 
 });
 
 test("leaderboard page includes resilient state containers, telemetry hooks, and shared play CTA", () => {
-  const html = renderLeaderboardPage([{ handle: "A", label: "A", profilePath: "/players/a", rating: 10, gamesPlayed: 1, trend: "up", isBot: true }]);
+  const html = renderLeaderboardPage([{ handle: "A", label: "A", profilePath: "/players/a", rating: 10, gamesPlayed: 1, isBot: false }]);
   assert.ok(html.includes('id="leaderboard-table"'));
   assert.ok(!html.includes('Loading leaderboard…'));
   assert.ok(!html.includes('Sort by rating'));
@@ -77,7 +77,9 @@ test("leaderboard page includes resilient state containers, telemetry hooks, and
   assert.ok(html.includes('href="https://app.kriegspiel.org/"'));
   assert.ok(html.includes('>Play</a>'));
   assert.ok(!html.includes('href="/players/a"'));
-  assert.ok(html.includes('(bot)'));
+  assert.ok(html.includes('Top human players by overall rating'));
+  assert.ok(html.includes('Overall rating'));
+  assert.ok(!html.includes('Trend'));
   const navHtml = html.match(/<nav class="site-nav" aria-label="Primary">([\s\S]*?)<\/nav>/)?.[1] || '';
   assert.ok(!navHtml.includes('>Home</a>'));
   assert.ok(!navHtml.includes('>Changelog</a>'));
