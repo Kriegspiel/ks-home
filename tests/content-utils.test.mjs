@@ -152,6 +152,20 @@ test("markdownToHtml renders markdown tables", () => {
   assert.ok(html.includes("<td>Minimal random bot</td>"));
 });
 
+test("markdownToHtml renders thematic breaks as horizontal rules", () => {
+  const html = markdownToHtml([
+    "Before",
+    "",
+    "---",
+    "",
+    "After"
+  ].join("\n"));
+
+  assert.ok(html.includes("<p>Before</p>"));
+  assert.ok(html.includes("<hr />"));
+  assert.ok(html.includes("<p>After</p>"));
+});
+
 test("markdownToHtml highlights include-code snippets with the same renderer", () => {
   const fixtureDir = path.join(process.cwd(), "tests", "fixtures", "snippet-highlight");
   const html = markdownToHtml('::include-code src="example.sh"', { baseDir: fixtureDir });
