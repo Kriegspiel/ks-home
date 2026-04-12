@@ -155,6 +155,13 @@ export function markdownToHtml(markdown, options = {}) {
       continue;
     }
 
+    if (/^(?:-{3,}|\*{3,}|_{3,})$/.test(trimmed)) {
+      flushParagraph();
+      flushList();
+      html.push("<hr />");
+      continue;
+    }
+
     const nextTrimmed = index + 1 < lines.length ? lines[index + 1].trim() : "";
     if (trimmed.includes("|") && isMarkdownTableSeparator(nextTrimmed)) {
       flushParagraph();
