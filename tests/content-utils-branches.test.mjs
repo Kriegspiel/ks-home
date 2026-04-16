@@ -79,7 +79,7 @@ test("markdownToHtml covers include-code aliases, unknown extensions, and guardr
     assert.ok(fallbackHtml.includes("&lt;demo&gt;"));
 
     assert.throws(
-      () => markdownToHtml("::include-code", { baseDir: fixtureDir }),
+      () => markdownToHtml("::include-code title=orphan", { baseDir: fixtureDir }),
       /missing required src\/path\/file argument/,
     );
     assert.throws(
