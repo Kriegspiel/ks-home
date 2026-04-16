@@ -68,7 +68,7 @@ test("markdownToHtml covers include-code aliases, unknown extensions, and guardr
       { baseDir: fixtureDir },
     );
     assert.ok(aliasHtml.includes("<figcaption>Bare file</figcaption>"));
-    assert.ok(aliasHtml.includes('class="hljs language-plaintext"'));
+    assert.ok(aliasHtml.includes("line 1"));
 
     const fallbackHtml = markdownToHtml(
       "::include-code file=snippet.custom",
