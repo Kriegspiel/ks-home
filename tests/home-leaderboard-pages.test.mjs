@@ -69,6 +69,7 @@ test("home page keeps a simplified play-first layout with CTA telemetry", () => 
 test("leaderboard page includes resilient state containers, telemetry hooks, and shared play CTA", () => {
   const html = renderLeaderboardPage([{ handle: "A", label: "A", profilePath: "/players/a", rating: 10, gamesPlayed: 1, isBot: false }]);
   assert.ok(html.includes('id="leaderboard-table"'));
+  assert.ok(html.includes('class="leaderboard-table"'));
   assert.ok(!html.includes('Loading leaderboard…'));
   assert.ok(!html.includes('Sort by rating'));
   assert.ok(!html.includes('Sort by games'));
@@ -91,6 +92,8 @@ test("leaderboard page includes resilient state containers, telemetry hooks, and
   assert.ok(html.includes('>Communication</h2>'));
   assert.ok(html.includes('X.com (@kriegspiel_org)'));
   assert.ok(html.includes('https://app.kriegspiel.org/leaderboard'));
+  assert.ok(html.includes('.leaderboard-table thead{display:table-header-group;}'));
+  assert.ok(html.includes('.leaderboard-table th,.leaderboard-table td{display:table-cell;'));
 });
 
 test("normalize payload handles malformed, invalid players, and stale states", () => {
