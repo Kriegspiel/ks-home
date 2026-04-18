@@ -92,8 +92,9 @@ test("leaderboard page includes resilient state containers, telemetry hooks, and
   assert.ok(html.includes('>Communication</h2>'));
   assert.ok(html.includes('X.com (@kriegspiel_org)'));
   assert.ok(html.includes('https://app.kriegspiel.org/leaderboard'));
-  assert.ok(html.includes('.leaderboard-table thead{display:table-header-group;}'));
-  assert.ok(html.includes('.leaderboard-table th,.leaderboard-table td{display:table-cell;'));
+  assert.ok(html.includes('.table-wrap thead{display:table-header-group;}'));
+  assert.ok(html.includes('.table-wrap th,.table-wrap td{display:table-cell;padding:.7rem .75rem;}'));
+  assert.ok(html.includes('.leaderboard-table th:nth-child(2),.leaderboard-table td:nth-child(2){min-width:10rem;}'));
 });
 
 test("normalize payload handles malformed, invalid players, and stale states", () => {

@@ -50,3 +50,14 @@ test('site markdown pages render policy content from content repo entries', () =
   assert.ok(termsHtml.includes('Terms of Use'));
   assert.ok(termsHtml.includes('legal@kriegspiel.org'));
 });
+
+test('site markdown pages keep wrapped tables as scrollable tables on narrow screens', () => {
+  const html = renderSiteMarkdownPage({
+    metadata: { title: 'Research', summary: 'Research page', slug: 'research' },
+    bodyHtml: '<div class="table-wrap"><table><thead><tr><th>Year</th><th>Title</th></tr></thead><tbody><tr><td>1992</td><td>Mate with bishop and knight in kriegspiel</td></tr></tbody></table></div>'
+  });
+  assert.ok(html.includes('.table-wrap table{display:table;width:max-content;min-width:100%;table-layout:auto;}'));
+  assert.ok(html.includes('.table-wrap thead{display:table-header-group;}'));
+  assert.ok(html.includes('.table-wrap th,.table-wrap td{display:table-cell;padding:.7rem .75rem;}'));
+  assert.ok(html.includes('.prose-card .table-wrap th:first-child,.prose-card .table-wrap td:first-child{width:auto;min-width:7rem;}'));
+});
