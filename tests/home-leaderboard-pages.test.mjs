@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { renderHomePage, renderLeaderboardPage, renderPublicProfilePage } from "../src/pages.mjs";
+import { renderBlogDetail, renderBlogIndex, renderHomePage, renderLeaderboardPage, renderPublicProfilePage } from "../src/pages.mjs";
 import { normalizeLeaderboardPayload, sortEntries, trendMarker } from "../src/leaderboard.mjs";
 
 const homeContent = {
@@ -160,4 +160,32 @@ test("public profile page renders stats and elo history", () => {
   assert.ok(html.includes(">Peak Elo<"));
   assert.ok(html.includes("Elo rating over time"));
   assert.ok(html.includes("Back to leaderboard"));
+});
+
+test("blog pages show date and reading time without the visible author label", () => {
+  const entry = {
+    metadata: {
+      slug: "welcome",
+      title: "Launch notes for the website track",
+      summary: "Just a launch note, to keep track of days.",
+      publishedAt: "2026-03-27",
+      updatedAt: "2026-03-27",
+      author: "Kriegspiel Team"
+    },
+    body: "Just a launch note, to keep track of days.",
+    bodyHtml: "<p>Just a launch note, to keep track of days.</p>"
+  };
+
+  const indexHtml = renderBlogIndex([entry]);
+  assert.ok(indexHtml.includes("Notes and updates about Kriegspiel."));
+  assert.ok(indexHtml.includes("2026-03-27"));
+  assert.ok(indexHtml.includes("min read"));
+  assert.ok(!indexHtml.includes("2026-03-27 • Kriegspiel Team •"));
+  assert.ok(!indexHtml.includes("Kriegspiel Team"));
+
+  const detailHtml = renderBlogDetail(entry);
+  assert.ok(detailHtml.includes("2026-03-27"));
+  assert.ok(detailHtml.includes("min read"));
+  assert.ok(!detailHtml.includes("2026-03-27 • Kriegspiel Team •"));
+  assert.ok(!detailHtml.includes("Kriegspiel Team"));
 });
