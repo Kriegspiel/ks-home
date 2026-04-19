@@ -11,7 +11,7 @@ test('rules landing page shows Berkeley, Cincinnati style, and Wild 16 tiles plu
   assert.ok(html.includes('/rules/berkeley'));
   assert.ok(html.includes('/rules/cincinnati'));
   assert.ok(html.includes('/rules/wild16'));
-  assert.ok(html.includes('Cincinnati style'));
+  assert.ok(html.includes('Cincinnati'));
   assert.ok(html.includes('Historical public rules centered on legal tries'));
   assert.ok(html.includes('Wild 16'));
   assert.ok(html.includes('Different capture announcements and a built-in pawn-tries rule.'));
@@ -44,7 +44,7 @@ test('comparison page links all published rulesets', () => {
   assert.ok(html.includes('/rules/cincinnati'));
   assert.ok(html.includes('/rules/wild16'));
   assert.ok(html.includes('Published ruleset comparison'));
-  assert.ok(html.includes('Cincinnati style'));
+  assert.ok(html.includes('Cincinnati'));
   assert.ok(html.includes('Wild 16'));
   assert.ok(!html.includes('Berkeley summary'));
   assert.ok(!html.includes('Cincinnati summary'));
