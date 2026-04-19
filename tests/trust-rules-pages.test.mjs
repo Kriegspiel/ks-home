@@ -44,6 +44,9 @@ test('comparison page links all published rulesets', () => {
   assert.ok(html.includes('/rules/cincinnati'));
   assert.ok(html.includes('/rules/wild16'));
   assert.ok(html.includes('Published ruleset comparison'));
+  assert.ok(html.includes('<a class="text-link" href="/rules/berkeley">Berkeley</a>'));
+  assert.ok(html.includes('<a class="text-link" href="/rules/cincinnati">Cincinnati</a>'));
+  assert.ok(html.includes('<a class="text-link" href="/rules/wild16">Wild 16</a>'));
   assert.ok(html.includes('Cincinnati'));
   assert.ok(html.includes('Wild 16'));
   assert.ok(!html.includes('Berkeley summary'));
