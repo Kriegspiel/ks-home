@@ -29,6 +29,7 @@
       "title": "Rules",
       "links": [
         { "label": "Berkeley", "href": "/rules/berkeley" },
+        { "label": "Cincinnati style", "href": "/rules/cincinnati" },
         { "label": "Wild 16", "href": "/rules/wild16" },
         { "label": "Comparison", "href": "/rules/comparison/" }
       ]
@@ -67,6 +68,7 @@
     { "label": "Privacy", "href": "/privacy" },
     { "label": "Terms", "href": "/terms" },
     { "label": "Berkeley", "href": "/rules/berkeley" },
+    { "label": "Cincinnati style", "href": "/rules/cincinnati" },
     { "label": "Wild 16", "href": "/rules/wild16" },
     { "label": "Comparison", "href": "/rules/comparison/" },
     { "label": "Blog", "href": "/blog" },

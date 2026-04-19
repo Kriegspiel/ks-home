@@ -31,7 +31,7 @@ function parseFooterEntry(footerEntry) {
 
 function renderFooter(footerEntry) {
   const fallbackGroups = [
-    { title: 'Rules', links: [['/rules/berkeley', 'Berkeley'], ['/rules/wild16', 'Wild 16'], ['/rules/comparison/', 'Comparison']] },
+    { title: 'Rules', links: [['/rules/berkeley', 'Berkeley'], ['/rules/cincinnati', 'Cincinnati style'], ['/rules/wild16', 'Wild 16'], ['/rules/comparison/', 'Comparison']] },
     { title: 'Communication', links: [['/blog', 'Blog'], ['/changelog', 'Changelog'], ['/', 'About']] },
     { title: 'Social', links: [['https://x.com/kriegspiel_org', 'X.com (@kriegspiel_org)'], ['https://github.com/Kriegspiel', 'GitHub']] }
   ];
@@ -57,7 +57,11 @@ function metaTags({ title, description, canonicalPath, ogType = 'website' }) {
 
 function jsonLd(data) { return `<script type="application/ld+json">${JSON.stringify(data)}</script>`; }
 function sectionsFromBody(body = '', limit = 4) { return body.split(/\r?\n\r?\n/).filter(Boolean).filter((block) => /^#/.test(block.trim())).slice(0, limit).map((block) => esc(block.split(/\r?\n/)[0].replace(/^#+\s*/, ''))); }
-function prettyRuleLabel(slug = '') { return slug === 'wild16' ? 'Wild 16' : slug.charAt(0).toUpperCase() + slug.slice(1); }
+function prettyRuleLabel(slug = '') {
+  if (slug === 'wild16') return 'Wild 16';
+  if (slug === 'cincinnati') return 'Cincinnati style';
+  return slug.charAt(0).toUpperCase() + slug.slice(1);
+}
 function statOrZero(value) { return Number.isFinite(Number(value)) ? Number(value) : 0; }
 function formatDateLabel(value) { if (!value) return 'Unknown'; const parsed = new Date(value); return Number.isNaN(parsed.getTime()) ? esc(value) : esc(parsed.toLocaleDateString()); }
 function formatUtcTimestamp(value) {
@@ -198,11 +202,17 @@ export function renderChangelogIndex(entries, footerEntry = null) {
 export const renderChangelogDetail = (entry, footerEntry = null) => renderShell({ footerEntry, title: `Kriegspiel — ${entry.metadata.title}`, description: entry.metadata.summary, activeNav: '/changelog', canonicalPath: `/changelog/${entry.metadata.slug}`, ogType: 'article', structuredData: { '@context': 'https://schema.org', '@type': 'Article', headline: entry.metadata.title, datePublished: entry.metadata.publishedAt, dateModified: entry.metadata.updatedAt, author: { '@type': 'Organization', name: entry.metadata.author }, mainEntityOfPage: absUrl(`/changelog/${entry.metadata.slug}`) }, main: `<article class="prose-card"><h1>${entry.metadata.title}</h1><p><small>Version ${entry.metadata.version} • ${entry.metadata.publishedAt}</small></p><p>${entry.metadata.summary}</p>${entry.bodyHtml}<p><a class="text-link" href="/changelog">Back to changelog</a></p></article>` });
 
 export function renderRulesPage(entries, changelogEntries, footerEntry = null) {
-  const primary = entries.filter((entry) => ['berkeley', 'wild16'].includes(entry.metadata.slug));
+  const primary = ['berkeley', 'cincinnati', 'wild16']
+    .map((slug) => entries.find((entry) => entry.metadata.slug === slug))
+    .filter(Boolean);
   const ruleNotes = {
     berkeley: {
       summary: 'Classic referee-led Kriegspiel with clean announcements, standard hidden-information play, and the optional Any extension available today on the live app.',
       status: 'Implemented, play today'
+    },
+    cincinnati: {
+      summary: 'Historical public rules centered on legal tries, Illegal vs Nonsense, official own pieces, and public pawn-capture notices.',
+      status: 'Reference rules, not implemented online'
     },
     wild16: {
       summary: 'Different capture announcements and a built-in pawn-tries rule. Read it alongside Berkeley if you want the shared game flow with the Wild 16-specific calls.',
@@ -213,7 +223,7 @@ export function renderRulesPage(entries, changelogEntries, footerEntry = null) {
     const note = ruleNotes[entry.metadata.slug] || { summary: entry.metadata.summary, status: '' };
     return `<article class="surface-card rules-tile"><p class="rules-tile__eyebrow">Ruleset</p><h2>${prettyRuleLabel(entry.metadata.slug)}</h2><p>${esc(note.summary)}</p><ul class="rules-tile__meta"><li>${esc(note.status)}</li></ul><div class="rules-tile__actions"><a class="button-link button-link--primary" href="/rules/${entry.metadata.slug}">Read ${prettyRuleLabel(entry.metadata.slug)} rules</a></div></article>`;
   }).join('');
-  return renderShell({ footerEntry, title: 'Kriegspiel — Rules', description: 'Published rulesets and a quick comparison guide.', activeNav: '/rules', canonicalPath: '/rules', structuredData: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Kriegspiel Rules', url: absUrl('/rules') }, main: `<section class="content-section"><div class="section-heading"><h1>Rules</h1><p>Choose a published ruleset, then use the comparison page when you need the differences at a glance.</p></div><div class="feature-grid feature-grid--two rules-grid">${cards}</div><aside class="cta-panel rules-comparison-callout"><div><h2>Need the differences first?</h2><p>See the overall comparison before picking a ruleset.</p></div><div class="cta-panel__actions"><a class="button-link button-link--secondary" href="/rules/comparison/">Open rules comparison</a></div></aside></section>` });
+  return renderShell({ footerEntry, title: 'Kriegspiel — Rules', description: 'Published rulesets and a quick comparison guide.', activeNav: '/rules', canonicalPath: '/rules', structuredData: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Kriegspiel Rules', url: absUrl('/rules') }, main: `<section class="content-section"><div class="section-heading"><h1>Rules</h1><p>Choose a published ruleset, then use the comparison page when you need the differences at a glance.</p></div><div class="feature-grid feature-grid--three rules-grid">${cards}</div><aside class="cta-panel rules-comparison-callout"><div><h2>Need the differences first?</h2><p>See the overall comparison before picking a ruleset.</p></div><div class="cta-panel__actions"><a class="button-link button-link--secondary" href="/rules/comparison/">Open rules comparison</a></div></aside></section>` });
 }
 
 export function renderRuleDetailPage(entry, changelogEntries, footerEntry = null) {
@@ -221,16 +231,15 @@ export function renderRuleDetailPage(entry, changelogEntries, footerEntry = null
 }
 
 export function renderRulesComparisonPage(entries, footerEntry = null) {
-  const berkeley = entries.find((entry) => entry.metadata.slug === 'berkeley');
-  const wild16 = entries.find((entry) => entry.metadata.slug === 'wild16');
   const comparisonRows = [
-    ['Referee response to illegal tries', 'Referee says “No” for illegal moves on the true board, and “Nonsense” for impossible or repeated tries on your own board.', 'Referee says “Illegal move”; the opponent is not told anything extra.'],
-    ['Capture announcements', 'Capture square is announced to both players after a legal capture.', 'Distinguishes pawn captures from other piece captures in the announcement.'],
-    ['Check announcements', 'Rank, File, Short, Long, and Knight checks are announced to both players.', 'Rank, File, Long-diagonal, Short-diagonal, and Knight checks are announced.'],
-    ['Any? / pawn-tries handling', 'No built-in “Any?” rule, though a compatible optional variant is documented.', 'Includes a pawn-tries announcement with the number of legal capturing pawn moves.'],
-    ['Best fit', 'Closest match for the Berkeley reference material and the published site rules text.', 'Closest match for the Wild 16 / ICC-style online announcement pattern.']
-  ].map(([label, left, right]) => `<tr><th scope="row">${label}</th><td>${left}</td><td>${right}</td></tr>`).join('');
-  return renderShell({ footerEntry, title: 'Kriegspiel — Rules Comparison', description: 'Quick comparison between the published Berkeley and Wild 16 rulesets.', activeNav: '/rules', canonicalPath: '/rules/comparison/', structuredData: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Kriegspiel Rules Comparison', url: absUrl('/rules/comparison/') }, main: `<section class="content-section"><div class="section-heading"><h1>Rules comparison</h1><p>A quick side-by-side before you dive into the full rule text.</p></div><div class="table-wrap"><table><caption>Published ruleset comparison</caption><thead><tr><th>Topic</th><th>Berkeley</th><th>Wild 16</th></tr></thead><tbody>${comparisonRows}</tbody></table></div><aside class="cta-panel rules-comparison-callout"><div><h2>Read the full rules</h2><p>Use the detailed rules pages when you want the complete wording and examples.</p></div><div class="cta-panel__actions"><a class="button-link button-link--secondary" href="/rules/berkeley">Berkeley rules</a><a class="button-link button-link--secondary" href="/rules/wild16">Wild 16 rules</a></div></aside></section>` });
+    ['Referee response to illegal tries', 'Referee says “No” for illegal moves on the true board, and “Nonsense” for impossible or repeated tries on your own board.', 'Referee says “Illegal” or “No” for illegal tries, and “Nonsense” for absurd tries the player must already know are impossible.', 'Referee says “Illegal move”; the opponent is not told anything extra.'],
+    ['Capture announcements', 'Capture square is announced to both players after a legal capture.', 'Announces the capture square and whether the captured material was a pawn or a piece.', 'Distinguishes pawn captures from other piece captures in the announcement.'],
+    ['Check announcements', 'Rank, File, Short, Long, and Knight checks are announced to both players.', 'File, rank, long diagonal, short diagonal, and Knight checks are announced.', 'Rank, File, Long-diagonal, Short-diagonal, and Knight checks are announced.'],
+    ['Pawn-capture handling', 'No built-in “Any?” rule, though a compatible optional variant is documented.', 'Publicly announces that the player has a pawn capture whenever at least one legal pawn capture exists.', 'Includes a pawn-tries announcement with the number of legal capturing pawn moves.'],
+    ['Board-handling model', 'Your own board tracks your pieces faithfully; the referee resolves hidden uncertainty.', 'Your own pieces are official, but opposing pieces on your board are unofficial and may be placed anywhere.', 'Same hidden-information game flow, but with ICC-style announcement wording and pawn-tries counting.'],
+    ['Best fit', 'Closest match for the Berkeley reference material and the published site rules text.', 'Best fit for the historical Cincinnati article and its public try-based referee workflow.', 'Closest match for the Wild 16 / ICC-style online announcement pattern.']
+  ].map(([label, berkeley, cincinnati, wild16]) => `<tr><th scope="row">${label}</th><td>${berkeley}</td><td>${cincinnati}</td><td>${wild16}</td></tr>`).join('');
+  return renderShell({ footerEntry, title: 'Kriegspiel — Rules Comparison', description: 'Quick comparison between the published Berkeley, Cincinnati, and Wild 16 rulesets.', activeNav: '/rules', canonicalPath: '/rules/comparison/', structuredData: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Kriegspiel Rules Comparison', url: absUrl('/rules/comparison/') }, main: `<section class="content-section"><div class="section-heading"><h1>Rules comparison</h1><p>A quick side-by-side before you dive into the full rule text.</p></div><div class="table-wrap"><table><caption>Published ruleset comparison</caption><thead><tr><th>Topic</th><th>Berkeley</th><th>Cincinnati style</th><th>Wild 16</th></tr></thead><tbody>${comparisonRows}</tbody></table></div><aside class="cta-panel rules-comparison-callout"><div><h2>Read the full rules</h2><p>Use the detailed rules pages when you want the complete wording and examples.</p></div><div class="cta-panel__actions"><a class="button-link button-link--secondary" href="/rules/berkeley">Berkeley rules</a><a class="button-link button-link--secondary" href="/rules/cincinnati">Cincinnati style rules</a><a class="button-link button-link--secondary" href="/rules/wild16">Wild 16 rules</a></div></aside></section>` });
 }
 
 export function renderRedirectPage({ fromPath, toPath, title = 'Redirecting…', footerEntry = null }) {
