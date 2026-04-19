@@ -49,6 +49,12 @@ test('comparison page links all published rulesets', () => {
   assert.ok(html.includes('<a class="text-link" href="/rules/wild16">Wild 16</a>'));
   assert.ok(html.includes('Cincinnati'));
   assert.ok(html.includes('Wild 16'));
+  assert.ok(html.includes('Referee says “Illegal” or “No” for illegal moves on the true board'));
+  assert.ok(html.includes('Capture square (where the piece is removed from) is announced to both players after a legal capture.'));
+  assert.ok(html.includes('File, rank, long diagonal, short diagonal, knight, and double checks are announced.'));
+  assert.ok(html.includes('Pawn-capture handling — “Any?” rule handling'));
+  assert.ok(html.includes('Before each ply starts, the referee publicly announces the number of legal capturing pawn moves.'));
+  assert.ok(!html.includes('Board-handling model'));
   assert.ok(!html.includes('Berkeley summary'));
   assert.ok(!html.includes('Cincinnati summary'));
   assert.ok(!html.includes('Wild16 summary'));
