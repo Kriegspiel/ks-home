@@ -2,17 +2,22 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { renderRulesPage, renderRuleDetailPage, renderRulesComparisonPage, renderSiteMarkdownPage } from '../src/pages.mjs';
 
-test('rules landing page shows Berkeley and Wild 16 tiles plus comparison link', () => {
+test('rules landing page shows Berkeley, Cincinnati style, and Wild 16 tiles plus comparison link', () => {
   const html = renderRulesPage([
     { metadata: { slug: 'berkeley', title: 'Berkeley', summary: 'Classic referee calls.' }, body: '# Intro\n\n## Section One' },
+    { metadata: { slug: 'cincinnati', title: 'Cincinnati style', summary: 'Historical public try-based rules.' }, body: '# Intro\n\n## Section One B' },
     { metadata: { slug: 'wild16', title: 'Wild 16', summary: 'ICC-style announcements.' }, body: '# Intro\n\n## Section Two' }
   ], []);
   assert.ok(html.includes('/rules/berkeley'));
+  assert.ok(html.includes('/rules/cincinnati'));
   assert.ok(html.includes('/rules/wild16'));
+  assert.ok(html.includes('Cincinnati style'));
+  assert.ok(html.includes('Historical public rules centered on legal tries'));
   assert.ok(html.includes('Wild 16'));
   assert.ok(html.includes('Different capture announcements and a built-in pawn-tries rule.'));
   assert.ok(html.includes('/rules/comparison/'));
   assert.ok(html.includes('Implemented, play today'));
+  assert.ok(html.includes('Reference rules, not implemented online'));
   assert.ok(html.includes('Work in progress, play soon'));
   assert.ok(!html.includes('rules-berkeley-r1'));
   assert.ok(!html.includes('Linked changelog'));
@@ -29,16 +34,20 @@ test('rule detail page keeps comparison navigation but removes metadata and toc 
   assert.ok(!html.includes('On this page'));
 });
 
-test('comparison page links both published rulesets', () => {
+test('comparison page links all published rulesets', () => {
   const html = renderRulesComparisonPage([
     { metadata: { slug: 'berkeley', summary: 'Berkeley summary' } },
+    { metadata: { slug: 'cincinnati', summary: 'Cincinnati summary' } },
     { metadata: { slug: 'wild16', summary: 'Wild16 summary' } }
   ]);
   assert.ok(html.includes('/rules/berkeley'));
+  assert.ok(html.includes('/rules/cincinnati'));
   assert.ok(html.includes('/rules/wild16'));
   assert.ok(html.includes('Published ruleset comparison'));
+  assert.ok(html.includes('Cincinnati style'));
   assert.ok(html.includes('Wild 16'));
   assert.ok(!html.includes('Berkeley summary'));
+  assert.ok(!html.includes('Cincinnati summary'));
   assert.ok(!html.includes('Wild16 summary'));
 });
 
