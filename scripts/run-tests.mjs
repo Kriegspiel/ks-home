@@ -1,4 +1,6 @@
+import { readdirSync } from "node:fs";
 import { spawnSync } from "node:child_process";
+import path from "node:path";
 
 const args = process.argv.slice(2);
 const read = (name, fallback) => {
@@ -10,6 +12,11 @@ const lines = read("lines", "82");
 const functions = read("functions", "82");
 const branches = read("branches", "78");
 const statements = read("statements", "82");
+const testDir = new URL("../tests/", import.meta.url);
+const testFiles = readdirSync(testDir)
+  .filter((file) => file.endsWith(".test.mjs"))
+  .sort()
+  .map((file) => path.join("tests", file));
 
 const c8Args = [
   "--check-coverage",
@@ -19,7 +26,7 @@ const c8Args = [
   "--statements", statements,
   process.execPath,
   "--test",
-  "tests"
+  ...testFiles
 ];
 
 const result = spawnSync("c8", c8Args, { stdio: "inherit", shell: process.platform === "win32" });
