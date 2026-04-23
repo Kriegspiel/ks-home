@@ -4,7 +4,9 @@ import { createHash } from 'node:crypto';
 import { getContentRoot, loadCollection, loadSingletonEntry } from '../src/content-utils.mjs';
 import { renderHomePage, renderLeaderboardPage, renderPublicProfilePage, renderSimplePage, renderBlogIndex, renderBlogDetail, renderBlogArchive, renderChangelogIndex, renderChangelogDetail, renderRulesPage, renderRuleDetailPage, renderRulesComparisonPage, renderRedirectPage, renderSiteMarkdownPage } from '../src/pages.mjs';
 
-const dist = path.resolve(process.cwd(), 'dist');
+const dist = path.resolve(process.cwd(), process.env.KS_DIST_DIR || 'dist');
+const siteVariant = String(process.env.KS_SITE_VARIANT || '').trim().toLowerCase() === 'stage' ? 'stage' : 'default';
+const siteUrl = String(process.env.KS_SITE_URL || (siteVariant === 'stage' ? 'https://www-stage.kriegspiel.org' : 'https://kriegspiel.org')).trim().replace(/\/$/, '') || 'https://kriegspiel.org';
 const contentRoot = getContentRoot();
 const blogEntries = loadCollection(contentRoot, 'blog');
 const changelogEntries = loadCollection(contentRoot, 'changelog');
@@ -54,6 +56,7 @@ const apiBase = process.env.KS_API_BASE ? process.env.KS_API_BASE.replace(/\/$/,
 fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
 copyStaticAsset('static/logo-theme-toggle.png', 'logo-theme-toggle.png');
+copyStaticAsset('static/stage-knight.png', 'stage-knight.png');
 copyContentAsset('binary/logo/favicon.ico', 'favicon.ico');
 copyContentAsset('binary/logo/favicon-16x16.png', 'favicon-16x16.png');
 copyContentAsset('binary/logo/favicon-32x32.png', 'favicon-32x32.png');
@@ -94,6 +97,8 @@ writePage(path.join(dist, 'rules/wild-16/index.html'), renderRedirectPage({ from
 
 writeJson(path.join(dist, '.regen-manifest.json'), {
   generatedAt: new Date().toISOString(),
+  siteVariant,
+  siteUrl,
   sourceHash: createHash('sha256').update(JSON.stringify({ blog: blogEntries.map((e) => [e.file, e.metadata.updatedAt]), changelog: changelogEntries.map((e) => [e.file, e.metadata.updatedAt]), rules: rulesEntries.map((e) => [e.file, e.metadata.updatedAt]), site: [[homeEntry.file, homeEntry.metadata.updatedAt], [privacyEntry.file, privacyEntry.metadata.updatedAt], [termsEntry.file, termsEntry.metadata.updatedAt], [aboutEntry.file, aboutEntry.metadata.updatedAt], [footerEntry.file, footerEntry.metadata.updatedAt]], players: publicData.entries.map((entry) => [entry.username, entry.rating, entry.gamesPlayed]) })).digest('hex'),
   blogRoutes: blogEntries.map((entry) => `/blog/${entry.metadata.slug}`),
   changelogRoutes: changelogEntries.map((entry) => `/changelog/${entry.metadata.slug}`),
@@ -101,7 +106,7 @@ writeJson(path.join(dist, '.regen-manifest.json'), {
   playerRoutes: publicData.profiles.map((entry) => `/players/${entry.profile.username}`)
 });
 
-console.log('build complete: marketing + leaderboard + player profiles + blog + changelog + rules routes generated');
+console.log(`build complete: ${siteVariant} marketing + leaderboard + player profiles + blog + changelog + rules routes generated in ${dist}`);
 
 function writePage(filePath, html) { fs.mkdirSync(path.dirname(filePath), { recursive: true }); fs.writeFileSync(filePath, html, 'utf8'); }
 function writeJson(filePath, value) { fs.mkdirSync(path.dirname(filePath), { recursive: true }); fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8'); }

@@ -11,6 +11,7 @@
     "content:schema:check": "node scripts/check-content-schema.mjs",
     "content:source-contract:check": "node scripts/check-content-source-contract.mjs",
     "build": "node scripts/build.mjs",
+    "build:stage": "KS_SITE_VARIANT=stage KS_SITE_URL=https://www-stage.kriegspiel.org KS_DIST_DIR=dist-stage node scripts/build.mjs",
     "test:coverage:check": "node scripts/run-tests.mjs",
     "test:e2e": "node scripts/test-e2e-home-leaderboard.mjs",
     "test:smoke": "node scripts/test-smoke-routes.mjs",
@@ -24,7 +25,8 @@
     "seo:validate": "node scripts/seo-validate.mjs",
     "structured-data:check": "node scripts/structured-data-check.mjs",
     "analytics:contract:test": "node scripts/analytics-contract-test.mjs",
-    "serve:prod": "node scripts/serve-static.mjs"
+    "serve:prod": "node scripts/serve-static.mjs",
+    "serve:stage": "DIST_DIR=dist-stage node scripts/serve-static.mjs"
   },
   "devDependencies": {
     "c8": "^10.1.3"
