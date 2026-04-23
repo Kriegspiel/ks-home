@@ -36,6 +36,7 @@ for (let i = 2; i < process.argv.length; i += 1) {
 const host = String(args.get("host") || process.env.HOST || "127.0.0.1");
 const port = Number(args.get("port") || process.env.PORT || 4180);
 const root = path.resolve(String(args.get("root") || process.env.DIST_DIR || "dist"));
+const allowedHosts = parseAllowedHosts(process.env.KS_ALLOWED_HOSTS || "");
 
 if (!fs.existsSync(root)) {
   console.error(`Static root not found: ${root}`);
@@ -51,19 +52,22 @@ const server = http.createServer((req, res) => {
       return;
     }
 
+    if (allowedHosts.size > 0) {
+      const requestHost = normalizeHost(req.headers.host);
+      if (!requestHost || !allowedHosts.has(requestHost)) {
+        sendNotFound(method, res);
+        return;
+      }
+    }
+
     const url = new URL(req.url || "/", `http://${req.headers.host || "localhost"}`);
     let pathname = decodeURIComponent(url.pathname);
     if (pathname.includes("\0")) throw new Error("invalid path");
 
     let filePath = resolvePath(pathname);
     if (!filePath) {
-      filePath = path.join(root, "404.html");
-      if (!fs.existsSync(filePath)) {
-        res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
-        res.end(method === "HEAD" ? undefined : "Not Found\n");
-        return;
-      }
-      return sendFile(filePath, 404, method, res);
+      sendNotFound(method, res);
+      return;
     }
 
     sendFile(filePath, 200, method, res);
@@ -115,4 +119,30 @@ function cacheControlFor(filePath) {
   return filePath.endsWith(".html") || filePath.endsWith(".json")
     ? "public, max-age=60"
     : "public, max-age=300";
+}
+
+function sendNotFound(method, res) {
+  const filePath = path.join(root, "404.html");
+  if (fs.existsSync(filePath)) {
+    sendFile(filePath, 404, method, res);
+    return;
+  }
+  res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+  res.end(method === "HEAD" ? undefined : "Not Found\n");
+}
+
+function parseAllowedHosts(rawValue) {
+  return new Set(
+    String(rawValue)
+      .split(",")
+      .map((value) => normalizeHost(value))
+      .filter(Boolean)
+  );
+}
+
+function normalizeHost(value) {
+  const rawValue = String(value || "").trim().toLowerCase();
+  if (!rawValue) return "";
+  const hasPort = rawValue.includes(":") && !rawValue.startsWith("[");
+  return hasPort ? rawValue.split(":")[0] : rawValue;
 }
