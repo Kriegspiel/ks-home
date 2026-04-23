@@ -28,6 +28,7 @@ test('stage build emits isolated preview output with stage-only metadata', () =>
   assert.ok(homeHtml.includes('content="noindex, nofollow"'));
   assert.ok(homeHtml.includes('www-stage.kriegspiel.org'));
   assert.ok(homeHtml.includes('class="stage-hero"'));
+  assert.ok(homeHtml.includes('src="/logo-theme-toggle.png"'));
   assert.ok(homeHtml.includes('src="/stage-knight.png"'));
   assert.ok(fs.existsSync(path.join(stageDist, 'stage-knight.png')));
 });
