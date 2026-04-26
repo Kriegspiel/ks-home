@@ -83,8 +83,6 @@ export function markdownToHtml(markdown, options = {}) {
   const lines = String(markdown || "").split(/\r?\n/);
   const html = [];
   let paragraph = [];
-  let listType = null;
-  let listItems = [];
   let codeFence = null;
   let codeLines = [];
 
@@ -92,17 +90,6 @@ export function markdownToHtml(markdown, options = {}) {
     if (!paragraph.length) return;
     html.push(`<p>${inlineMarkdown(paragraph.join(" "))}</p>`);
     paragraph = [];
-  };
-
-  const flushList = () => {
-    if (!listType || !listItems.length) {
-      listType = null;
-      listItems = [];
-      return;
-    }
-    html.push(`<${listType}>${listItems.map((item) => `<li>${inlineMarkdown(item)}</li>`).join("")}</${listType}>`);
-    listType = null;
-    listItems = [];
   };
 
   const flushCodeBlock = () => {
@@ -117,7 +104,6 @@ export function markdownToHtml(markdown, options = {}) {
     const fenceMatch = rawLine.match(/^```\s*([^\s`]+)?\s*$/);
     if (fenceMatch) {
       flushParagraph();
-      flushList();
       if (codeFence !== null) {
         flushCodeBlock();
       } else {
@@ -135,14 +121,12 @@ export function markdownToHtml(markdown, options = {}) {
     const trimmed = rawLine.trim();
     if (!trimmed) {
       flushParagraph();
-      flushList();
       continue;
     }
 
     const includeMatch = trimmed.match(/^::include-code\s+(.+)$/);
     if (includeMatch) {
       flushParagraph();
-      flushList();
       html.push(renderIncludedCodeBlock(includeMatch[1], baseDir));
       continue;
     }
@@ -150,14 +134,12 @@ export function markdownToHtml(markdown, options = {}) {
     const heading = trimmed.match(/^(#{1,3})\s+(.+)$/);
     if (heading) {
       flushParagraph();
-      flushList();
       html.push(`<h${heading[1].length}>${inlineMarkdown(heading[2].trim())}</h${heading[1].length}>`);
       continue;
     }
 
     if (/^(?:-{3,}|\*{3,}|_{3,})$/.test(trimmed)) {
       flushParagraph();
-      flushList();
       html.push("<hr />");
       continue;
     }
@@ -165,7 +147,6 @@ export function markdownToHtml(markdown, options = {}) {
     const nextTrimmed = index + 1 < lines.length ? lines[index + 1].trim() : "";
     if (trimmed.includes("|") && isMarkdownTableSeparator(nextTrimmed)) {
       flushParagraph();
-      flushList();
       const headerCells = parseTableCells(trimmed);
       const rows = [];
       index += 1;
@@ -179,32 +160,95 @@ export function markdownToHtml(markdown, options = {}) {
       continue;
     }
 
-    const unordered = trimmed.match(/^-\s+(.+)$/);
-    if (unordered) {
+    if (parseListItemLine(rawLine)) {
       flushParagraph();
-      if (listType && listType !== "ul") flushList();
-      listType = "ul";
-      listItems.push(unordered[1].trim());
+      const listLines = [rawLine];
+      while (index + 1 < lines.length) {
+        const nextLine = lines[index + 1];
+        if (!nextLine.trim()) {
+          index += 1;
+          continue;
+        }
+        if (!parseListItemLine(nextLine)) break;
+        listLines.push(nextLine);
+        index += 1;
+      }
+      html.push(renderListBlock(listLines));
       continue;
     }
 
-    const ordered = trimmed.match(/^\d+\.\s+(.+)$/);
-    if (ordered) {
-      flushParagraph();
-      if (listType && listType !== "ol") flushList();
-      listType = "ol";
-      listItems.push(ordered[1].trim());
-      continue;
-    }
-
-    flushList();
     paragraph.push(trimmed);
   }
 
   flushParagraph();
-  flushList();
   if (codeFence !== null) flushCodeBlock();
   return html.join("\n");
+}
+
+function parseListItemLine(line) {
+  const normalized = String(line || "").replace(/\t/g, "    ");
+  const match = normalized.match(/^(\s*)(?:(\d+)\.|([-*]))\s+(.+)$/);
+  if (!match) return null;
+  return {
+    indent: match[1].length,
+    type: match[2] ? "ol" : "ul",
+    start: match[2] ? Number(match[2]) : null,
+    content: match[4].trim()
+  };
+}
+
+function renderListBlock(lines) {
+  const rootLists = [];
+  const stack = [];
+
+  for (const line of lines) {
+    const item = parseListItemLine(line);
+    if (!item) continue;
+    const list = resolveListForItem(rootLists, stack, item);
+    list.items.push({ content: item.content, children: [] });
+  }
+
+  return rootLists.map(renderListNode).join("");
+}
+
+function resolveListForItem(rootLists, stack, item) {
+  while (stack.length && item.indent < stack[stack.length - 1].indent) stack.pop();
+
+  const current = stack[stack.length - 1];
+  if (!current) return pushList(rootLists, stack, createListNode(item));
+  if (item.indent > current.indent) return pushChildList(rootLists, stack, createListNode(item));
+  if (item.type !== current.type) {
+    stack.pop();
+    return pushChildList(rootLists, stack, createListNode(item));
+  }
+  return current;
+}
+
+function createListNode(item) {
+  return { type: item.type, indent: item.indent, start: item.start, items: [] };
+}
+
+function pushList(rootLists, stack, list) {
+  rootLists.push(list);
+  stack.push(list);
+  return list;
+}
+
+function pushChildList(rootLists, stack, list) {
+  const parent = stack[stack.length - 1];
+  const parentItem = parent?.items[parent.items.length - 1];
+  if (!parentItem) return pushList(rootLists, stack, list);
+  parentItem.children.push(list);
+  stack.push(list);
+  return list;
+}
+
+function renderListNode(list) {
+  const startAttribute = list.type === "ol" && list.start && list.start !== 1 ? ` start="${list.start}"` : "";
+  const items = list.items
+    .map((item) => `<li>${inlineMarkdown(item.content)}${item.children.map(renderListNode).join("")}</li>`)
+    .join("");
+  return `<${list.type}${startAttribute}>${items}</${list.type}>`;
 }
 
 function renderMarkdownTable(headerCells, rows) {

@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.0.35
+
+- **Rules Rendering**: kept spaced and nested ordered lists as a single
+  hierarchy, fixing the RAND rules page where every item rendered as `1.`.
+
 ## ks-home v. 1.0.34
 
 - **Rules Index**: promoted RAND to a linked historical reference and kept
