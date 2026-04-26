@@ -5,6 +5,12 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.0.36
+
+- **Rules Comparison**: added RAND as a comparison column, including its
+  pawn-try square announcements, rebuff counts, promotion notice, and best-fit
+  context.
+
 ## ks-home v. 1.0.35
 
 - **Rules Rendering**: kept spaced and nested ordered lists as a single
