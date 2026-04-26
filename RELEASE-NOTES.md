@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.0.33
+
+- **Rules Index**: marked the implemented online rulesets as live and added
+  placeholders for RAND and CrazyKrieg rules.
+
 ## ks-home v. 1.0.32
 
 - **Rules Comparison**: refined wording for Berkeley, Cincinnati, and Wild 16
