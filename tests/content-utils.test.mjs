@@ -130,6 +130,31 @@ test("markdownToHtml renders fenced code blocks and ordered lists", () => {
   assert.ok(html.includes("https://api.kriegspiel.org/api/auth/bots/register"));
 });
 
+test("markdownToHtml keeps spaced and nested ordered lists in one hierarchy", () => {
+  const html = markdownToHtml([
+    "1. Personnel: two players, referee, kibitzers.",
+    "",
+    "2. Each player has a complete chess set.",
+    "",
+    "3. A referee announces:",
+    "",
+    "   1. whose turn it is to move;",
+    "",
+    "   2. checks, which are announced by whichever is correct:",
+    "",
+    "      1. check on a long diagonal;",
+    "",
+    "      2. check by a knight;",
+    "",
+    "4. The referee does not recapitulate losses."
+  ].join("\n"));
+
+  assert.equal(
+    html,
+    "<ol><li>Personnel: two players, referee, kibitzers.</li><li>Each player has a complete chess set.</li><li>A referee announces:<ol><li>whose turn it is to move;</li><li>checks, which are announced by whichever is correct:<ol><li>check on a long diagonal;</li><li>check by a knight;</li></ol></li></ol></li><li>The referee does not recapitulate losses.</li></ol>",
+  );
+});
+
 test("markdownToHtml preserves inline formatting without breaking links", () => {
   const html = markdownToHtml("Use **bold**, *emphasis*, `inline()` and [docs](https://kriegspiel.org/docs).");
   assert.ok(html.includes("<strong>bold</strong>"));
