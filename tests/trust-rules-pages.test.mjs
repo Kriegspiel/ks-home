@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { renderRulesPage, renderRuleDetailPage, renderRulesComparisonPage, renderSiteMarkdownPage } from '../src/pages.mjs';
 
-test('rules landing page shows Berkeley, Cincinnati style, and Wild 16 tiles plus comparison link', () => {
+test('rules landing page shows implemented rules and planned placeholders plus comparison link', () => {
   const html = renderRulesPage([
     { metadata: { slug: 'berkeley', title: 'Berkeley', summary: 'Classic referee calls.' }, body: '# Intro\n\n## Section One' },
     { metadata: { slug: 'cincinnati', title: 'Cincinnati style', summary: 'Historical public try-based rules.' }, body: '# Intro\n\n## Section One B' },
@@ -15,10 +15,16 @@ test('rules landing page shows Berkeley, Cincinnati style, and Wild 16 tiles plu
   assert.ok(html.includes('Historical public rules centered on legal tries'));
   assert.ok(html.includes('Wild 16'));
   assert.ok(html.includes('Different capture announcements and a built-in pawn-tries rule.'));
+  assert.ok(html.includes('Berkeley, Berkeley + Any, Cincinnati, and Wild 16 are implemented online.'));
+  assert.ok(html.includes('RAND rules'));
+  assert.ok(html.includes('CrazyKrieg rules'));
+  assert.ok(html.includes('Planned ruleset'));
+  assert.ok(html.includes('Rules placeholder'));
   assert.ok(html.includes('/rules/comparison/'));
-  assert.ok(html.includes('Implemented, play today'));
-  assert.ok(html.includes('Reference rules, not implemented online'));
-  assert.ok(html.includes('Work in progress, play soon'));
+  assert.equal((html.match(/Implemented online/g) || []).length, 3);
+  assert.equal((html.match(/Placeholder, not implemented yet/g) || []).length, 2);
+  assert.ok(!html.includes('Reference rules, not implemented online'));
+  assert.ok(!html.includes('Work in progress, play soon'));
   assert.ok(!html.includes('rules-berkeley-r1'));
   assert.ok(!html.includes('Linked changelog'));
 });

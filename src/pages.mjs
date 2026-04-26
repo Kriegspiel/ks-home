@@ -202,28 +202,41 @@ export function renderChangelogIndex(entries, footerEntry = null) {
 export const renderChangelogDetail = (entry, footerEntry = null) => renderShell({ footerEntry, title: `Kriegspiel — ${entry.metadata.title}`, description: entry.metadata.summary, activeNav: '/changelog', canonicalPath: `/changelog/${entry.metadata.slug}`, ogType: 'article', structuredData: { '@context': 'https://schema.org', '@type': 'Article', headline: entry.metadata.title, datePublished: entry.metadata.publishedAt, dateModified: entry.metadata.updatedAt, author: { '@type': 'Organization', name: entry.metadata.author }, mainEntityOfPage: absUrl(`/changelog/${entry.metadata.slug}`) }, main: `<article class="prose-card"><h1>${entry.metadata.title}</h1><p><small>Version ${entry.metadata.version} • ${entry.metadata.publishedAt}</small></p><p>${entry.metadata.summary}</p>${entry.bodyHtml}<p><a class="text-link" href="/changelog">Back to changelog</a></p></article>` });
 
 export function renderRulesPage(entries, changelogEntries, footerEntry = null) {
-  const primary = ['berkeley', 'cincinnati', 'wild16']
-    .map((slug) => entries.find((entry) => entry.metadata.slug === slug))
-    .filter(Boolean);
   const ruleNotes = {
     berkeley: {
-      summary: 'Classic referee-led Kriegspiel with clean announcements, standard hidden-information play, and the optional Any extension available today on the live app.',
-      status: 'Implemented, play today'
+      summary: 'Classic referee-led Kriegspiel with clean announcements, standard hidden-information play, and the Berkeley + Any extension.',
+      status: 'Implemented online'
     },
     cincinnati: {
       summary: 'Historical public rules centered on legal tries, Illegal vs Nonsense, official own pieces, and public pawn-capture notices.',
-      status: 'Reference rules, not implemented online'
+      status: 'Implemented online'
     },
     wild16: {
       summary: 'Different capture announcements and a built-in pawn-tries rule. Read it alongside Berkeley if you want the shared game flow with the Wild 16-specific calls.',
-      status: 'Work in progress, play soon'
+      status: 'Implemented online'
     }
   };
-  const cards = primary.map((entry) => {
+  const primaryCards = ['berkeley', 'cincinnati', 'wild16']
+    .map((slug) => entries.find((entry) => entry.metadata.slug === slug))
+    .filter(Boolean)
+    .map((entry) => {
     const note = ruleNotes[entry.metadata.slug] || { summary: entry.metadata.summary, status: '' };
     return `<article class="surface-card rules-tile"><p class="rules-tile__eyebrow">Ruleset</p><h2>${prettyRuleLabel(entry.metadata.slug)}</h2><p>${esc(note.summary)}</p><ul class="rules-tile__meta"><li>${esc(note.status)}</li></ul><div class="rules-tile__actions"><a class="button-link button-link--primary" href="/rules/${entry.metadata.slug}">Read ${prettyRuleLabel(entry.metadata.slug)} rules</a></div></article>`;
-  }).join('');
-  return renderShell({ footerEntry, title: 'Kriegspiel — Rules', description: 'Published rulesets and a quick comparison guide.', activeNav: '/rules', canonicalPath: '/rules', structuredData: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Kriegspiel Rules', url: absUrl('/rules') }, main: `<section class="content-section"><div class="section-heading"><h1>Rules</h1><p>Choose a published ruleset, then use the comparison page when you need the differences at a glance.</p></div><div class="feature-grid feature-grid--three rules-grid">${cards}</div><aside class="cta-panel rules-comparison-callout"><div><h2>Need the differences first?</h2><p>See the overall comparison before picking a ruleset.</p></div><div class="cta-panel__actions"><a class="button-link button-link--secondary" href="/rules/comparison/">Open rules comparison</a></div></aside></section>` });
+  });
+  const placeholderCards = [
+    {
+      title: 'RAND rules',
+      summary: 'Placeholder for the RAND / Shapley-line rules notes. We will publish this when the source text is ready.',
+      status: 'Placeholder, not implemented yet'
+    },
+    {
+      title: 'CrazyKrieg rules',
+      summary: 'Placeholder for a future crazyhouse-style hidden-information ruleset.',
+      status: 'Placeholder, not implemented yet'
+    }
+  ].map((entry) => `<article class="surface-card rules-tile"><p class="rules-tile__eyebrow">Planned ruleset</p><h2>${esc(entry.title)}</h2><p>${esc(entry.summary)}</p><ul class="rules-tile__meta"><li>${esc(entry.status)}</li></ul><div class="rules-tile__actions"><span>Rules placeholder</span></div></article>`);
+  const cards = [...primaryCards, ...placeholderCards].join('');
+  return renderShell({ footerEntry, title: 'Kriegspiel — Rules', description: 'Published rulesets and a quick comparison guide.', activeNav: '/rules', canonicalPath: '/rules', structuredData: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Kriegspiel Rules', url: absUrl('/rules') }, main: `<section class="content-section"><div class="section-heading"><h1>Rules</h1><p>Berkeley, Berkeley + Any, Cincinnati, and Wild 16 are implemented online. RAND and CrazyKrieg are listed as placeholders for future rules work.</p></div><div class="feature-grid feature-grid--three rules-grid">${cards}</div><aside class="cta-panel rules-comparison-callout"><div><h2>Need the differences first?</h2><p>See the overall comparison before picking a ruleset.</p></div><div class="cta-panel__actions"><a class="button-link button-link--secondary" href="/rules/comparison/">Open rules comparison</a></div></aside></section>` });
 }
 
 export function renderRuleDetailPage(entry, changelogEntries, footerEntry = null) {
