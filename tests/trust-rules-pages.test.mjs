@@ -51,26 +51,33 @@ test('comparison page links all published rulesets', () => {
   const html = renderRulesComparisonPage([
     { metadata: { slug: 'berkeley', summary: 'Berkeley summary' } },
     { metadata: { slug: 'cincinnati', summary: 'Cincinnati summary' } },
-    { metadata: { slug: 'wild16', summary: 'Wild16 summary' } }
+    { metadata: { slug: 'wild16', summary: 'Wild16 summary' } },
+    { metadata: { slug: 'rand', summary: 'RAND summary' } }
   ]);
   assert.ok(html.includes('/rules/berkeley'));
   assert.ok(html.includes('/rules/cincinnati'));
   assert.ok(html.includes('/rules/wild16'));
+  assert.ok(html.includes('/rules/rand'));
   assert.ok(html.includes('Published ruleset comparison'));
   assert.ok(html.includes('<a class="text-link" href="/rules/berkeley">Berkeley</a>'));
   assert.ok(html.includes('<a class="text-link" href="/rules/cincinnati">Cincinnati</a>'));
   assert.ok(html.includes('<a class="text-link" href="/rules/wild16">Wild 16</a>'));
+  assert.ok(html.includes('<a class="text-link" href="/rules/rand">RAND</a>'));
   assert.ok(html.includes('Cincinnati'));
   assert.ok(html.includes('Wild 16'));
+  assert.ok(html.includes('RAND reference'));
   assert.ok(html.includes('Referee says “Illegal” or “No” for illegal moves on the true board'));
   assert.ok(html.includes('Capture square (where the piece is removed from) is announced to both players after a legal capture.'));
   assert.ok(html.includes('File, rank, long diagonal, short diagonal, knight, and double checks are announced.'));
   assert.ok(html.includes('Pawn-capture handling — “Any?” rule handling'));
   assert.ok(html.includes('Before each ply starts, the referee publicly announces the number of legal capturing pawn moves.'));
+  assert.ok(html.includes('the referee announces the squares on which the mover’s pawns have currently valid capture tries.'));
+  assert.ok(html.includes('The fact that a pawn promotes is announced, but not the promoted piece type or promotion square.'));
   assert.ok(!html.includes('Board-handling model'));
   assert.ok(!html.includes('Berkeley summary'));
   assert.ok(!html.includes('Cincinnati summary'));
   assert.ok(!html.includes('Wild16 summary'));
+  assert.ok(!html.includes('RAND summary'));
 });
 
 test('site markdown pages render policy content from content repo entries', () => {
