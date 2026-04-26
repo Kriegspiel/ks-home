@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.0.37
+
+- **Rules Comparison CTA**: top-aligned the full-rules callout, shortened the
+  RAND button label, and made the rule buttons visually consistent.
+
 ## ks-home v. 1.0.36
 
 - **Rules Comparison**: added RAND as a comparison column, including its
