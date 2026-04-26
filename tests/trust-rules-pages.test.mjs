@@ -6,23 +6,30 @@ test('rules landing page shows implemented rules and planned placeholders plus c
   const html = renderRulesPage([
     { metadata: { slug: 'berkeley', title: 'Berkeley', summary: 'Classic referee calls.' }, body: '# Intro\n\n## Section One' },
     { metadata: { slug: 'cincinnati', title: 'Cincinnati style', summary: 'Historical public try-based rules.' }, body: '# Intro\n\n## Section One B' },
-    { metadata: { slug: 'wild16', title: 'Wild 16', summary: 'ICC-style announcements.' }, body: '# Intro\n\n## Section Two' }
+    { metadata: { slug: 'wild16', title: 'Wild 16', summary: 'ICC-style announcements.' }, body: '# Intro\n\n## Section Two' },
+    { metadata: { slug: 'rand', title: 'RAND', summary: 'RAND reference.' }, body: '# Intro\n\n## Section Three' }
   ], []);
   assert.ok(html.includes('/rules/berkeley'));
   assert.ok(html.includes('/rules/cincinnati'));
   assert.ok(html.includes('/rules/wild16'));
+  assert.ok(html.includes('/rules/rand'));
   assert.ok(html.includes('Cincinnati'));
   assert.ok(html.includes('Historical public rules centered on legal tries'));
   assert.ok(html.includes('Wild 16'));
   assert.ok(html.includes('Different capture announcements and a built-in pawn-tries rule.'));
   assert.ok(html.includes('Berkeley, Berkeley + Any, Cincinnati, and Wild 16 are implemented online.'));
-  assert.ok(html.includes('RAND rules'));
-  assert.ok(html.includes('CrazyKrieg rules'));
+  assert.ok(html.includes('RAND is published as a historical reference'));
+  assert.ok(html.includes('RAND'));
+  assert.ok(html.includes('Historical RAND reference from J. D. Williams'));
+  assert.ok(html.includes('CrazyKrieg'));
   assert.ok(html.includes('Planned ruleset'));
-  assert.ok(html.includes('Rules placeholder'));
+  assert.ok(html.includes('Placeholder'));
   assert.ok(html.includes('/rules/comparison/'));
   assert.equal((html.match(/Implemented online/g) || []).length, 3);
-  assert.equal((html.match(/Placeholder, not implemented yet/g) || []).length, 2);
+  assert.equal((html.match(/Historical reference/g) || []).length, 1);
+  assert.equal((html.match(/Placeholder, not implemented yet/g) || []).length, 1);
+  assert.ok(!html.includes('RAND rules'));
+  assert.ok(!html.includes('CrazyKrieg rules'));
   assert.ok(!html.includes('Reference rules, not implemented online'));
   assert.ok(!html.includes('Work in progress, play soon'));
   assert.ok(!html.includes('rules-berkeley-r1'));
