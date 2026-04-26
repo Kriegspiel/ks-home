@@ -31,7 +31,7 @@ function parseFooterEntry(footerEntry) {
 
 function renderFooter(footerEntry) {
   const fallbackGroups = [
-    { title: 'Rules', links: [['/rules/berkeley', 'Berkeley'], ['/rules/cincinnati', 'Cincinnati'], ['/rules/wild16', 'Wild 16'], ['/rules/comparison/', 'Comparison']] },
+    { title: 'Rules', links: [['/rules/berkeley', 'Berkeley'], ['/rules/cincinnati', 'Cincinnati'], ['/rules/wild16', 'Wild 16'], ['/rules/rand', 'RAND'], ['/rules/comparison/', 'Comparison']] },
     { title: 'Communication', links: [['/blog', 'Blog'], ['/changelog', 'Changelog'], ['/', 'About']] },
     { title: 'Social', links: [['https://x.com/kriegspiel_org', 'X.com (@kriegspiel_org)'], ['https://github.com/Kriegspiel', 'GitHub']] }
   ];
@@ -59,6 +59,7 @@ function jsonLd(data) { return `<script type="application/ld+json">${JSON.string
 function sectionsFromBody(body = '', limit = 4) { return body.split(/\r?\n\r?\n/).filter(Boolean).filter((block) => /^#/.test(block.trim())).slice(0, limit).map((block) => esc(block.split(/\r?\n/)[0].replace(/^#+\s*/, ''))); }
 function prettyRuleLabel(slug = '') {
   if (slug === 'wild16') return 'Wild 16';
+  if (slug === 'rand') return 'RAND';
   if (slug === 'cincinnati') return 'Cincinnati style';
   return slug.charAt(0).toUpperCase() + slug.slice(1);
 }
@@ -214,29 +215,28 @@ export function renderRulesPage(entries, changelogEntries, footerEntry = null) {
     wild16: {
       summary: 'Different capture announcements and a built-in pawn-tries rule. Read it alongside Berkeley if you want the shared game flow with the Wild 16-specific calls.',
       status: 'Implemented online'
+    },
+    rand: {
+      summary: 'Historical RAND rules from J. D. Williams, including pawn-try squares, typed captures, promotion announcements, and rebuff counts.',
+      status: 'Historical reference'
     }
   };
-  const primaryCards = ['berkeley', 'cincinnati', 'wild16']
+  const primaryCards = ['berkeley', 'cincinnati', 'wild16', 'rand']
     .map((slug) => entries.find((entry) => entry.metadata.slug === slug))
     .filter(Boolean)
     .map((entry) => {
     const note = ruleNotes[entry.metadata.slug] || { summary: entry.metadata.summary, status: '' };
-    return `<article class="surface-card rules-tile"><p class="rules-tile__eyebrow">Ruleset</p><h2>${prettyRuleLabel(entry.metadata.slug)}</h2><p>${esc(note.summary)}</p><ul class="rules-tile__meta"><li>${esc(note.status)}</li></ul><div class="rules-tile__actions"><a class="button-link button-link--primary" href="/rules/${entry.metadata.slug}">Read ${prettyRuleLabel(entry.metadata.slug)} rules</a></div></article>`;
+    return `<article class="surface-card rules-tile"><p class="rules-tile__eyebrow">Ruleset</p><h2>${prettyRuleLabel(entry.metadata.slug)}</h2><p>${esc(note.summary)}</p><ul class="rules-tile__meta"><li>${esc(note.status)}</li></ul><div class="rules-tile__actions"><a class="button-link button-link--primary" href="/rules/${entry.metadata.slug}">Read ${prettyRuleLabel(entry.metadata.slug)}</a></div></article>`;
   });
   const placeholderCards = [
     {
-      title: 'RAND rules',
-      summary: 'Placeholder for the RAND / Shapley-line rules notes. We will publish this when the source text is ready.',
-      status: 'Placeholder, not implemented yet'
-    },
-    {
-      title: 'CrazyKrieg rules',
+      title: 'CrazyKrieg',
       summary: 'Placeholder for a future crazyhouse-style hidden-information ruleset.',
       status: 'Placeholder, not implemented yet'
     }
-  ].map((entry) => `<article class="surface-card rules-tile"><p class="rules-tile__eyebrow">Planned ruleset</p><h2>${esc(entry.title)}</h2><p>${esc(entry.summary)}</p><ul class="rules-tile__meta"><li>${esc(entry.status)}</li></ul><div class="rules-tile__actions"><span>Rules placeholder</span></div></article>`);
+  ].map((entry) => `<article class="surface-card rules-tile"><p class="rules-tile__eyebrow">Planned ruleset</p><h2>${esc(entry.title)}</h2><p>${esc(entry.summary)}</p><ul class="rules-tile__meta"><li>${esc(entry.status)}</li></ul><div class="rules-tile__actions"><span>Placeholder</span></div></article>`);
   const cards = [...primaryCards, ...placeholderCards].join('');
-  return renderShell({ footerEntry, title: 'Kriegspiel — Rules', description: 'Published rulesets and a quick comparison guide.', activeNav: '/rules', canonicalPath: '/rules', structuredData: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Kriegspiel Rules', url: absUrl('/rules') }, main: `<section class="content-section"><div class="section-heading"><h1>Rules</h1><p>Berkeley, Berkeley + Any, Cincinnati, and Wild 16 are implemented online. RAND and CrazyKrieg are listed as placeholders for future rules work.</p></div><div class="feature-grid feature-grid--three rules-grid">${cards}</div><aside class="cta-panel rules-comparison-callout"><div><h2>Need the differences first?</h2><p>See the overall comparison before picking a ruleset.</p></div><div class="cta-panel__actions"><a class="button-link button-link--secondary" href="/rules/comparison/">Open rules comparison</a></div></aside></section>` });
+  return renderShell({ footerEntry, title: 'Kriegspiel — Rules', description: 'Published rulesets and a quick comparison guide.', activeNav: '/rules', canonicalPath: '/rules', structuredData: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Kriegspiel Rules', url: absUrl('/rules') }, main: `<section class="content-section"><div class="section-heading"><h1>Rules</h1><p>Berkeley, Berkeley + Any, Cincinnati, and Wild 16 are implemented online. RAND is published as a historical reference, and CrazyKrieg is a placeholder for future rules work.</p></div><div class="feature-grid feature-grid--three rules-grid">${cards}</div><aside class="cta-panel rules-comparison-callout"><div><h2>Need the differences first?</h2><p>See the overall comparison before picking a ruleset.</p></div><div class="cta-panel__actions"><a class="button-link button-link--secondary" href="/rules/comparison/">Open rules comparison</a></div></aside></section>` });
 }
 
 export function renderRuleDetailPage(entry, changelogEntries, footerEntry = null) {
