@@ -65,7 +65,8 @@ test('comparison page links all published rulesets', () => {
   assert.ok(html.includes('<a class="text-link" href="/rules/rand">RAND</a>'));
   assert.ok(html.includes('Cincinnati'));
   assert.ok(html.includes('Wild 16'));
-  assert.ok(html.includes('RAND reference'));
+  assert.ok(html.includes('rules-comparison-callout__actions'));
+  assert.ok(!html.includes('>RAND reference</a>'));
   assert.ok(html.includes('Referee says “Illegal” or “No” for illegal moves on the true board'));
   assert.ok(html.includes('Capture square (where the piece is removed from) is announced to both players after a legal capture.'));
   assert.ok(html.includes('File, rank, long diagonal, short diagonal, knight, and double checks are announced.'));
