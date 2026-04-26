@@ -20,7 +20,7 @@ test('rules landing page shows implemented rules and planned placeholders plus c
   assert.ok(html.includes('Berkeley, Berkeley + Any, Cincinnati, and Wild 16 are implemented online.'));
   assert.ok(html.includes('RAND is published as a historical reference'));
   assert.ok(html.includes('RAND'));
-  assert.ok(html.includes('Historical RAND rules from J. D. Williams'));
+  assert.ok(html.includes('Historical RAND reference from J. D. Williams'));
   assert.ok(html.includes('CrazyKrieg'));
   assert.ok(html.includes('Planned ruleset'));
   assert.ok(html.includes('Placeholder'));

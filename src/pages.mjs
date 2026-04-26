@@ -217,7 +217,7 @@ export function renderRulesPage(entries, changelogEntries, footerEntry = null) {
       status: 'Implemented online'
     },
     rand: {
-      summary: 'Historical RAND rules from J. D. Williams, including pawn-try squares, typed captures, promotion announcements, and rebuff counts.',
+      summary: 'Historical RAND reference from J. D. Williams, including pawn-try squares, typed captures, promotion announcements, and rebuff counts.',
       status: 'Historical reference'
     }
   };
