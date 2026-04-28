@@ -5,6 +5,14 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.0.38
+
+- **Rules Comparison**: simplified shared referee wording across rulesets,
+  made the RAND full-rules button match the other labels, and kept the
+  callout buttons evenly sized.
+- **Test Runner**: made `npm test` enumerate test files explicitly so it works
+  on newer Node versions.
+
 ## ks-home v. 1.0.37
 
 - **Rules Comparison CTA**: top-aligned the full-rules callout, shortened the
