@@ -5,6 +5,12 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.0.39
+
+- **CrazyKrieg Rules**: promoted CrazyKrieg from placeholder to published
+  reference rules, added footer/navigation links, and included it in the rules
+  comparison.
+
 ## ks-home v. 1.0.38
 
 - **Rules Comparison**: simplified shared referee wording across rulesets,
