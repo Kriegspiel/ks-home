@@ -5,6 +5,12 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.0.40
+
+- **English Rules**: added the Gambit Club English rules as a published
+  historical reference before CrazyKrieg, including footer/navigation links and
+  rules comparison coverage.
+
 ## ks-home v. 1.0.39
 
 - **CrazyKrieg Rules**: promoted CrazyKrieg from placeholder to published
