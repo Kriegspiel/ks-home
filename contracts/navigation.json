@@ -32,6 +32,7 @@
         { "label": "Cincinnati", "href": "/rules/cincinnati" },
         { "label": "Wild 16", "href": "/rules/wild16" },
         { "label": "RAND", "href": "/rules/rand" },
+        { "label": "CrazyKrieg", "href": "/rules/crazykrieg" },
         { "label": "Comparison", "href": "/rules/comparison/" }
       ]
     },
@@ -72,6 +73,7 @@
     { "label": "Cincinnati", "href": "/rules/cincinnati" },
     { "label": "Wild 16", "href": "/rules/wild16" },
     { "label": "RAND", "href": "/rules/rand" },
+    { "label": "CrazyKrieg", "href": "/rules/crazykrieg" },
     { "label": "Comparison", "href": "/rules/comparison/" },
     { "label": "Blog", "href": "/blog" },
     { "label": "Changelog", "href": "/changelog" },

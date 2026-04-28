@@ -31,7 +31,7 @@ function parseFooterEntry(footerEntry) {
 
 function renderFooter(footerEntry) {
   const fallbackGroups = [
-    { title: 'Rules', links: [['/rules/berkeley', 'Berkeley'], ['/rules/cincinnati', 'Cincinnati'], ['/rules/wild16', 'Wild 16'], ['/rules/rand', 'RAND'], ['/rules/comparison/', 'Comparison']] },
+    { title: 'Rules', links: [['/rules/berkeley', 'Berkeley'], ['/rules/cincinnati', 'Cincinnati'], ['/rules/wild16', 'Wild 16'], ['/rules/rand', 'RAND'], ['/rules/crazykrieg', 'CrazyKrieg'], ['/rules/comparison/', 'Comparison']] },
     { title: 'Communication', links: [['/blog', 'Blog'], ['/changelog', 'Changelog'], ['/', 'About']] },
     { title: 'Social', links: [['https://x.com/kriegspiel_org', 'X.com (@kriegspiel_org)'], ['https://github.com/Kriegspiel', 'GitHub']] }
   ];
@@ -60,6 +60,7 @@ function sectionsFromBody(body = '', limit = 4) { return body.split(/\r?\n\r?\n/
 function prettyRuleLabel(slug = '') {
   if (slug === 'wild16') return 'Wild 16';
   if (slug === 'rand') return 'RAND';
+  if (slug === 'crazykrieg') return 'CrazyKrieg';
   if (slug === 'cincinnati') return 'Cincinnati style';
   return slug.charAt(0).toUpperCase() + slug.slice(1);
 }
@@ -219,24 +220,20 @@ export function renderRulesPage(entries, changelogEntries, footerEntry = null) {
     rand: {
       summary: 'Historical RAND reference from J. D. Williams, including pawn-try squares, typed captures, promotion announcements, and rebuff counts.',
       status: 'Historical reference'
+    },
+    crazykrieg: {
+      summary: 'Crazyhouse mixed with Kriegspiel: hidden board, public reserves, typed captures, and secret drop squares.',
+      status: 'Reference rules'
     }
   };
-  const primaryCards = ['berkeley', 'cincinnati', 'wild16', 'rand']
+  const cards = ['berkeley', 'cincinnati', 'wild16', 'rand', 'crazykrieg']
     .map((slug) => entries.find((entry) => entry.metadata.slug === slug))
     .filter(Boolean)
     .map((entry) => {
     const note = ruleNotes[entry.metadata.slug] || { summary: entry.metadata.summary, status: '' };
     return `<article class="surface-card rules-tile"><p class="rules-tile__eyebrow">Ruleset</p><h2>${prettyRuleLabel(entry.metadata.slug)}</h2><p>${esc(note.summary)}</p><ul class="rules-tile__meta"><li>${esc(note.status)}</li></ul><div class="rules-tile__actions"><a class="button-link button-link--primary" href="/rules/${entry.metadata.slug}">Read ${prettyRuleLabel(entry.metadata.slug)}</a></div></article>`;
-  });
-  const placeholderCards = [
-    {
-      title: 'CrazyKrieg',
-      summary: 'Placeholder for a future crazyhouse-style hidden-information ruleset.',
-      status: 'Placeholder, not implemented yet'
-    }
-  ].map((entry) => `<article class="surface-card rules-tile"><p class="rules-tile__eyebrow">Planned ruleset</p><h2>${esc(entry.title)}</h2><p>${esc(entry.summary)}</p><ul class="rules-tile__meta"><li>${esc(entry.status)}</li></ul><div class="rules-tile__actions"><span>Placeholder</span></div></article>`);
-  const cards = [...primaryCards, ...placeholderCards].join('');
-  return renderShell({ footerEntry, title: 'Kriegspiel — Rules', description: 'Published rulesets and a quick comparison guide.', activeNav: '/rules', canonicalPath: '/rules', structuredData: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Kriegspiel Rules', url: absUrl('/rules') }, main: `<section class="content-section"><div class="section-heading"><h1>Rules</h1><p>Berkeley, Berkeley + Any, Cincinnati, and Wild 16 are implemented online. RAND is published as a historical reference, and CrazyKrieg is a placeholder for future rules work.</p></div><div class="feature-grid feature-grid--three rules-grid">${cards}</div><aside class="cta-panel rules-comparison-callout"><div><h2>Need the differences first?</h2><p>See the overall comparison before picking a ruleset.</p></div><div class="cta-panel__actions"><a class="button-link button-link--secondary" href="/rules/comparison/">Open rules comparison</a></div></aside></section>` });
+  }).join('');
+  return renderShell({ footerEntry, title: 'Kriegspiel — Rules', description: 'Published rulesets and a quick comparison guide.', activeNav: '/rules', canonicalPath: '/rules', structuredData: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Kriegspiel Rules', url: absUrl('/rules') }, main: `<section class="content-section"><div class="section-heading"><h1>Rules</h1><p>Berkeley, Berkeley + Any, Cincinnati, and Wild 16 are implemented online. RAND and CrazyKrieg are published as reference rulesets.</p></div><div class="feature-grid feature-grid--three rules-grid">${cards}</div><aside class="cta-panel rules-comparison-callout"><div><h2>Need the differences first?</h2><p>See the overall comparison before picking a ruleset.</p></div><div class="cta-panel__actions"><a class="button-link button-link--secondary" href="/rules/comparison/">Open rules comparison</a></div></aside></section>` });
 }
 
 export function renderRuleDetailPage(entry, changelogEntries, footerEntry = null) {
@@ -249,15 +246,17 @@ export function renderRulesComparisonPage(entries, footerEntry = null) {
   const captureSquareAndType = `${captureSquareOnly} The referee also says whether the captured material was a pawn or a piece.`;
   const directionalChecks = 'File, rank, long diagonal, short diagonal, knight, and double checks are announced.';
   const silentPromotion = 'Promotion is not announced and should be handled silently.';
+  const crazyKriegIllegalResponse = 'Illegal attempts are private: only the mover sees “No” or “Impossible”, and the opponent hears nothing until a legal move is complete.';
+  const crazyKriegCaptureAnnouncement = 'After a legal capture, the captured square and reserve identity are announced to both players. Promoted pawns are announced as pawns because they enter reserve as pawns.';
   const comparisonRows = [
-    ['Referee response to illegal tries', publicIllegalResponse, publicIllegalResponse, 'Illegal attempts are private: only the mover sees “Illegal move”, and the opponent hears nothing until a move is complete.', `${publicIllegalResponse} RAND also lets a player ask for the opponent’s last-move rebuff count.`],
-    ['Capture announcements', captureSquareOnly, captureSquareAndType, captureSquareAndType, captureSquareAndType],
-    ['Check announcements', directionalChecks, directionalChecks, directionalChecks, directionalChecks],
-    ['Pawn-capture handling — “Any?” rule handling', 'No built-in “Any?” rule in the original ruleset. A compatible modification is documented: the player may ask, and if the answer is “yes”, then must do a pawn capture.', 'Before each ply starts, the referee publicly announces that the player has a pawn capture whenever at least one legal pawn capture exists. The player may now try to make captures with their pawns, or may not.', 'Before each ply starts, the referee publicly announces the number of legal capturing pawn moves. The player may now try to make captures with their pawns, or may not.', 'Before moving, the referee announces the squares on which the mover’s pawns have currently valid capture tries.'],
-    ['Promotion announcements', silentPromotion, silentPromotion, silentPromotion, 'The fact that a pawn promotes is announced, but not the promoted piece type or promotion square.'],
-    ['Best fit', 'Best fit if you want the Berkeley reference rules and the Berkeley-based online play model used on this site.', 'Best fit if you want the historical Cincinnati article and its public try-based referee workflow.', 'Best fit if you want the ICC-style public announcement model with counted pawn tries and no public illegal-move call.', 'Best fit if you want the 1950 RAND historical reference, especially its spectator/referee culture and more information-rich pawn-try announcements.']
-  ].map(([label, berkeley, cincinnati, wild16, rand]) => `<tr><th scope="row">${label}</th><td>${berkeley}</td><td>${cincinnati}</td><td>${wild16}</td><td>${rand}</td></tr>`).join('');
-  return renderShell({ footerEntry, title: 'Kriegspiel — Rules Comparison', description: 'Quick comparison between the published Berkeley, Cincinnati, Wild 16, and RAND rulesets.', activeNav: '/rules', canonicalPath: '/rules/comparison/', structuredData: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Kriegspiel Rules Comparison', url: absUrl('/rules/comparison/') }, main: `<section class="content-section"><div class="section-heading"><h1>Rules comparison</h1><p>A quick side-by-side before you dive into the full rule text.</p></div><div class="table-wrap"><table><caption>Published ruleset comparison</caption><thead><tr><th>Topic</th><th><a class="text-link" href="/rules/berkeley">Berkeley</a></th><th><a class="text-link" href="/rules/cincinnati">Cincinnati</a></th><th><a class="text-link" href="/rules/wild16">Wild 16</a></th><th><a class="text-link" href="/rules/rand">RAND</a></th></tr></thead><tbody>${comparisonRows}</tbody></table></div><aside class="cta-panel rules-comparison-callout"><div><h2>Read the full rules</h2><p>Use the detailed rules pages when you want the complete wording and examples.</p></div><div class="cta-panel__actions rules-comparison-callout__actions"><a class="button-link button-link--secondary" href="/rules/berkeley">Berkeley rules</a><a class="button-link button-link--secondary" href="/rules/cincinnati">Cincinnati rules</a><a class="button-link button-link--secondary" href="/rules/wild16">Wild 16 rules</a><a class="button-link button-link--secondary" href="/rules/rand">RAND rules</a></div></aside></section>` });
+    ['Referee response to illegal tries', publicIllegalResponse, publicIllegalResponse, 'Illegal attempts are private: only the mover sees “Illegal move”, and the opponent hears nothing until a move is complete.', `${publicIllegalResponse} RAND also lets a player ask for the opponent’s last-move rebuff count.`, crazyKriegIllegalResponse],
+    ['Capture announcements', captureSquareOnly, captureSquareAndType, captureSquareAndType, captureSquareAndType, crazyKriegCaptureAnnouncement],
+    ['Check announcements', directionalChecks, directionalChecks, directionalChecks, directionalChecks, directionalChecks],
+    ['Pawn-capture handling — “Any?” rule handling', 'No built-in “Any?” rule in the original ruleset. A compatible modification is documented: the player may ask, and if the answer is “yes”, then must do a pawn capture.', 'Before each ply starts, the referee publicly announces that the player has a pawn capture whenever at least one legal pawn capture exists. The player may now try to make captures with their pawns, or may not.', 'Before each ply starts, the referee publicly announces the number of legal capturing pawn moves. The player may now try to make captures with their pawns, or may not.', 'Before moving, the referee announces the squares on which the mover’s pawns have currently valid capture tries.', 'A player may ask “Any?”; a positive answer obligates a pawn-capture try. It checks visible pawns only and reveals no target details.'],
+    ['Promotion announcements', silentPromotion, silentPromotion, silentPromotion, 'The fact that a pawn promotes is announced, but not the promoted piece type or promotion square.', 'Promotion is not announced. If the promoted pawn is later captured, it enters reserve and is announced as a pawn.'],
+    ['Best fit', 'Best fit if you want the Berkeley reference rules and the Berkeley-based online play model used on this site.', 'Best fit if you want the historical Cincinnati article and its public try-based referee workflow.', 'Best fit if you want the ICC-style public announcement model with counted pawn tries and no public illegal-move call.', 'Best fit if you want the 1950 RAND historical reference, especially its spectator/referee culture and more information-rich pawn-try announcements.', 'Best fit if you want Crazyhouse reserves and drops inside a Kriegspiel hidden-board/referee model.']
+  ].map(([label, berkeley, cincinnati, wild16, rand, crazykrieg]) => `<tr><th scope="row">${label}</th><td>${berkeley}</td><td>${cincinnati}</td><td>${wild16}</td><td>${rand}</td><td>${crazykrieg}</td></tr>`).join('');
+  return renderShell({ footerEntry, title: 'Kriegspiel — Rules Comparison', description: 'Quick comparison between the published Berkeley, Cincinnati, Wild 16, RAND, and CrazyKrieg rulesets.', activeNav: '/rules', canonicalPath: '/rules/comparison/', structuredData: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Kriegspiel Rules Comparison', url: absUrl('/rules/comparison/') }, main: `<section class="content-section"><div class="section-heading"><h1>Rules comparison</h1><p>A quick side-by-side before you dive into the full rule text.</p></div><div class="table-wrap"><table><caption>Published ruleset comparison</caption><thead><tr><th>Topic</th><th><a class="text-link" href="/rules/berkeley">Berkeley</a></th><th><a class="text-link" href="/rules/cincinnati">Cincinnati</a></th><th><a class="text-link" href="/rules/wild16">Wild 16</a></th><th><a class="text-link" href="/rules/rand">RAND</a></th><th><a class="text-link" href="/rules/crazykrieg">CrazyKrieg</a></th></tr></thead><tbody>${comparisonRows}</tbody></table></div><aside class="cta-panel rules-comparison-callout"><div><h2>Read the full rules</h2><p>Use the detailed rules pages when you want the complete wording and examples.</p></div><div class="cta-panel__actions rules-comparison-callout__actions"><a class="button-link button-link--secondary" href="/rules/berkeley">Berkeley rules</a><a class="button-link button-link--secondary" href="/rules/cincinnati">Cincinnati rules</a><a class="button-link button-link--secondary" href="/rules/wild16">Wild 16 rules</a><a class="button-link button-link--secondary" href="/rules/rand">RAND rules</a><a class="button-link button-link--secondary" href="/rules/crazykrieg">CrazyKrieg rules</a></div></aside></section>` });
 }
 
 export function renderRedirectPage({ fromPath, toPath, title = 'Redirecting…', footerEntry = null }) {
