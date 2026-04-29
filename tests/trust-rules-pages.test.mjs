@@ -106,6 +106,10 @@ test('comparison page links all published rulesets', () => {
   assert.ok(html.includes('The fact that a pawn promotes is announced, but not the promoted piece type or promotion square.'));
   assert.ok(html.includes('No separate promotion announcement is listed; the umpire communicates only the details permitted by the rules.'));
   assert.ok(html.includes('If the promoted pawn is later captured, it enters reserve and is announced as a pawn.'));
+  assert.ok(html.includes('Reserves and drops'));
+  assert.equal((html.match(/No reserves or drops; play uses only the normal pieces on the board/g) || []).length, 5);
+  assert.ok(html.includes('Captured units change color and enter public reserves.'));
+  assert.ok(html.includes('A player may spend a turn dropping a reserve unit onto an empty square; the drop square is not announced.'));
   assert.ok(!html.includes('Board-handling model'));
   assert.ok(!html.includes('Berkeley summary'));
   assert.ok(!html.includes('Cincinnati summary'));
