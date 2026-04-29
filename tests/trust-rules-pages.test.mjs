@@ -88,6 +88,7 @@ test('comparison page links all published rulesets', () => {
   assert.ok(html.indexOf('>English rules</a>') < html.indexOf('>CrazyKrieg rules</a>'));
   assert.equal((html.match(/“Illegal” or “No” means the try is illegal on the true board/g) || []).length, 3);
   assert.equal((html.match(/After a legal capture, the captured square is announced to both players/g) || []).length, 4);
+  assert.equal((html.match(/En passant is announced like a regular capture, using the square from which the pawn is removed/g) || []).length, 6);
   assert.equal((html.match(/The referee also says whether the captured material was a pawn or a piece/g) || []).length, 3);
   assert.ok(html.includes('A capture is announced with the capture square, calculated from the captured player’s side.'));
   assert.ok(html.includes('Neither the capturing man nor the captured man is named.'));
@@ -95,12 +96,13 @@ test('comparison page links all published rulesets', () => {
   assert.ok(html.includes('Promoted pawns are announced as pawns because they enter reserve as pawns.'));
   assert.ok(html.includes('File, rank, long diagonal, short diagonal, knight, and double checks are announced.'));
   assert.equal((html.match(/File, rank, long diagonal, short diagonal, knight, and double checks are announced/g) || []).length, 5);
-  assert.ok(html.includes('Long, short, rank, file, and knight checks are announced.'));
+  assert.ok(html.includes('Long, short, rank, file, knight, and double checks are announced.'));
+  assert.ok(html.includes('Illegal tries are public: the referee says “No” for hidden-position illegality, or “Impossible” / “Hell no” for impossible moves.'));
   assert.ok(html.includes('Pawn-capture handling — “Any?” rule handling'));
   assert.ok(html.includes('Before each ply starts, the referee publicly announces the number of legal capturing pawn moves.'));
   assert.ok(html.includes('the referee announces the squares on which the mover’s pawns have currently valid capture tries.'));
-  assert.ok(html.includes('If the answer is “Yes”, the player must try one pawn capture'));
-  assert.ok(html.includes('A player may ask “Any?”; a positive answer obligates a pawn-capture try.'));
+  assert.equal((html.match(/A player may ask whether any pawn capture exists. If the answer is “Yes”, the player must try one pawn capture; if that try is illegal, the player may make any legal move/g) || []).length, 2);
+  assert.ok(!html.includes('A player may ask “Any?”; a positive answer obligates a pawn-capture try.'));
   assert.ok(!html.includes('When in check, only pawn tries that would eliminate the check are announced.'));
   assert.equal((html.match(/Promotion is not announced and should be handled silently/g) || []).length, 3);
   assert.ok(html.includes('The fact that a pawn promotes is announced, but not the promoted piece type or promotion square.'));
