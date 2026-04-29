@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.0.41
+
+- **Rules Polish**: changed the Cincinnati rules card label to `Cincinnati`
+  and made the full-rules comparison buttons lay out three per row by default.
+
 ## ks-home v. 1.0.40
 
 - **English Rules**: added the Gambit Club English rules as a published

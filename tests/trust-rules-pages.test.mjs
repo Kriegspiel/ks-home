@@ -18,6 +18,7 @@ test('rules landing page shows implemented and reference rules plus comparison l
   assert.ok(html.includes('/rules/english'));
   assert.ok(html.includes('/rules/crazykrieg'));
   assert.ok(html.includes('Cincinnati'));
+  assert.ok(!html.includes('Cincinnati style'));
   assert.ok(html.includes('Historical public rules centered on legal tries'));
   assert.ok(html.includes('Wild 16'));
   assert.ok(html.includes('Different capture announcements and a built-in pawn-tries rule.'));
@@ -79,6 +80,7 @@ test('comparison page links all published rulesets', () => {
   assert.ok(html.includes('Cincinnati'));
   assert.ok(html.includes('Wild 16'));
   assert.ok(html.includes('rules-comparison-callout__actions'));
+  assert.ok(html.includes('grid-template-columns:repeat(3,minmax(0,1fr))'));
   assert.ok(!html.includes('>RAND reference</a>'));
   assert.ok(html.includes('>RAND rules</a>'));
   assert.ok(html.includes('>English rules</a>'));
