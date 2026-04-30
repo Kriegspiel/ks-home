@@ -219,15 +219,15 @@ export function renderRulesPage(entries, changelogEntries, footerEntry = null) {
     },
     rand: {
       summary: 'Historical RAND reference from J. D. Williams, including pawn-try squares, typed captures, promotion announcements, and rebuff counts.',
-      status: 'Historical reference'
+      status: 'Implemented online'
     },
     english: {
       summary: 'Gambit Club English rules with three boards, umpire-controlled legality, capture-square announcements, directional checks, and the classic Any? question.',
-      status: 'Historical reference'
+      status: 'Implemented online'
     },
     crazykrieg: {
       summary: 'Crazyhouse mixed with Kriegspiel: hidden board, public reserves, typed captures, and secret drop squares.',
-      status: 'Reference rules'
+      status: 'Implemented online'
     }
   };
   const cards = ['berkeley', 'cincinnati', 'wild16', 'rand', 'english', 'crazykrieg']
@@ -237,7 +237,7 @@ export function renderRulesPage(entries, changelogEntries, footerEntry = null) {
     const note = ruleNotes[entry.metadata.slug] || { summary: entry.metadata.summary, status: '' };
     return `<article class="surface-card rules-tile"><p class="rules-tile__eyebrow">Ruleset</p><h2>${prettyRuleLabel(entry.metadata.slug)}</h2><p>${esc(note.summary)}</p><ul class="rules-tile__meta"><li>${esc(note.status)}</li></ul><div class="rules-tile__actions"><a class="button-link button-link--primary" href="/rules/${entry.metadata.slug}">Read ${prettyRuleLabel(entry.metadata.slug)}</a></div></article>`;
   }).join('');
-  return renderShell({ footerEntry, title: 'Kriegspiel — Rules', description: 'Published rulesets and a quick comparison guide.', activeNav: '/rules', canonicalPath: '/rules', structuredData: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Kriegspiel Rules', url: absUrl('/rules') }, main: `<section class="content-section"><div class="section-heading"><h1>Rules</h1><p>Berkeley, Berkeley + Any, Cincinnati, and Wild 16 are implemented online. RAND, English, and CrazyKrieg are published as reference rulesets.</p></div><div class="feature-grid feature-grid--three rules-grid">${cards}</div><aside class="cta-panel rules-comparison-callout"><div><h2>Need the differences first?</h2><p>See the overall comparison before picking a ruleset.</p></div><div class="cta-panel__actions"><a class="button-link button-link--secondary" href="/rules/comparison/">Open rules comparison</a></div></aside></section>` });
+  return renderShell({ footerEntry, title: 'Kriegspiel — Rules', description: 'Published rulesets and a quick comparison guide.', activeNav: '/rules', canonicalPath: '/rules', structuredData: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Kriegspiel Rules', url: absUrl('/rules') }, main: `<section class="content-section"><div class="section-heading"><h1>Rules</h1><p>All published rulesets are implemented online: Berkeley, Berkeley + Any, Cincinnati, Wild 16, RAND, English, and CrazyKrieg.</p></div><div class="feature-grid feature-grid--three rules-grid">${cards}</div><aside class="cta-panel rules-comparison-callout"><div><h2>Need the differences first?</h2><p>See the overall comparison before picking a ruleset.</p></div><div class="cta-panel__actions"><a class="button-link button-link--secondary" href="/rules/comparison/">Open rules comparison</a></div></aside></section>` });
 }
 
 export function renderRuleDetailPage(entry, changelogEntries, footerEntry = null) {
