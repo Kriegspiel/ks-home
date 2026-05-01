@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.0.45
+
+- **Rules Index**: marked RAND, English, and CrazyKrieg as implemented online
+  alongside Berkeley, Cincinnati, and Wild 16.
+
 ## ks-home v. 1.0.44
 
 - **Rules Comparison**: simplified matching illegal-try and promotion wording
