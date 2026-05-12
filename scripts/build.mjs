@@ -54,6 +54,7 @@ const apiBase = process.env.KS_API_BASE ? process.env.KS_API_BASE.replace(/\/$/,
 fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
 copyStaticAsset('static/logo-theme-toggle.png', 'logo-theme-toggle.png');
+copyStaticAsset('static/social-card-20260511.png', 'social-card-20260511.png');
 copyContentAsset('binary/logo/favicon.ico', 'favicon.ico');
 copyContentAsset('binary/logo/favicon-16x16.png', 'favicon-16x16.png');
 copyContentAsset('binary/logo/favicon-32x32.png', 'favicon-32x32.png');

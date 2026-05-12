@@ -32,6 +32,14 @@ for (const route of routes) {
       failures += 1;
     }
   }
+  const imageMatch = html.match(/<meta\s+property="og:image"\s+content="https:\/\/kriegspiel\.org\/([^"#?]+)(?:[?#][^"]*)?"\s*\/>/i);
+  if (imageMatch) {
+    const imagePath = path.join(process.cwd(), "dist", imageMatch[1]);
+    if (!fs.existsSync(imagePath)) {
+      console.error(`${route}: referenced social image is missing from dist: ${imageMatch[1]}`);
+      failures += 1;
+    }
+  }
 }
 
 if (failures > 0) process.exit(1);

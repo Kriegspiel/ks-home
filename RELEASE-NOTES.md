@@ -5,6 +5,12 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.0.47
+
+- **Social Card Asset**: copied the social preview PNG into generated static
+  output and extended SEO validation to fail if an OpenGraph image is missing
+  from `dist/`.
+
 ## ks-home v. 1.0.46
 
 - **Social Link Cards**: added a versioned OpenGraph/Twitter preview image and
