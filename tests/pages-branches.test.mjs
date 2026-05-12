@@ -19,6 +19,8 @@ test("renderShell falls back canonical paths and footer variants", () => {
   });
 
   assert.ok(emptyFooterHtml.includes('<link rel="canonical" href="https://kriegspiel.org/" />'));
+  assert.ok(emptyFooterHtml.includes('<meta property="og:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
+  assert.ok(emptyFooterHtml.includes('<meta name="twitter:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
   assert.ok(emptyFooterHtml.includes('aria-current="page">Play</a>'));
   assert.ok(!emptyFooterHtml.includes(">Rules</h2>"));
 

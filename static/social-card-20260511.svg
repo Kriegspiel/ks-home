@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Kriegspiel social preview card</title>
+  <desc id="desc">Preview card for Kriegspiel, hidden-information chess online.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fff8ec" />
+      <stop offset="0.55" stop-color="#f3e4d0" />
+      <stop offset="1" stop-color="#dac3a8" />
+    </linearGradient>
+    <linearGradient id="boardLight" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f7efe3" stop-opacity="0.95" />
+      <stop offset="1" stop-color="#d1bfa7" stop-opacity="0.95" />
+    </linearGradient>
+    <linearGradient id="boardDark" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#a87950" stop-opacity="0.95" />
+      <stop offset="1" stop-color="#7b5638" stop-opacity="0.95" />
+    </linearGradient>
+    <filter id="shadow" color-interpolation-filters="sRGB" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="20" stdDeviation="24" flood-color="#2a1d13" flood-opacity="0.2" />
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#background)" />
+  <circle cx="1000" cy="92" r="250" fill="#fffaf2" opacity="0.55" />
+  <circle cx="102" cy="540" r="280" fill="#c89c6b" opacity="0.16" />
+
+  <g opacity="0.42" transform="translate(724 96) rotate(-8)">
+    <rect x="0" y="0" width="392" height="392" rx="38" fill="#f6ead9" stroke="#8b6a50" stroke-width="5" />
+    <g clip-path="url(#clip-board)">
+      <rect x="24" y="24" width="344" height="344" rx="20" fill="#f5ead9" />
+      <g>
+        <rect x="24" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="67" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="110" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="153" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="196" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="239" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="282" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="325" y="24" width="43" height="43" fill="url(#boardDark)" />
+      </g>
+      <g transform="translate(0 43)">
+        <rect x="24" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="67" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="110" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="153" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="196" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="239" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="282" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="325" y="24" width="43" height="43" fill="url(#boardLight)" />
+      </g>
+      <g transform="translate(0 86)">
+        <rect x="24" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="67" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="110" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="153" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="196" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="239" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="282" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="325" y="24" width="43" height="43" fill="url(#boardDark)" />
+      </g>
+      <g transform="translate(0 129)">
+        <rect x="24" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="67" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="110" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="153" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="196" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="239" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="282" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="325" y="24" width="43" height="43" fill="url(#boardLight)" />
+      </g>
+      <g transform="translate(0 172)">
+        <rect x="24" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="67" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="110" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="153" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="196" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="239" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="282" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="325" y="24" width="43" height="43" fill="url(#boardDark)" />
+      </g>
+      <g transform="translate(0 215)">
+        <rect x="24" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="67" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="110" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="153" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="196" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="239" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="282" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="325" y="24" width="43" height="43" fill="url(#boardLight)" />
+      </g>
+      <g transform="translate(0 258)">
+        <rect x="24" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="67" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="110" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="153" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="196" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="239" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="282" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="325" y="24" width="43" height="43" fill="url(#boardDark)" />
+      </g>
+      <g transform="translate(0 301)">
+        <rect x="24" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="67" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="110" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="153" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="196" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="239" y="24" width="43" height="43" fill="url(#boardLight)" />
+        <rect x="282" y="24" width="43" height="43" fill="url(#boardDark)" />
+        <rect x="325" y="24" width="43" height="43" fill="url(#boardLight)" />
+      </g>
+    </g>
+    <defs>
+      <clipPath id="clip-board">
+        <rect x="24" y="24" width="344" height="344" rx="20" />
+      </clipPath>
+    </defs>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="78" width="760" height="474" rx="54" fill="#fff8ef" opacity="0.92" />
+    <rect x="70" y="78" width="760" height="474" rx="54" fill="none" stroke="#d7c3ad" stroke-width="3" />
+  </g>
+  <image href="logo-theme-toggle.png" x="112" y="124" width="126" height="126" preserveAspectRatio="xMidYMid meet" />
+  <text x="260" y="174" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="700" fill="#5f412b" letter-spacing="3">KRIEGSPIEL.ORG</text>
+  <text x="112" y="344" font-family="Georgia, 'Times New Roman', serif" font-size="96" font-weight="800" fill="#1f1712">Kriegspiel</text>
+  <text x="116" y="412" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="700" fill="#5d4431">Hidden-information chess online</text>
+  <text x="116" y="470" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="600" fill="#7a614b">Berkeley, Cincinnati, Wild 16, RAND, English, and CrazyKrieg</text>
+  <rect x="920" y="476" width="188" height="58" rx="29" fill="#201610" />
+  <text x="956" y="514" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="800" fill="#fff7eb">Play now</text>
+</svg>
