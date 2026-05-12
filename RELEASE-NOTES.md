@@ -5,6 +5,12 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.0.46
+
+- **Social Link Cards**: added a versioned OpenGraph/Twitter preview image and
+  required social-card metadata so shared links render with a proper image on
+  X and other preview crawlers.
+
 ## ks-home v. 1.0.45
 
 - **Rules Index**: marked RAND, English, and CrazyKrieg as implemented online

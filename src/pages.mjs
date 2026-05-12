@@ -5,6 +5,9 @@ import { readingTimeMinutes } from './content-utils.mjs';
 
 const SITE_URL = 'https://kriegspiel.org';
 const PACKAGE_VERSION = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version;
+const SOCIAL_CARD_PATH = '/social-card-20260511.png';
+const SOCIAL_CARD_URL = absUrl(SOCIAL_CARD_PATH);
+const SOCIAL_CARD_ALT = 'Kriegspiel hidden-information chess online.';
 
 function esc(v = '') { return String(v).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;'); }
 function absUrl(path = '/') { return `${SITE_URL}${path}`; }
@@ -49,9 +52,19 @@ function metaTags({ title, description, canonicalPath, ogType = 'website' }) {
     `<meta property="og:title" content="${esc(title)}" />`,
     `<meta property="og:description" content="${esc(description)}" />`,
     `<meta property="og:url" content="${esc(canonical)}" />`,
+    `<meta property="og:site_name" content="Kriegspiel.org" />`,
+    `<meta property="og:image" content="${esc(SOCIAL_CARD_URL)}" />`,
+    `<meta property="og:image:secure_url" content="${esc(SOCIAL_CARD_URL)}" />`,
+    `<meta property="og:image:type" content="image/png" />`,
+    `<meta property="og:image:width" content="1200" />`,
+    `<meta property="og:image:height" content="630" />`,
+    `<meta property="og:image:alt" content="${esc(SOCIAL_CARD_ALT)}" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
+    `<meta name="twitter:site" content="@kriegspiel_org" />`,
     `<meta name="twitter:title" content="${esc(title)}" />`,
-    `<meta name="twitter:description" content="${esc(description)}" />`
+    `<meta name="twitter:description" content="${esc(description)}" />`,
+    `<meta name="twitter:image" content="${esc(SOCIAL_CARD_URL)}" />`,
+    `<meta name="twitter:image:alt" content="${esc(SOCIAL_CARD_ALT)}" />`
   ].join('');
 }
 

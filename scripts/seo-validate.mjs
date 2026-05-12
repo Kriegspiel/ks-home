@@ -9,7 +9,11 @@ const requiredChecks = [
   { name: "description", re: /<meta\s+name="description"\s+content="[^"]+"\s*\/>/i },
   { name: "canonical", re: /<link\s+rel="canonical"\s+href="[^"]+"\s*\/>/i },
   { name: "og:title", re: /<meta\s+property="og:title"\s+content="[^"]+"\s*\/>/i },
-  { name: "twitter:title", re: /<meta\s+name="twitter:title"\s+content="[^"]+"\s*\/>/i }
+  { name: "og:image", re: /<meta\s+property="og:image"\s+content="https:\/\/kriegspiel\.org\/social-card-\d+\.png"\s*\/>/i },
+  { name: "og:image:width", re: /<meta\s+property="og:image:width"\s+content="1200"\s*\/>/i },
+  { name: "og:image:height", re: /<meta\s+property="og:image:height"\s+content="630"\s*\/>/i },
+  { name: "twitter:title", re: /<meta\s+name="twitter:title"\s+content="[^"]+"\s*\/>/i },
+  { name: "twitter:image", re: /<meta\s+name="twitter:image"\s+content="https:\/\/kriegspiel\.org\/social-card-\d+\.png"\s*\/>/i }
 ];
 
 let failures = 0;
