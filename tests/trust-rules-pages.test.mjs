@@ -136,4 +136,6 @@ test('site markdown pages keep wrapped tables as scrollable tables on narrow scr
   assert.ok(html.includes('.table-wrap thead{display:table-header-group;}'));
   assert.ok(html.includes('.table-wrap th,.table-wrap td{display:table-cell;padding:.7rem .75rem;}'));
   assert.ok(html.includes('.prose-card .table-wrap th:first-child,.prose-card .table-wrap td:first-child{width:auto;min-width:7rem;}'));
+  assert.ok(html.includes('.prose-card .table-wrap code{white-space:normal;overflow-wrap:anywhere;word-break:break-word;}'));
+  assert.ok(html.includes('@media (min-width:701px){.prose-card .table-wrap th:first-child,.prose-card .table-wrap td:first-child{width:26%;min-width:12rem;}}'));
 });
