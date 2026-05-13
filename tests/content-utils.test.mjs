@@ -163,6 +163,15 @@ test("markdownToHtml preserves inline formatting without breaking links", () => 
   assert.ok(html.includes('<a href="https://kriegspiel.org/docs">docs</a>'));
 });
 
+test("markdownToHtml collapses solution paragraphs", () => {
+  const html = markdownToHtml("Solution: The key is `1.Rg3`, threatening **mate**.");
+
+  assert.equal(
+    html,
+    '<details class="solution-block"><summary>Show solution</summary><p>The key is <code>1.Rg3</code>, threatening <strong>mate</strong>.</p></details>',
+  );
+});
+
 test("markdownToHtml renders markdown tables", () => {
   const html = markdownToHtml([
     "| Repository | What it does |",
