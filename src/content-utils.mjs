@@ -119,7 +119,7 @@ export function markdownToHtml(markdown, options = {}) {
 
   const flushParagraph = () => {
     if (!paragraph.length) return;
-    html.push(`<p>${inlineMarkdown(paragraph.join(" "))}</p>`);
+    html.push(renderParagraph(paragraph.join(" ")));
     paragraph = [];
   };
 
@@ -332,6 +332,18 @@ function renderIncludedCodeBlock(argumentString, baseDir) {
   const label = args.title || args.label || path.basename(resolved);
   const code = fs.readFileSync(resolved, "utf8").replace(/\s+$/, "");
   return `<figure class="code-snippet"><figcaption>${escapeHtml(label)}</figcaption>${renderCodeBlock(code, language)}</figure>`;
+}
+
+function renderParagraph(text) {
+  const solutionMatch = String(text || "").match(/^Solution:\s*(.*)$/i);
+  if (solutionMatch) return renderSolutionBlock(solutionMatch[1]);
+  return `<p>${inlineMarkdown(text)}</p>`;
+}
+
+function renderSolutionBlock(solutionText) {
+  const body = String(solutionText || "").trim();
+  const bodyHtml = body ? `<p>${inlineMarkdown(body)}</p>` : "";
+  return `<details class="solution-block"><summary>Show solution</summary>${bodyHtml}</details>`;
 }
 
 function renderFenDiagram(fen) {
