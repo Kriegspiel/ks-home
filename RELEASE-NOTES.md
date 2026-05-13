@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.0.48
+
+- **Prose Tables**: let long inline-code values wrap inside markdown tables so
+  bot error-code tables do not overlap adjacent columns.
+
 ## ks-home v. 1.0.47
 
 - **Social Card Asset**: copied the social preview PNG into generated static
