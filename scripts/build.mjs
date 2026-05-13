@@ -14,6 +14,11 @@ const privacyEntry = loadSingletonEntry(contentRoot, 'site', 'privacy');
 const termsEntry = loadSingletonEntry(contentRoot, 'site', 'terms');
 const aboutEntry = loadSingletonEntry(contentRoot, 'site', 'about');
 const footerEntry = loadSingletonEntry(contentRoot, 'site', 'footer');
+const CHESS_PIECE_ASSETS = [
+  'LICENSE.md',
+  'bB.svg', 'bK.svg', 'bN.svg', 'bP.svg', 'bQ.svg', 'bR.svg',
+  'wB.svg', 'wK.svg', 'wN.svg', 'wP.svg', 'wQ.svg', 'wR.svg',
+];
 
 const seedLeaderboard = [
   { username: 'refereefox', handle: 'RefereeFox', label: 'RefereeFox', profilePath: '/players/refereefox', rating: 1968, gamesPlayed: 122, trend: 'up', isBot: false },
@@ -55,6 +60,7 @@ fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
 copyStaticAsset('static/logo-theme-toggle.png', 'logo-theme-toggle.png');
 copyStaticAsset('static/social-card-20260511.png', 'social-card-20260511.png');
+for (const asset of CHESS_PIECE_ASSETS) copyStaticAsset(`static/chess/cburnett/${asset}`, `chess/cburnett/${asset}`);
 copyContentAsset('binary/logo/favicon.ico', 'favicon.ico');
 copyContentAsset('binary/logo/favicon-16x16.png', 'favicon-16x16.png');
 copyContentAsset('binary/logo/favicon-32x32.png', 'favicon-32x32.png');
