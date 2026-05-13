@@ -119,7 +119,7 @@ test("markdownToHtml renders fenced code blocks and ordered lists", () => {
     "2. Save the returned token",
     "",
     "```bash",
-    "curl -X POST https://api.kriegspiel.org/api/auth/bots/register \\",
+    "curl -X POST https://api.kriegspiel.org/auth/bots/register \\",
     "  -H \"Content-Type: application/json\"",
     "```"
   ].join("\n"));
@@ -127,7 +127,7 @@ test("markdownToHtml renders fenced code blocks and ordered lists", () => {
   assert.ok(html.includes("<ol><li>Register the bot</li><li>Save the returned token</li></ol>"));
   assert.ok(html.includes('<pre><code class="hljs language-bash">'));
   assert.match(html, /<span class="hljs-string">&quot;Content-Type: application\/json&quot;<\/span>|Content-Type: application\/json/);
-  assert.ok(html.includes("https://api.kriegspiel.org/api/auth/bots/register"));
+  assert.ok(html.includes("https://api.kriegspiel.org/auth/bots/register"));
 });
 
 test("markdownToHtml keeps spaced and nested ordered lists in one hierarchy", () => {

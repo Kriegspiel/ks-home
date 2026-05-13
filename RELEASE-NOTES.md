@@ -5,6 +5,12 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.0.49
+
+- **API Contract**: static leaderboard regeneration now uses prefix-free
+  `api.kriegspiel.org` paths so the public API host can reject `/api/...`
+  while the browser app keeps same-origin `/api` traffic.
+
 ## ks-home v. 1.0.48
 
 - **Prose Tables**: let long inline-code values wrap inside markdown tables so

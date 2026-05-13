@@ -121,8 +121,8 @@ async function loadPublicPlayerData() {
     const username = String(entry.username || '').trim();
     if (!username) continue;
     const [profile, history] = await Promise.all([
-      fetchJson(`${apiBase}/api/user/${encodeURIComponent(username)}`),
-      fetchJson(`${apiBase}/api/user/${encodeURIComponent(username)}/games?page=1&per_page=20`),
+      fetchJson(`${apiBase}/user/${encodeURIComponent(username)}`),
+      fetchJson(`${apiBase}/user/${encodeURIComponent(username)}/games?page=1&per_page=20`),
     ]);
     profiles.push({
       profile,
@@ -134,11 +134,11 @@ async function loadPublicPlayerData() {
 
 async function loadLeaderboardEntriesFromApi() {
   const perPage = 20;
-  const firstPage = await fetchJson(`${apiBase}/api/leaderboard?page=1&per_page=${perPage}`);
+  const firstPage = await fetchJson(`${apiBase}/leaderboard?page=1&per_page=${perPage}`);
   const pages = Number(firstPage?.pagination?.pages || 1);
   const players = Array.isArray(firstPage?.players) ? [...firstPage.players] : [];
   for (let page = 2; page <= pages; page += 1) {
-    const payload = await fetchJson(`${apiBase}/api/leaderboard?page=${page}&per_page=${perPage}`);
+    const payload = await fetchJson(`${apiBase}/leaderboard?page=${page}&per_page=${perPage}`);
     if (Array.isArray(payload?.players)) players.push(...payload.players);
   }
   return players.map((player) => ({

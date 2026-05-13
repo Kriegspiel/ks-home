@@ -1,5 +1,5 @@
 {
-  "endpoint": "/api/leaderboard",
+  "endpoint": "/leaderboard",
   "cachePolicy": {
     "request": "no-store",
     "staleThresholdMs": 900000
