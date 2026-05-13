@@ -38,6 +38,37 @@ const HIGHLIGHT_LANGUAGES = [
 
 for (const [name, language] of HIGHLIGHT_LANGUAGES) hljs.registerLanguage(name, language);
 
+const FEN_FILES = ["a", "b", "c", "d", "e", "f", "g", "h"];
+const FEN_RANKS = [8, 7, 6, 5, 4, 3, 2, 1];
+const FEN_PIECE_LABELS = {
+  K: "White king",
+  Q: "White queen",
+  R: "White rook",
+  B: "White bishop",
+  N: "White knight",
+  P: "White pawn",
+  k: "Black king",
+  q: "Black queen",
+  r: "Black rook",
+  b: "Black bishop",
+  n: "Black knight",
+  p: "Black pawn"
+};
+const FEN_PIECE_ASSETS = {
+  K: "wK.svg",
+  Q: "wQ.svg",
+  R: "wR.svg",
+  B: "wB.svg",
+  N: "wN.svg",
+  P: "wP.svg",
+  k: "bK.svg",
+  q: "bQ.svg",
+  r: "bR.svg",
+  b: "bB.svg",
+  n: "bN.svg",
+  p: "bP.svg"
+};
+
 export const HOME_REQUIRED_FIELDS = [
   "eyebrow", "heroTitle", "heroLede",
   "heroPrimaryCtaLabel", "heroPrimaryCtaHref", "heroSecondaryCtaLabel", "heroSecondaryCtaHref",
@@ -128,6 +159,13 @@ export function markdownToHtml(markdown, options = {}) {
     if (includeMatch) {
       flushParagraph();
       html.push(renderIncludedCodeBlock(includeMatch[1], baseDir));
+      continue;
+    }
+
+    const fenMatch = trimmed.match(/^Diagram FEN:\s+`([^`]+)`\s*$/i);
+    if (fenMatch) {
+      flushParagraph();
+      html.push(renderFenDiagram(fenMatch[1]));
       continue;
     }
 
@@ -294,6 +332,79 @@ function renderIncludedCodeBlock(argumentString, baseDir) {
   const label = args.title || args.label || path.basename(resolved);
   const code = fs.readFileSync(resolved, "utf8").replace(/\s+$/, "");
   return `<figure class="code-snippet"><figcaption>${escapeHtml(label)}</figcaption>${renderCodeBlock(code, language)}</figure>`;
+}
+
+function renderFenDiagram(fen) {
+  const normalizedFen = String(fen || "").trim();
+  const board = parseFenBoard(normalizedFen);
+  const sideToMove = fenSideToMove(normalizedFen);
+  const squares = board.flatMap((row, rankIndex) => row.map((piece, fileIndex) => {
+    const shade = (rankIndex + fileIndex) % 2 === 0 ? "light" : "dark";
+    const rankLabel = fileIndex === 0 ? `<span class="fen-board__coord fen-board__coord--rank">${FEN_RANKS[rankIndex]}</span>` : "";
+    const fileLabel = rankIndex === 7 ? `<span class="fen-board__coord fen-board__coord--file">${FEN_FILES[fileIndex]}</span>` : "";
+    const pieceHtml = piece && FEN_PIECE_ASSETS[piece]
+      ? `<span class="fen-board__piece"><img class="fen-board__piece-image" src="/chess/cburnett/${FEN_PIECE_ASSETS[piece]}" alt="" loading="lazy" decoding="async" /></span>`
+      : "";
+    return `<div class="fen-board__square fen-board__square--${shade}">${rankLabel}${fileLabel}${pieceHtml}</div>`;
+  })).join("");
+
+  const sideHtml = sideToMove ? `<span class="fen-diagram__side">${escapeHtml(sideToMove)}</span>` : "";
+  return [
+    `<figure class="fen-diagram">`,
+    `<div class="fen-board" role="img" aria-label="${escapeHtml(describeFenBoard(board, sideToMove))}">`,
+    `<div class="fen-board__grid" aria-hidden="true">${squares}</div>`,
+    `</div>`,
+    `<figcaption class="fen-diagram__caption">${sideHtml}<span>Diagram FEN: <code>${escapeHtml(normalizedFen)}</code></span></figcaption>`,
+    `</figure>`
+  ].join("");
+}
+
+function parseFenBoard(fen) {
+  const placement = String(fen || "8/8/8/8/8/8/8/8").trim().split(/\s+/)[0] || "8/8/8/8/8/8/8/8";
+  const fenRanks = placement.split("/");
+
+  return FEN_RANKS.map((_, rankIndex) => {
+    const tokens = (fenRanks[rankIndex] || "8").split("");
+    const row = [];
+
+    for (const token of tokens) {
+      if (token >= "1" && token <= "8") {
+        row.push(...Array(Number(token)).fill(null));
+      } else if (/^[prnbqkPRNBQK]$/.test(token)) {
+        row.push(token);
+      }
+    }
+
+    while (row.length < 8) row.push(null);
+    return row.slice(0, 8);
+  });
+}
+
+function fenSideToMove(fen) {
+  const activeColor = String(fen || "").trim().split(/\s+/)[1];
+  if (activeColor === "w") return "White to move";
+  if (activeColor === "b") return "Black to move";
+  return "";
+}
+
+function describeFenBoard(board, sideToMove) {
+  const white = [];
+  const black = [];
+  board.forEach((row, rankIndex) => row.forEach((piece, fileIndex) => {
+    if (!piece || !FEN_PIECE_LABELS[piece]) return;
+    const label = FEN_PIECE_LABELS[piece];
+    const square = `${FEN_FILES[fileIndex]}${FEN_RANKS[rankIndex]}`;
+    const entry = `${label.replace(/^White /, "").replace(/^Black /, "")} ${square}`;
+    if (piece === piece.toUpperCase()) white.push(entry);
+    else black.push(entry);
+  }));
+
+  const parts = ["Chess diagram"];
+  if (sideToMove) parts.push(sideToMove.toLowerCase());
+  if (white.length) parts.push(`White: ${white.join(", ")}`);
+  if (black.length) parts.push(`Black: ${black.join(", ")}`);
+  if (!white.length && !black.length) parts.push("empty board");
+  return `${parts.join(". ")}.`;
 }
 
 function renderCodeBlock(source, languageHint) {

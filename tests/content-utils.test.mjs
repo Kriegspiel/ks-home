@@ -191,6 +191,26 @@ test("markdownToHtml renders thematic breaks as horizontal rules", () => {
   assert.ok(html.includes("<p>After</p>"));
 });
 
+test("markdownToHtml renders Diagram FEN lines with cburnett piece assets", () => {
+  const html = markdownToHtml("Diagram FEN: `8/3k4/8/8/8/8/8/4K3 w - - 0 1`");
+
+  assert.ok(html.includes('<figure class="fen-diagram">'));
+  assert.ok(html.includes('<span class="fen-diagram__side">White to move</span>'));
+  assert.ok(html.includes('src="/chess/cburnett/bK.svg"'));
+  assert.ok(html.includes('src="/chess/cburnett/wK.svg"'));
+  assert.ok(html.includes('aria-label="Chess diagram. white to move. White: king e1. Black: king d7."'));
+  assert.ok(html.includes("<code>8/3k4/8/8/8/8/8/4K3 w - - 0 1</code>"));
+});
+
+test("markdownToHtml renders malformed Diagram FEN lines as empty boards", () => {
+  const html = markdownToHtml("Diagram FEN: `x/8/8/8/8/8/8/8 b - - 0 1`");
+
+  assert.ok(html.includes('<figure class="fen-diagram">'));
+  assert.ok(html.includes('<span class="fen-diagram__side">Black to move</span>'));
+  assert.ok(html.includes('aria-label="Chess diagram. black to move. empty board."'));
+  assert.equal(html.includes('src="/chess/cburnett/'), false);
+});
+
 test("markdownToHtml highlights include-code snippets with the same renderer", () => {
   const fixtureDir = path.join(process.cwd(), "tests", "fixtures", "snippet-highlight");
   const html = markdownToHtml('::include-code src="example.sh"', { baseDir: fixtureDir });
