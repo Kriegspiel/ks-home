@@ -65,9 +65,7 @@
     diagram.addEventListener("dragover", handleDragOver);
     diagram.addEventListener("dragleave", handleDragLeave);
     diagram.addEventListener("drop", handleDrop);
-    diagram.addEventListener("dragend", function () {
-      clearDragTargets(diagram);
-    });
+    diagram.addEventListener("dragend", handleDragEnd);
   }
 
   function handleDocumentClick(event) {
@@ -114,6 +112,11 @@
       return;
     }
 
+    if (!canPlacePhantom(square)) {
+      closeActiveMenu();
+      return;
+    }
+
     openPhantomMenu(diagram, square, event);
   }
 
@@ -130,6 +133,7 @@
     if (!payload.square) return;
 
     selectSquare(diagram, square, payload.kind);
+    diagram.dataset.fenDropHandled = "false";
     event.dataTransfer.effectAllowed = "move";
     event.dataTransfer.setData("application/x-ks-fen-piece", JSON.stringify(payload));
     event.dataTransfer.setData("text/plain", payload.kind + ":" + payload.square);
@@ -155,11 +159,26 @@
     var square = event.target.closest("[data-fen-square]");
     if (!square || !diagram.contains(square)) return;
     event.preventDefault();
+    diagram.dataset.fenDropHandled = "true";
     clearDragTargets(diagram);
 
     var payload = readDragPayload(event);
     if (!payload.square || !payload.kind) return;
     movePiece(diagram, payload.square, square.dataset.square, payload.kind);
+  }
+
+  function handleDragEnd(event) {
+    var diagram = event.currentTarget;
+    var dropHandled = diagram.dataset.fenDropHandled === "true";
+    delete diagram.dataset.fenDropHandled;
+    clearDragTargets(diagram);
+
+    if (dropHandled) return;
+    if (isDropOutsideBoard(diagram, event)) {
+      removeSelectedPiece(diagram);
+      return;
+    }
+    clearSelection(diagram);
   }
 
   function readDragPayload(event) {
@@ -189,9 +208,14 @@
       clearSelection(diagram);
       return;
     }
+    if (kind === "phantom" && !canPlacePhantom(toSquare)) {
+      clearSelection(diagram);
+      return;
+    }
 
     fromSquare.dataset[dataKey] = "";
     toSquare.dataset[dataKey] = piece;
+    if (kind !== "phantom") toSquare.dataset.phantomPiece = "";
     renderSquare(fromSquare);
     renderSquare(toSquare);
     markLastMove(diagram, fromSquare, toSquare);
@@ -202,6 +226,14 @@
     var dataKey = kind === "phantom" ? "phantomPiece" : "piece";
     square.dataset[dataKey] = "";
     renderSquare(square);
+  }
+
+  function removeSelectedPiece(diagram) {
+    var selectedSquareName = diagram.dataset.fenSelectedSquare || "";
+    var selectedKind = diagram.dataset.fenSelectedKind || "";
+    var square = findSquare(diagram, selectedSquareName);
+    if (square && selectedKind) removePiece(square, selectedKind);
+    clearSelection(diagram);
   }
 
   function resetDiagram(diagram) {
@@ -243,7 +275,7 @@
 
       var square = findSquare(diagram, menu.dataset.fenTargetSquare || "");
       var piece = button.dataset.fenPhantomChoice || "";
-      if (square && PIECE_ASSETS[piece]) {
+      if (square && canPlacePhantom(square) && PIECE_ASSETS[piece]) {
         square.dataset.phantomPiece = piece;
         renderSquare(square);
       }
@@ -255,6 +287,7 @@
   }
 
   function openPhantomMenu(diagram, square, event) {
+    if (!canPlacePhantom(square)) return;
     closeActiveMenu();
     var menu = diagram.querySelector("[data-fen-phantom-menu]");
     if (!menu) menu = createPhantomMenu(diagram);
@@ -328,6 +361,13 @@
     });
   }
 
+  function isDropOutsideBoard(diagram, event) {
+    if (event.clientX === 0 && event.clientY === 0) return false;
+    var grid = diagram.querySelector("[data-fen-grid]");
+    var target = document.elementFromPoint(event.clientX, event.clientY);
+    return !!grid && (!target || !grid.contains(target));
+  }
+
   function closeActiveMenu() {
     if (!activeMenu) return;
     activeMenu.hidden = true;
@@ -348,6 +388,8 @@
       piece.remove();
     });
 
+    if (square.dataset.piece) square.dataset.phantomPiece = "";
+
     if (square.dataset.phantomPiece) {
       square.appendChild(createPiece(square.dataset.phantomPiece, "phantom"));
       square.dataset.fenPhantom = "true";
@@ -359,6 +401,10 @@
 
     if (square.dataset.piece) square.appendChild(createPiece(square.dataset.piece, "piece"));
     square.setAttribute("aria-label", squareLabel(square));
+  }
+
+  function canPlacePhantom(square) {
+    return !square.dataset.piece;
   }
 
   function createPiece(piece, kind) {

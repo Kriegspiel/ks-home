@@ -5,6 +5,12 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.2.6
+
+- **Problem Boards**: prevented phantom pieces from being placed on occupied
+  squares and made dragged-off-board pieces disappear for both real and phantom
+  pieces.
+
 ## ks-home v. 1.2.5
 
 - **Problem Boards**: fixed static FEN board row sizing so all eight ranks share
