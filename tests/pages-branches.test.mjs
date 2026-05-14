@@ -21,9 +21,11 @@ test("renderShell falls back canonical paths and footer variants", () => {
   assert.ok(emptyFooterHtml.includes('<link rel="canonical" href="https://kriegspiel.org/" />'));
   assert.ok(emptyFooterHtml.includes('<meta property="og:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
   assert.ok(emptyFooterHtml.includes('<meta name="twitter:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
-  assert.ok(emptyFooterHtml.includes('<script src="/fen-board.js?v=1.2.2" defer></script>'));
+  assert.ok(emptyFooterHtml.includes('<script src="/fen-board.js?v=1.2.3" defer></script>'));
   assert.ok(emptyFooterHtml.includes("--square-capture-overlay:transparent"));
   assert.ok(emptyFooterHtml.includes("var(--square-ring-capture),var(--square-ring-illegal),var(--square-ring-suggested)"));
+  assert.ok(emptyFooterHtml.includes(".fen-board__coord--file{right:.28rem;bottom:.34rem;}"));
+  assert.ok(emptyFooterHtml.includes(".fen-board__coord{font-size:.52rem;}.fen-board__coord--file{bottom:.32rem;}"));
   assert.ok(emptyFooterHtml.includes(".fen-board__square.square--highlighted"));
   assert.ok(emptyFooterHtml.includes(".fen-board__square.square--suggested"));
   assert.ok(emptyFooterHtml.includes('aria-current="page">Play</a>'));
