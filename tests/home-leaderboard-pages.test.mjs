@@ -162,7 +162,7 @@ test("public profile page renders stats and elo history", () => {
   assert.ok(html.includes("Back to leaderboard"));
 });
 
-test("blog pages show date and reading time without the visible author label", () => {
+test("blog pages show date and singular reading time without the visible author label", () => {
   const entry = {
     metadata: {
       slug: "welcome",
@@ -179,15 +179,37 @@ test("blog pages show date and reading time without the visible author label", (
   const indexHtml = renderBlogIndex([entry]);
   assert.ok(indexHtml.includes("Notes and updates about Kriegspiel."));
   assert.ok(indexHtml.includes("2026-03-27"));
-  assert.ok(indexHtml.includes("mins read"));
-  assert.ok(!indexHtml.includes("min read"));
+  assert.ok(indexHtml.includes("1 min read"));
+  assert.ok(!indexHtml.includes("1 mins read"));
   assert.ok(!indexHtml.includes("2026-03-27 • Kriegspiel Team •"));
   assert.ok(!indexHtml.includes("Kriegspiel Team"));
 
   const detailHtml = renderBlogDetail(entry);
   assert.ok(detailHtml.includes("2026-03-27"));
-  assert.ok(detailHtml.includes("mins read"));
-  assert.ok(!detailHtml.includes("min read"));
+  assert.ok(detailHtml.includes("1 min read"));
+  assert.ok(!detailHtml.includes("1 mins read"));
   assert.ok(!detailHtml.includes("2026-03-27 • Kriegspiel Team •"));
   assert.ok(!detailHtml.includes("Kriegspiel Team"));
+});
+
+test("blog pages show plural reading time for longer posts", () => {
+  const entry = {
+    metadata: {
+      slug: "long-note",
+      title: "Long note",
+      summary: "A longer note.",
+      publishedAt: "2026-04-01",
+      updatedAt: "2026-04-01",
+    },
+    body: Array.from({ length: 221 }, (_, index) => `word${index}`).join(" "),
+    bodyHtml: "<p>A longer note.</p>"
+  };
+
+  const indexHtml = renderBlogIndex([entry]);
+  assert.ok(indexHtml.includes("2 mins read"));
+  assert.ok(!indexHtml.includes("2 min read"));
+
+  const detailHtml = renderBlogDetail(entry);
+  assert.ok(detailHtml.includes("2 mins read"));
+  assert.ok(!detailHtml.includes("2 min read"));
 });

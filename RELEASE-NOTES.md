@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.2.11
+
+- **Blog**: made reading-time labels grammatically singular for one-minute
+  posts (`1 min read`) and plural otherwise (`N mins read`).
+
 ## ks-home v. 1.2.10
 
 - **Blog**: changed reading-time labels from `min read` to `mins read` across
