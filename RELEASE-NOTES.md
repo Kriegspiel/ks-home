@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.2.5
+
+- **Problem Boards**: fixed static FEN board row sizing so all eight ranks share
+  the full board height and the bottom rank is no longer clipped.
+
 ## ks-home v. 1.2.4
 
 - **Problem Boards**: moved bottom file labels away from the rounded clipped
