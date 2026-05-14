@@ -5,6 +5,12 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.2.12
+
+- **Problem Boards**: lazy-initialize interactive blog problem boards near the
+  viewport, avoid re-rendering static pieces on startup, and reuse one phantom
+  picker menu to improve large problem-post performance in Safari and Chrome.
+
 ## ks-home v. 1.2.11
 
 - **Blog**: made reading-time labels grammatically singular for one-minute

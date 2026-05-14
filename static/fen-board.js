@@ -29,25 +29,53 @@
   };
   var PHANTOM_PIECES = ["K", "Q", "R", "B", "N", "P", "k", "q", "r", "b", "n", "p"];
   var activeMenu = null;
+  var activeMenuDiagram = null;
+  var phantomMenu = null;
+  var lazyObserver = null;
 
   function init() {
-    document.querySelectorAll("[data-fen-diagram]").forEach(initDiagram);
+    document.querySelectorAll("[data-fen-diagram]").forEach(scheduleDiagramInit);
     document.addEventListener("click", handleDocumentClick);
     document.addEventListener("keydown", handleDocumentKeydown);
     window.addEventListener("resize", closeActiveMenu);
     window.addEventListener("scroll", closeActiveMenu, true);
   }
 
+  function scheduleDiagramInit(diagram) {
+    if (diagram.dataset.fenReady === "true" || diagram.dataset.fenQueued === "true") return;
+    if (!("IntersectionObserver" in window)) {
+      initDiagram(diagram);
+      return;
+    }
+
+    diagram.dataset.fenQueued = "true";
+    if (!lazyObserver) {
+      lazyObserver = new IntersectionObserver(handleLazyIntersections, {
+        rootMargin: "900px 0px",
+        threshold: 0.01
+      });
+    }
+    lazyObserver.observe(diagram);
+  }
+
+  function handleLazyIntersections(entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting && entry.intersectionRatio <= 0) return;
+      lazyObserver.unobserve(entry.target);
+      initDiagram(entry.target);
+    });
+  }
+
   function initDiagram(diagram) {
     if (diagram.dataset.fenReady === "true") return;
     diagram.dataset.fenReady = "true";
+    delete diagram.dataset.fenQueued;
     diagram.dataset.fenSelectedSquare = "";
     diagram.dataset.fenSelectedKind = "";
     diagram.dataset.fenLastMove = "";
 
-    createPhantomMenu(diagram);
     diagram.querySelectorAll("[data-fen-square]").forEach(function (square) {
-      renderSquare(square);
+      syncSquareState(square);
       square.addEventListener("click", function (event) {
         handleSquareClick(diagram, square, event);
       });
@@ -246,7 +274,9 @@
     closeActiveMenu();
   }
 
-  function createPhantomMenu(diagram) {
+  function getPhantomMenu() {
+    if (phantomMenu) return phantomMenu;
+
     var menu = document.createElement("div");
     menu.className = "fen-phantom-menu";
     menu.hidden = true;
@@ -272,6 +302,11 @@
       if (!button || !menu.contains(button)) return;
       event.stopPropagation();
 
+      var diagram = activeMenuDiagram;
+      if (!diagram) {
+        closeActiveMenu();
+        return;
+      }
       var square = findSquare(diagram, menu.dataset.fenTargetSquare || "");
       var piece = button.dataset.fenPhantomChoice || "";
       if (square && canPlacePhantom(square) && PIECE_ASSETS[piece]) {
@@ -281,15 +316,15 @@
       closeActiveMenu();
     });
 
-    diagram.appendChild(menu);
-    return menu;
+    document.body.appendChild(menu);
+    phantomMenu = menu;
+    return phantomMenu;
   }
 
   function openPhantomMenu(diagram, square, event) {
     if (!canPlacePhantom(square)) return;
     closeActiveMenu();
-    var menu = diagram.querySelector("[data-fen-phantom-menu]");
-    if (!menu) menu = createPhantomMenu(diagram);
+    var menu = getPhantomMenu();
 
     menu.dataset.fenTargetSquare = square.dataset.square || "";
     menu.hidden = false;
@@ -305,6 +340,7 @@
     menu.style.top = top + "px";
     menu.style.visibility = "";
     activeMenu = menu;
+    activeMenuDiagram = diagram;
 
     var firstButton = menu.querySelector("[data-fen-phantom-choice]");
     if (firstButton) firstButton.focus({ preventScroll: true });
@@ -372,6 +408,7 @@
     activeMenu.hidden = true;
     activeMenu.dataset.fenTargetSquare = "";
     activeMenu = null;
+    activeMenuDiagram = null;
   }
 
   function findSquare(diagram, squareName) {
@@ -387,10 +424,19 @@
       piece.remove();
     });
 
-    if (square.dataset.piece) square.dataset.phantomPiece = "";
+    syncSquareState(square);
 
     if (square.dataset.phantomPiece) {
       square.appendChild(createPiece(square.dataset.phantomPiece, "phantom"));
+    }
+
+    if (square.dataset.piece) square.appendChild(createPiece(square.dataset.piece, "piece"));
+  }
+
+  function syncSquareState(square) {
+    if (square.dataset.piece) square.dataset.phantomPiece = "";
+
+    if (square.dataset.phantomPiece) {
       square.dataset.fenPhantom = "true";
       square.classList.add("square--phantom");
     } else {
@@ -398,7 +444,6 @@
       square.classList.remove("square--phantom");
     }
 
-    if (square.dataset.piece) square.appendChild(createPiece(square.dataset.piece, "piece"));
     square.setAttribute("aria-label", squareLabel(square));
   }
 

@@ -52,3 +52,35 @@ test("FEN board script deselects instead of removing on same-square clicks", () 
   assert.ok(script.includes("if (selectedSquareName === square.dataset.square) {\n        clearSelection(diagram);\n      } else {"));
   assert.ok(!script.includes("if (selectedSquareName === square.dataset.square) {\n        removePiece(square, selectedKind);"));
 });
+
+test("FEN board script lazy-initializes problem boards near the viewport", () => {
+  const script = fs.readFileSync(path.join(process.cwd(), "static", "fen-board.js"), "utf8");
+
+  assert.ok(script.includes('document.querySelectorAll("[data-fen-diagram]").forEach(scheduleDiagramInit)'));
+  assert.ok(script.includes('new IntersectionObserver(handleLazyIntersections, {'));
+  assert.ok(script.includes('rootMargin: "900px 0px"'));
+  assert.ok(script.includes('lazyObserver.observe(diagram)'));
+  assert.ok(script.includes('lazyObserver.unobserve(entry.target)'));
+  assert.ok(script.includes('initDiagram(entry.target)'));
+});
+
+test("FEN board script avoids startup piece re-rendering", () => {
+  const script = fs.readFileSync(path.join(process.cwd(), "static", "fen-board.js"), "utf8");
+
+  assert.ok(script.includes("function syncSquareState(square)"));
+  assert.ok(script.includes("syncSquareState(square);"));
+  assert.ok(script.includes("function renderSquare(square)"));
+  assert.ok(!script.includes("renderSquare(square);\n      square.addEventListener(\"click\""));
+});
+
+test("FEN board script reuses one shared phantom menu", () => {
+  const script = fs.readFileSync(path.join(process.cwd(), "static", "fen-board.js"), "utf8");
+
+  assert.ok(script.includes("var phantomMenu = null;"));
+  assert.ok(script.includes("function getPhantomMenu()"));
+  assert.ok(script.includes("document.body.appendChild(menu);"));
+  assert.ok(script.includes("activeMenuDiagram = diagram;"));
+  assert.ok(script.includes("activeMenuDiagram = null;"));
+  assert.ok(!script.includes("createPhantomMenu(diagram)"));
+  assert.ok(!script.includes("diagram.appendChild(menu)"));
+});
