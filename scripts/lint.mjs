@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 
-const roots = ["scripts", "src", "tests"];
+const roots = ["scripts", "src", "static", "tests"];
 const files = [];
 for (const root of roots) {
   const abs = path.resolve(process.cwd(), root);
@@ -14,7 +14,7 @@ function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) walk(full);
-    else if (entry.isFile() && full.endsWith(".mjs")) files.push(full);
+    else if (entry.isFile() && (full.endsWith(".mjs") || full.endsWith(".js"))) files.push(full);
   }
 }
 

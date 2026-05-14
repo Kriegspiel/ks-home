@@ -203,7 +203,13 @@ test("markdownToHtml renders thematic breaks as horizontal rules", () => {
 test("markdownToHtml renders Diagram FEN lines with cburnett piece assets", () => {
   const html = markdownToHtml("Diagram FEN: `8/3k4/8/8/8/8/8/4K3 w - - 0 1`");
 
-  assert.ok(html.includes('<figure class="fen-diagram">'));
+  assert.ok(html.includes('<figure class="fen-diagram" data-fen-diagram'));
+  assert.ok(html.includes('data-fen="8/3k4/8/8/8/8/8/4K3 w - - 0 1"'));
+  assert.ok(html.includes('data-fen-square data-square="d7" data-initial-piece="k" data-piece="k"'));
+  assert.ok(html.includes('data-fen-square data-square="e1" data-initial-piece="K" data-piece="K"'));
+  assert.ok(html.includes('data-phantom-piece=""'));
+  assert.ok(html.includes('data-fen-reset>Reset</button>'));
+  assert.ok(html.includes('data-fen-phantom="Q"'));
   assert.ok(html.includes('<span class="fen-diagram__side">White to move</span>'));
   assert.ok(html.includes('src="/chess/cburnett/bK.svg"'));
   assert.ok(html.includes('src="/chess/cburnett/wK.svg"'));
@@ -214,10 +220,11 @@ test("markdownToHtml renders Diagram FEN lines with cburnett piece assets", () =
 test("markdownToHtml renders malformed Diagram FEN lines as empty boards", () => {
   const html = markdownToHtml("Diagram FEN: `x/8/8/8/8/8/8/8 b - - 0 1`");
 
-  assert.ok(html.includes('<figure class="fen-diagram">'));
+  assert.ok(html.includes('<figure class="fen-diagram" data-fen-diagram'));
   assert.ok(html.includes('<span class="fen-diagram__side">Black to move</span>'));
   assert.ok(html.includes('aria-label="Chess diagram. black to move. empty board."'));
-  assert.equal(html.includes('src="/chess/cburnett/'), false);
+  assert.ok(html.includes('data-fen-square data-square="a8" data-initial-piece="" data-piece=""'));
+  assert.equal(html.includes('data-initial-piece="x"'), false);
 });
 
 test("markdownToHtml highlights include-code snippets with the same renderer", () => {

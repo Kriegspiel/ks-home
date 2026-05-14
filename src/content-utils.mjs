@@ -352,23 +352,38 @@ function renderFenDiagram(fen) {
   const sideToMove = fenSideToMove(normalizedFen);
   const squares = board.flatMap((row, rankIndex) => row.map((piece, fileIndex) => {
     const shade = (rankIndex + fileIndex) % 2 === 0 ? "light" : "dark";
+    const square = `${FEN_FILES[fileIndex]}${FEN_RANKS[rankIndex]}`;
     const rankLabel = fileIndex === 0 ? `<span class="fen-board__coord fen-board__coord--rank">${FEN_RANKS[rankIndex]}</span>` : "";
     const fileLabel = rankIndex === 7 ? `<span class="fen-board__coord fen-board__coord--file">${FEN_FILES[fileIndex]}</span>` : "";
-    const pieceHtml = piece && FEN_PIECE_ASSETS[piece]
-      ? `<span class="fen-board__piece"><img class="fen-board__piece-image" src="/chess/cburnett/${FEN_PIECE_ASSETS[piece]}" alt="" loading="lazy" decoding="async" /></span>`
-      : "";
-    return `<div class="fen-board__square fen-board__square--${shade}">${rankLabel}${fileLabel}${pieceHtml}</div>`;
+    const pieceHtml = renderFenPiece(piece, "piece");
+    return `<button type="button" class="fen-board__square fen-board__square--${shade}" data-fen-square data-square="${square}" data-initial-piece="${piece || ""}" data-piece="${piece || ""}" data-phantom-piece="" aria-label="${escapeHtml(describeFenSquare(square, piece))}">${rankLabel}${fileLabel}${pieceHtml}</button>`;
   })).join("");
 
   const sideHtml = sideToMove ? `<span class="fen-diagram__side">${escapeHtml(sideToMove)}</span>` : "";
   return [
-    `<figure class="fen-diagram">`,
-    `<div class="fen-board" role="img" aria-label="${escapeHtml(describeFenBoard(board, sideToMove))}">`,
-    `<div class="fen-board__grid" aria-hidden="true">${squares}</div>`,
+    `<figure class="fen-diagram" data-fen-diagram data-fen="${escapeHtml(normalizedFen)}">`,
+    `<div class="fen-diagram__workspace">`,
+    `<div class="fen-board" role="group" aria-label="${escapeHtml(describeFenBoard(board, sideToMove))}">`,
+    `<div class="fen-board__grid" data-fen-grid>${squares}</div>`,
+    `</div>`,
+    renderFenBoardTools(),
     `</div>`,
     `<figcaption class="fen-diagram__caption">${sideHtml}<span>Diagram FEN: <code>${escapeHtml(normalizedFen)}</code></span></figcaption>`,
     `</figure>`
   ].join("");
+}
+
+function renderFenPiece(piece, kind) {
+  if (!piece || !FEN_PIECE_ASSETS[piece]) return "";
+  const phantomClass = kind === "phantom" ? " fen-board__piece--phantom" : "";
+  return `<span class="fen-board__piece${phantomClass}" draggable="true" data-fen-piece="${piece}" data-fen-piece-kind="${kind}"><img class="fen-board__piece-image" src="/chess/cburnett/${FEN_PIECE_ASSETS[piece]}" alt="" loading="lazy" decoding="async" draggable="false" /></span>`;
+}
+
+function renderFenBoardTools() {
+  const palette = Object.keys(FEN_PIECE_ASSETS)
+    .map((piece) => `<button type="button" class="fen-board-tools__piece" data-fen-phantom="${piece}" aria-pressed="false" aria-label="Add phantom ${FEN_PIECE_LABELS[piece].toLowerCase()}">${renderFenPiece(piece, "phantom")}</button>`)
+    .join("");
+  return `<div class="fen-board-tools" aria-label="Board tools"><button type="button" class="fen-board-tools__reset" data-fen-reset>Reset</button><div class="fen-board-tools__modes" role="group" aria-label="Board mode"><button type="button" class="fen-board-tools__mode" data-fen-mode="move" aria-pressed="true">Move</button><button type="button" class="fen-board-tools__mode" data-fen-mode="erase" aria-pressed="false">Erase</button></div><div class="fen-board-tools__palette" aria-label="Phantom pieces"><span class="fen-board-tools__label">Phantom</span><div class="fen-board-tools__pieces">${palette}</div></div></div>`;
 }
 
 function parseFenBoard(fen) {
@@ -417,6 +432,11 @@ function describeFenBoard(board, sideToMove) {
   if (black.length) parts.push(`Black: ${black.join(", ")}`);
   if (!white.length && !black.length) parts.push("empty board");
   return `${parts.join(". ")}.`;
+}
+
+function describeFenSquare(square, piece) {
+  if (piece && FEN_PIECE_LABELS[piece]) return `${square}: ${FEN_PIECE_LABELS[piece]}`;
+  return `${square}: empty`;
 }
 
 function renderCodeBlock(source, languageHint) {
