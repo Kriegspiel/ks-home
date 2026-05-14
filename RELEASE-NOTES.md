@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.2.10
+
+- **Blog**: changed reading-time labels from `min read` to `mins read` across
+  blog index and post pages.
+
 ## ks-home v. 1.2.9
 
 - **Problem Boards**: made interactive board sizing more explicit for Firefox so
