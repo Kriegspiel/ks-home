@@ -179,13 +179,15 @@ test("blog pages show date and reading time without the visible author label", (
   const indexHtml = renderBlogIndex([entry]);
   assert.ok(indexHtml.includes("Notes and updates about Kriegspiel."));
   assert.ok(indexHtml.includes("2026-03-27"));
-  assert.ok(indexHtml.includes("min read"));
+  assert.ok(indexHtml.includes("mins read"));
+  assert.ok(!indexHtml.includes("min read"));
   assert.ok(!indexHtml.includes("2026-03-27 • Kriegspiel Team •"));
   assert.ok(!indexHtml.includes("Kriegspiel Team"));
 
   const detailHtml = renderBlogDetail(entry);
   assert.ok(detailHtml.includes("2026-03-27"));
-  assert.ok(detailHtml.includes("min read"));
+  assert.ok(detailHtml.includes("mins read"));
+  assert.ok(!detailHtml.includes("min read"));
   assert.ok(!detailHtml.includes("2026-03-27 • Kriegspiel Team •"));
   assert.ok(!detailHtml.includes("Kriegspiel Team"));
 });
