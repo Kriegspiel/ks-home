@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.2.9
+
+- **Problem Boards**: made interactive board sizing more explicit for Firefox so
+  problem diagrams do not collapse to a tiny min-content board.
+
 ## ks-home v. 1.2.8
 
 - **Problem Boards**: changed same-square clicks to deselect the selected piece
