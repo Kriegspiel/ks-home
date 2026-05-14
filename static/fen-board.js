@@ -32,6 +32,7 @@
   var activeMenuDiagram = null;
   var phantomMenu = null;
   var lazyObserver = null;
+  var transparentDragImage = null;
 
   function init() {
     document.querySelectorAll("[data-fen-diagram]").forEach(scheduleDiagramInit);
@@ -73,8 +74,11 @@
     diagram.dataset.fenSelectedSquare = "";
     diagram.dataset.fenSelectedKind = "";
     diagram.dataset.fenLastMove = "";
+    diagram.dataset.fenDragTargetSquare = "";
+    diagram.fenSquareMap = Object.create(null);
 
     diagram.querySelectorAll("[data-fen-square]").forEach(function (square) {
+      if (square.dataset.square) diagram.fenSquareMap[square.dataset.square] = square;
       syncSquareState(square);
       square.addEventListener("click", function (event) {
         handleSquareClick(diagram, square, event);
@@ -161,9 +165,13 @@
 
     selectSquare(diagram, square, payload.kind);
     diagram.dataset.fenDropHandled = "false";
+    diagram.dataset.fenDragging = "true";
     event.dataTransfer.effectAllowed = "move";
     event.dataTransfer.setData("application/x-ks-fen-piece", JSON.stringify(payload));
     event.dataTransfer.setData("text/plain", payload.kind + ":" + payload.square);
+    if (event.dataTransfer.setDragImage) {
+      event.dataTransfer.setDragImage(getTransparentDragImage(), 0, 0);
+    }
   }
 
   function handleDragOver(event) {
@@ -172,6 +180,7 @@
     if (!square || !diagram.contains(square)) return;
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
+    if (diagram.dataset.fenDragTargetSquare === square.dataset.square) return;
     markDragTarget(diagram, square);
   }
 
@@ -198,6 +207,7 @@
     var diagram = event.currentTarget;
     var dropHandled = diagram.dataset.fenDropHandled === "true";
     delete diagram.dataset.fenDropHandled;
+    delete diagram.dataset.fenDragging;
     clearDragTargets(diagram);
 
     if (dropHandled) return;
@@ -235,16 +245,20 @@
       clearSelection(diagram);
       return;
     }
+    if (fromSquare === toSquare) {
+      clearSelection(diagram);
+      return;
+    }
     if (kind === "phantom" && !canPlacePhantom(toSquare)) {
       clearSelection(diagram);
       return;
     }
 
+    var movingNode = findPieceNode(fromSquare, kind);
     fromSquare.dataset[dataKey] = "";
     toSquare.dataset[dataKey] = piece;
     if (kind !== "phantom") toSquare.dataset.phantomPiece = "";
-    renderSquare(fromSquare);
-    renderSquare(toSquare);
+    movePieceNode(fromSquare, toSquare, movingNode);
     markLastMove(diagram, fromSquare, toSquare);
     clearSelection(diagram);
   }
@@ -355,8 +369,19 @@
   }
 
   function clearSelection(diagram) {
+    var selectedSquareName = diagram.dataset.fenSelectedSquare || "";
     diagram.dataset.fenSelectedSquare = "";
     diagram.dataset.fenSelectedKind = "";
+    var selectedSquare = findSquare(diagram, selectedSquareName);
+    if (!selectedSquare) {
+      clearAllSelections(diagram);
+      return;
+    }
+    delete selectedSquare.dataset.fenSelected;
+    selectedSquare.classList.remove("square--highlighted");
+  }
+
+  function clearAllSelections(diagram) {
     diagram.querySelectorAll("[data-fen-selected]").forEach(function (square) {
       delete square.dataset.fenSelected;
       square.classList.remove("square--highlighted");
@@ -379,20 +404,27 @@
   }
 
   function markDragTarget(diagram, square) {
-    diagram.querySelectorAll("[data-fen-drag-over]").forEach(function (target) {
-      if (target !== square) {
-        delete target.dataset.fenDragOver;
-        target.classList.remove("square--suggested");
-      }
-    });
+    var previousSquare = findSquare(diagram, diagram.dataset.fenDragTargetSquare || "");
+    if (previousSquare && previousSquare !== square) {
+      delete previousSquare.dataset.fenDragOver;
+      previousSquare.classList.remove("square--suggested");
+    }
+    diagram.dataset.fenDragTargetSquare = square.dataset.square || "";
     square.dataset.fenDragOver = "true";
     square.classList.add("square--suggested");
   }
 
   function clearDragTargets(diagram) {
-    diagram.querySelectorAll("[data-fen-drag-over]").forEach(function (square) {
+    var square = findSquare(diagram, diagram.dataset.fenDragTargetSquare || "");
+    diagram.dataset.fenDragTargetSquare = "";
+    if (square) {
       delete square.dataset.fenDragOver;
       square.classList.remove("square--suggested");
+      return;
+    }
+    diagram.querySelectorAll("[data-fen-drag-over]").forEach(function (target) {
+      delete target.dataset.fenDragOver;
+      target.classList.remove("square--suggested");
     });
   }
 
@@ -412,11 +444,9 @@
   }
 
   function findSquare(diagram, squareName) {
-    var result = null;
-    diagram.querySelectorAll("[data-fen-square]").forEach(function (square) {
-      if (square.dataset.square === squareName) result = square;
-    });
-    return result;
+    if (!squareName) return null;
+    if (diagram.fenSquareMap && diagram.fenSquareMap[squareName]) return diagram.fenSquareMap[squareName];
+    return diagram.querySelector('[data-square="' + squareName + '"]');
   }
 
   function renderSquare(square) {
@@ -431,6 +461,24 @@
     }
 
     if (square.dataset.piece) square.appendChild(createPiece(square.dataset.piece, "piece"));
+  }
+
+  function findPieceNode(square, kind) {
+    return square.querySelector('[data-fen-piece-kind="' + kind + '"]');
+  }
+
+  function movePieceNode(fromSquare, toSquare, movingNode) {
+    syncSquareState(fromSquare);
+    syncSquareState(toSquare);
+    if (!movingNode) {
+      renderSquare(fromSquare);
+      renderSquare(toSquare);
+      return;
+    }
+    toSquare.querySelectorAll(".fen-board__piece").forEach(function (piece) {
+      piece.remove();
+    });
+    toSquare.appendChild(movingNode);
   }
 
   function syncSquareState(square) {
@@ -467,6 +515,22 @@
     image.draggable = false;
     span.appendChild(image);
     return span;
+  }
+
+  function getTransparentDragImage() {
+    if (transparentDragImage) return transparentDragImage;
+    transparentDragImage = document.createElement("canvas");
+    transparentDragImage.width = 1;
+    transparentDragImage.height = 1;
+    transparentDragImage.style.position = "fixed";
+    transparentDragImage.style.left = "-10px";
+    transparentDragImage.style.top = "-10px";
+    transparentDragImage.style.width = "1px";
+    transparentDragImage.style.height = "1px";
+    transparentDragImage.style.opacity = "0";
+    transparentDragImage.style.pointerEvents = "none";
+    document.body.appendChild(transparentDragImage);
+    return transparentDragImage;
   }
 
   function pieceClassName(piece, kind) {
