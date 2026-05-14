@@ -84,3 +84,31 @@ test("FEN board script reuses one shared phantom menu", () => {
   assert.ok(!script.includes("createPhantomMenu(diagram)"));
   assert.ok(!script.includes("diagram.appendChild(menu)"));
 });
+
+test("FEN board script optimizes drag target updates", () => {
+  const script = fs.readFileSync(path.join(process.cwd(), "static", "fen-board.js"), "utf8");
+
+  assert.ok(script.includes("diagram.fenSquareMap = Object.create(null);"));
+  assert.ok(script.includes("diagram.fenSquareMap[square.dataset.square] = square;"));
+  assert.ok(script.includes("if (diagram.dataset.fenDragTargetSquare === square.dataset.square) return;"));
+  assert.ok(script.includes("var previousSquare = findSquare(diagram, diagram.dataset.fenDragTargetSquare || \"\");"));
+  assert.ok(script.includes("diagram.dataset.fenDragTargetSquare = square.dataset.square || \"\";"));
+});
+
+test("FEN board script moves existing piece nodes instead of recreating them", () => {
+  const script = fs.readFileSync(path.join(process.cwd(), "static", "fen-board.js"), "utf8");
+
+  assert.ok(script.includes("var movingNode = findPieceNode(fromSquare, kind);"));
+  assert.ok(script.includes("function movePieceNode(fromSquare, toSquare, movingNode)"));
+  assert.ok(script.includes("toSquare.appendChild(movingNode);"));
+  assert.ok(script.includes("if (fromSquare === toSquare) {"));
+});
+
+test("FEN board script uses a lightweight drag image", () => {
+  const script = fs.readFileSync(path.join(process.cwd(), "static", "fen-board.js"), "utf8");
+
+  assert.ok(script.includes("event.dataTransfer.setDragImage(getTransparentDragImage(), 0, 0);"));
+  assert.ok(script.includes("function getTransparentDragImage()"));
+  assert.ok(script.includes('transparentDragImage = document.createElement("canvas");'));
+  assert.ok(script.includes("transparentDragImage.width = 1;"));
+});

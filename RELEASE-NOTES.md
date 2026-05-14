@@ -5,6 +5,13 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.2.13
+
+- **Problem Boards**: reduced drag/move work by caching board squares, skipping
+  repeated drag-target DOM writes, moving existing piece nodes instead of
+  recreating SVG images, and using a tiny transparent drag image for smoother
+  Chrome/Safari dragging.
+
 ## ks-home v. 1.2.12
 
 - **Problem Boards**: lazy-initialize interactive blog problem boards near the
