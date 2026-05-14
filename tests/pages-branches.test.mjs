@@ -21,7 +21,7 @@ test("renderShell falls back canonical paths and footer variants", () => {
   assert.ok(emptyFooterHtml.includes('<link rel="canonical" href="https://kriegspiel.org/" />'));
   assert.ok(emptyFooterHtml.includes('<meta property="og:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
   assert.ok(emptyFooterHtml.includes('<meta name="twitter:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
-  assert.ok(emptyFooterHtml.includes('<script src="/fen-board.js?v=1.2.6" defer></script>'));
+  assert.ok(emptyFooterHtml.includes('<script src="/fen-board.js?v=1.2.7" defer></script>'));
   assert.ok(emptyFooterHtml.includes("--square-capture-overlay:transparent"));
   assert.ok(emptyFooterHtml.includes("var(--square-ring-capture),var(--square-ring-illegal),var(--square-ring-suggested)"));
   assert.ok(emptyFooterHtml.includes("grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));"));
@@ -30,6 +30,10 @@ test("renderShell falls back canonical paths and footer variants", () => {
   assert.ok(emptyFooterHtml.includes(".fen-board__coord{font-size:.52rem;}.fen-board__coord--file{bottom:.32rem;}"));
   assert.ok(emptyFooterHtml.includes(".fen-board__square.square--highlighted"));
   assert.ok(emptyFooterHtml.includes(".fen-board__square.square--suggested"));
+  assert.ok(emptyFooterHtml.includes(".fen-board__grid .fen-board__square:hover,.fen-board__grid .fen-board__square:focus-visible,.fen-board__grid .fen-board__square:active{border-color:transparent;transform:none;outline:none;filter:none;}"));
+  assert.ok(emptyFooterHtml.includes(".fen-board__square.square--suggested,.fen-board__square[data-fen-drag-over=\"true\"]{--square-ring-suggested:inset 0 0 0 .16rem rgba(34,197,94,.78);}"));
+  assert.ok(!emptyFooterHtml.includes("filter:brightness(1.08);z-index:4"));
+  assert.ok(!emptyFooterHtml.includes(".fen-board__grid .fen-board__square:focus-visible{outline:2px solid var(--text);outline-offset:-2px;z-index:5;}"));
   assert.ok(emptyFooterHtml.includes('aria-current="page">Play</a>'));
   assert.ok(!emptyFooterHtml.includes(">Rules</h2>"));
 
