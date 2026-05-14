@@ -21,9 +21,13 @@ test("renderShell falls back canonical paths and footer variants", () => {
   assert.ok(emptyFooterHtml.includes('<link rel="canonical" href="https://kriegspiel.org/" />'));
   assert.ok(emptyFooterHtml.includes('<meta property="og:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
   assert.ok(emptyFooterHtml.includes('<meta name="twitter:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
-  assert.ok(emptyFooterHtml.includes('<script src="/fen-board.js?v=1.2.8" defer></script>'));
+  assert.ok(emptyFooterHtml.includes('<script src="/fen-board.js?v=1.2.9" defer></script>'));
   assert.ok(emptyFooterHtml.includes("--square-capture-overlay:transparent"));
   assert.ok(emptyFooterHtml.includes("var(--square-ring-capture),var(--square-ring-illegal),var(--square-ring-suggested)"));
+  assert.ok(emptyFooterHtml.includes(".fen-board{width:22rem;max-width:100%;}"));
+  assert.ok(emptyFooterHtml.includes(".fen-board{flex:0 1 auto;min-width:0;}"));
+  assert.ok(emptyFooterHtml.includes("@media (max-width:640px){.fen-board{width:30rem;max-width:100%;}"));
+  assert.ok(emptyFooterHtml.includes("@media (max-width:640px){.fen-diagram__workspace{gap:.45rem;}.fen-board{width:30rem;max-width:100%;flex:0 1 auto;}"));
   assert.ok(emptyFooterHtml.includes("grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));"));
   assert.ok(emptyFooterHtml.includes(".fen-board__square{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;min-height:0;width:100%;height:100%;}"));
   assert.ok(emptyFooterHtml.includes(".fen-board__coord--file{right:.28rem;bottom:.34rem;}"));
