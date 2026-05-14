@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.2.3
+
+- **Problem Boards**: moved bottom file-coordinate labels inward so the rounded
+  board frame no longer clips them on large rendered diagrams.
+
 ## ks-home v. 1.2.2
 
 - **Problem Boards**: aligned interactive blog/problem-board movement styling with
