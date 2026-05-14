@@ -205,9 +205,14 @@ test("markdownToHtml renders Diagram FEN lines with cburnett piece assets", () =
 
   assert.ok(html.includes('<figure class="fen-diagram" data-fen-diagram'));
   assert.ok(html.includes('data-fen="8/3k4/8/8/8/8/8/4K3 w - - 0 1"'));
+  assert.ok(html.includes('class="fen-board__square fen-board__square--'));
+  assert.ok(html.includes(' square light" data-fen-square'));
   assert.ok(html.includes('data-fen-square data-square="d7" data-initial-piece="k" data-piece="k"'));
   assert.ok(html.includes('data-fen-square data-square="e1" data-initial-piece="K" data-piece="K"'));
   assert.ok(html.includes('data-phantom-piece=""'));
+  assert.ok(html.includes('class="fen-board__piece piece white"'));
+  assert.ok(html.includes('class="fen-board__piece-image piece__image"'));
+  assert.ok(html.includes('class="fen-board__coord fen-board__coord--rank coord rank"'));
   assert.ok(html.includes('data-fen-reset>Reset</button>'));
   assert.equal(html.includes('data-fen-phantom="Q"'), false);
   assert.equal(html.includes('data-fen-mode='), false);

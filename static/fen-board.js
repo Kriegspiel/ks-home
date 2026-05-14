@@ -283,6 +283,7 @@
     diagram.dataset.fenSelectedSquare = square.dataset.square || "";
     diagram.dataset.fenSelectedKind = kind || "piece";
     square.dataset.fenSelected = "true";
+    square.classList.add("square--highlighted");
   }
 
   function clearSelection(diagram) {
@@ -290,6 +291,7 @@
     diagram.dataset.fenSelectedKind = "";
     diagram.querySelectorAll("[data-fen-selected]").forEach(function (square) {
       delete square.dataset.fenSelected;
+      square.classList.remove("square--highlighted");
     });
   }
 
@@ -297,24 +299,32 @@
     clearLastMove(diagram);
     fromSquare.dataset.fenLastMove = "true";
     toSquare.dataset.fenLastMove = "true";
+    fromSquare.classList.add("square--last-move");
+    toSquare.classList.add("square--last-move");
   }
 
   function clearLastMove(diagram) {
     diagram.querySelectorAll("[data-fen-last-move]").forEach(function (square) {
       delete square.dataset.fenLastMove;
+      square.classList.remove("square--last-move");
     });
   }
 
   function markDragTarget(diagram, square) {
     diagram.querySelectorAll("[data-fen-drag-over]").forEach(function (target) {
-      if (target !== square) delete target.dataset.fenDragOver;
+      if (target !== square) {
+        delete target.dataset.fenDragOver;
+        target.classList.remove("square--suggested");
+      }
     });
     square.dataset.fenDragOver = "true";
+    square.classList.add("square--suggested");
   }
 
   function clearDragTargets(diagram) {
     diagram.querySelectorAll("[data-fen-drag-over]").forEach(function (square) {
       delete square.dataset.fenDragOver;
+      square.classList.remove("square--suggested");
     });
   }
 
@@ -341,8 +351,10 @@
     if (square.dataset.phantomPiece) {
       square.appendChild(createPiece(square.dataset.phantomPiece, "phantom"));
       square.dataset.fenPhantom = "true";
+      square.classList.add("square--phantom");
     } else {
       delete square.dataset.fenPhantom;
+      square.classList.remove("square--phantom");
     }
 
     if (square.dataset.piece) square.appendChild(createPiece(square.dataset.piece, "piece"));
@@ -351,13 +363,13 @@
 
   function createPiece(piece, kind) {
     var span = document.createElement("span");
-    span.className = "fen-board__piece" + (kind === "phantom" ? " fen-board__piece--phantom" : "");
+    span.className = pieceClassName(piece, kind);
     span.draggable = true;
     span.dataset.fenPiece = piece;
     span.dataset.fenPieceKind = kind;
 
     var image = document.createElement("img");
-    image.className = "fen-board__piece-image";
+    image.className = imageClassName(kind);
     image.src = "/chess/cburnett/" + PIECE_ASSETS[piece];
     image.alt = "";
     image.loading = "lazy";
@@ -365,6 +377,18 @@
     image.draggable = false;
     span.appendChild(image);
     return span;
+  }
+
+  function pieceClassName(piece, kind) {
+    if (kind === "phantom") {
+      return "fen-board__piece fen-board__piece--phantom phantom-piece-on-board";
+    }
+    return "fen-board__piece piece " + (piece === piece.toUpperCase() ? "white" : "black");
+  }
+
+  function imageClassName(kind) {
+    if (kind === "phantom") return "fen-board__piece-image phantom-piece-on-board__image";
+    return "fen-board__piece-image piece__image";
   }
 
   function squareLabel(square) {

@@ -5,6 +5,12 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.2.2
+
+- **Problem Boards**: aligned interactive blog/problem-board movement styling with
+  the live app board semantics, including selected squares, last-move squares,
+  drop targets, and phantom-piece visual classes.
+
 ## ks-home v. 1.0.49
 
 - **API Contract**: static leaderboard regeneration now uses prefix-free
