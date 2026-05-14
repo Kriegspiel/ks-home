@@ -380,10 +380,7 @@ function renderFenPiece(piece, kind) {
 }
 
 function renderFenBoardTools() {
-  const palette = Object.keys(FEN_PIECE_ASSETS)
-    .map((piece) => `<button type="button" class="fen-board-tools__piece" data-fen-phantom="${piece}" aria-pressed="false" aria-label="Add phantom ${FEN_PIECE_LABELS[piece].toLowerCase()}">${renderFenPiece(piece, "phantom")}</button>`)
-    .join("");
-  return `<div class="fen-board-tools" aria-label="Board tools"><button type="button" class="fen-board-tools__reset" data-fen-reset>Reset</button><div class="fen-board-tools__modes" role="group" aria-label="Board mode"><button type="button" class="fen-board-tools__mode" data-fen-mode="move" aria-pressed="true">Move</button><button type="button" class="fen-board-tools__mode" data-fen-mode="erase" aria-pressed="false">Erase</button></div><div class="fen-board-tools__palette" aria-label="Phantom pieces"><span class="fen-board-tools__label">Phantom</span><div class="fen-board-tools__pieces">${palette}</div></div></div>`;
+  return `<div class="fen-board-tools" aria-label="Board tools"><button type="button" class="fen-board-tools__reset" data-fen-reset>Reset</button></div>`;
 }
 
 function parseFenBoard(fen) {

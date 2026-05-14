@@ -27,23 +27,32 @@
     n: "Black knight",
     p: "Black pawn"
   };
+  var PHANTOM_PIECES = ["K", "Q", "R", "B", "N", "P", "k", "q", "r", "b", "n", "p"];
+  var activeMenu = null;
 
   function init() {
     document.querySelectorAll("[data-fen-diagram]").forEach(initDiagram);
+    document.addEventListener("click", handleDocumentClick);
+    document.addEventListener("keydown", handleDocumentKeydown);
+    window.addEventListener("resize", closeActiveMenu);
+    window.addEventListener("scroll", closeActiveMenu, true);
   }
 
   function initDiagram(diagram) {
     if (diagram.dataset.fenReady === "true") return;
     diagram.dataset.fenReady = "true";
-    diagram.dataset.fenMode = "move";
-    diagram.dataset.fenPhantomPiece = "";
     diagram.dataset.fenSelectedSquare = "";
     diagram.dataset.fenSelectedKind = "";
+    diagram.dataset.fenLastMove = "";
 
+    createPhantomMenu(diagram);
     diagram.querySelectorAll("[data-fen-square]").forEach(function (square) {
       renderSquare(square);
       square.addEventListener("click", function (event) {
         handleSquareClick(diagram, square, event);
+      });
+      square.addEventListener("contextmenu", function (event) {
+        handleSquareContextMenu(diagram, square, event);
       });
     });
     diagram.querySelectorAll("[data-fen-reset]").forEach(function (button) {
@@ -52,19 +61,6 @@
         resetDiagram(diagram);
       });
     });
-    diagram.querySelectorAll("[data-fen-mode]").forEach(function (button) {
-      button.addEventListener("click", function (event) {
-        event.stopPropagation();
-        setMode(diagram, button.dataset.fenMode || "move", "");
-      });
-    });
-    diagram.querySelectorAll("[data-fen-phantom]").forEach(function (button) {
-      button.addEventListener("click", function (event) {
-        event.stopPropagation();
-        setMode(diagram, "phantom", button.dataset.fenPhantom || "");
-      });
-    });
-    diagram.addEventListener("click", handleClick);
     diagram.addEventListener("dragstart", handleDragStart);
     diagram.addEventListener("dragover", handleDragOver);
     diagram.addEventListener("dragleave", handleDragLeave);
@@ -72,55 +68,31 @@
     diagram.addEventListener("dragend", function () {
       clearDragTargets(diagram);
     });
-    updateControls(diagram);
   }
 
-  function handleClick(event) {
-    var diagram = event.currentTarget;
-    var resetButton = event.target.closest("[data-fen-reset]");
-    if (resetButton && diagram.contains(resetButton)) {
-      resetDiagram(diagram);
-      return;
-    }
+  function handleDocumentClick(event) {
+    if (!activeMenu || activeMenu.contains(event.target)) return;
+    closeActiveMenu();
+  }
 
-    var modeButton = event.target.closest("[data-fen-mode]");
-    if (modeButton && diagram.contains(modeButton)) {
-      setMode(diagram, modeButton.dataset.fenMode || "move", "");
-      return;
-    }
-
-    var phantomButton = event.target.closest("[data-fen-phantom]");
-    if (phantomButton && diagram.contains(phantomButton)) {
-      setMode(diagram, "phantom", phantomButton.dataset.fenPhantom || "");
-      return;
-    }
-
-    var square = event.target.closest("[data-fen-square]");
-    if (!square || !diagram.contains(square)) return;
-    handleSquareClick(diagram, square, event);
+  function handleDocumentKeydown(event) {
+    if (event.key === "Escape") closeActiveMenu();
   }
 
   function handleSquareClick(diagram, square, event) {
+    if (event.button && event.button !== 0) return;
     event.stopPropagation();
-    if (diagram.dataset.fenMode === "phantom") {
-      if (diagram.dataset.fenPhantomPiece) {
-        square.dataset.phantomPiece = diagram.dataset.fenPhantomPiece;
-        renderSquare(square);
-      }
-      clearSelection(diagram);
-      return;
-    }
-
-    if (diagram.dataset.fenMode === "erase") {
-      eraseSquare(square);
-      clearSelection(diagram);
-      return;
-    }
+    closeActiveMenu();
 
     var selectedSquareName = diagram.dataset.fenSelectedSquare || "";
     var selectedKind = diagram.dataset.fenSelectedKind || "";
     if (selectedSquareName && selectedKind) {
-      movePiece(diagram, selectedSquareName, square.dataset.square, selectedKind);
+      if (selectedSquareName === square.dataset.square) {
+        removePiece(square, selectedKind);
+        clearSelection(diagram);
+      } else {
+        movePiece(diagram, selectedSquareName, square.dataset.square, selectedKind);
+      }
       return;
     }
 
@@ -128,6 +100,21 @@
     var pieceKind = pieceNode && square.contains(pieceNode) ? pieceNode.dataset.fenPieceKind : "";
     if (!pieceKind) pieceKind = square.dataset.piece ? "piece" : (square.dataset.phantomPiece ? "phantom" : "");
     if (pieceKind) selectSquare(diagram, square, pieceKind);
+  }
+
+  function handleSquareContextMenu(diagram, square, event) {
+    event.preventDefault();
+    event.stopPropagation();
+    clearSelection(diagram);
+
+    if (square.dataset.phantomPiece) {
+      square.dataset.phantomPiece = "";
+      renderSquare(square);
+      closeActiveMenu();
+      return;
+    }
+
+    openPhantomMenu(diagram, square, event);
   }
 
   function handleDragStart(event) {
@@ -189,11 +176,6 @@
   }
 
   function movePiece(diagram, fromSquareName, toSquareName, kind) {
-    if (fromSquareName === toSquareName) {
-      clearSelection(diagram);
-      return;
-    }
-
     var fromSquare = findSquare(diagram, fromSquareName);
     var toSquare = findSquare(diagram, toSquareName);
     if (!fromSquare || !toSquare) {
@@ -212,15 +194,13 @@
     toSquare.dataset[dataKey] = piece;
     renderSquare(fromSquare);
     renderSquare(toSquare);
+    markLastMove(diagram, fromSquare, toSquare);
     clearSelection(diagram);
   }
 
-  function eraseSquare(square) {
-    if (square.dataset.phantomPiece) {
-      square.dataset.phantomPiece = "";
-    } else {
-      square.dataset.piece = "";
-    }
+  function removePiece(square, kind) {
+    var dataKey = kind === "phantom" ? "phantomPiece" : "piece";
+    square.dataset[dataKey] = "";
     renderSquare(square);
   }
 
@@ -230,26 +210,72 @@
       square.dataset.phantomPiece = "";
       renderSquare(square);
     });
-    setMode(diagram, "move", "");
     clearSelection(diagram);
+    clearLastMove(diagram);
+    closeActiveMenu();
   }
 
-  function setMode(diagram, mode, phantomPiece) {
-    diagram.dataset.fenMode = mode || "move";
-    diagram.dataset.fenPhantomPiece = phantomPiece || "";
-    clearSelection(diagram);
-    updateControls(diagram);
+  function createPhantomMenu(diagram) {
+    var menu = document.createElement("div");
+    menu.className = "fen-phantom-menu";
+    menu.hidden = true;
+    menu.dataset.fenPhantomMenu = "";
+    menu.setAttribute("role", "menu");
+    menu.setAttribute("aria-label", "Add phantom piece");
+    menu.innerHTML = '<div class="fen-phantom-menu__piece-grid">' + PHANTOM_PIECES.map(function (piece) {
+      return [
+        '<button type="button" class="fen-phantom-menu__piece-button" data-fen-phantom-choice="',
+        piece,
+        '" aria-label="Add phantom ',
+        PIECE_LABELS[piece].toLowerCase(),
+        '" role="menuitem">',
+        '<span class="fen-phantom-menu__piece-symbol"><img src="/chess/cburnett/',
+        PIECE_ASSETS[piece],
+        '" alt="" loading="lazy" decoding="async" draggable="false" /></span>',
+        "</button>"
+      ].join("");
+    }).join("") + "</div>";
+
+    menu.addEventListener("click", function (event) {
+      var button = event.target.closest("[data-fen-phantom-choice]");
+      if (!button || !menu.contains(button)) return;
+      event.stopPropagation();
+
+      var square = findSquare(diagram, menu.dataset.fenTargetSquare || "");
+      var piece = button.dataset.fenPhantomChoice || "";
+      if (square && PIECE_ASSETS[piece]) {
+        square.dataset.phantomPiece = piece;
+        renderSquare(square);
+      }
+      closeActiveMenu();
+    });
+
+    diagram.appendChild(menu);
+    return menu;
   }
 
-  function updateControls(diagram) {
-    var mode = diagram.dataset.fenMode || "move";
-    var phantomPiece = diagram.dataset.fenPhantomPiece || "";
-    diagram.querySelectorAll("[data-fen-mode]").forEach(function (button) {
-      button.setAttribute("aria-pressed", String((button.dataset.fenMode || "") === mode));
-    });
-    diagram.querySelectorAll("[data-fen-phantom]").forEach(function (button) {
-      button.setAttribute("aria-pressed", String(mode === "phantom" && button.dataset.fenPhantom === phantomPiece));
-    });
+  function openPhantomMenu(diagram, square, event) {
+    closeActiveMenu();
+    var menu = diagram.querySelector("[data-fen-phantom-menu]");
+    if (!menu) menu = createPhantomMenu(diagram);
+
+    menu.dataset.fenTargetSquare = square.dataset.square || "";
+    menu.hidden = false;
+    menu.style.visibility = "hidden";
+    menu.style.left = "0";
+    menu.style.top = "0";
+
+    var gap = 8;
+    var rect = menu.getBoundingClientRect();
+    var left = Math.min(Math.max(gap, event.clientX + gap), window.innerWidth - rect.width - gap);
+    var top = Math.min(Math.max(gap, event.clientY + gap), window.innerHeight - rect.height - gap);
+    menu.style.left = left + "px";
+    menu.style.top = top + "px";
+    menu.style.visibility = "";
+    activeMenu = menu;
+
+    var firstButton = menu.querySelector("[data-fen-phantom-choice]");
+    if (firstButton) firstButton.focus({ preventScroll: true });
   }
 
   function selectSquare(diagram, square, kind) {
@@ -267,6 +293,18 @@
     });
   }
 
+  function markLastMove(diagram, fromSquare, toSquare) {
+    clearLastMove(diagram);
+    fromSquare.dataset.fenLastMove = "true";
+    toSquare.dataset.fenLastMove = "true";
+  }
+
+  function clearLastMove(diagram) {
+    diagram.querySelectorAll("[data-fen-last-move]").forEach(function (square) {
+      delete square.dataset.fenLastMove;
+    });
+  }
+
   function markDragTarget(diagram, square) {
     diagram.querySelectorAll("[data-fen-drag-over]").forEach(function (target) {
       if (target !== square) delete target.dataset.fenDragOver;
@@ -278,6 +316,13 @@
     diagram.querySelectorAll("[data-fen-drag-over]").forEach(function (square) {
       delete square.dataset.fenDragOver;
     });
+  }
+
+  function closeActiveMenu() {
+    if (!activeMenu) return;
+    activeMenu.hidden = true;
+    activeMenu.dataset.fenTargetSquare = "";
+    activeMenu = null;
   }
 
   function findSquare(diagram, squareName) {
@@ -292,8 +337,15 @@
     square.querySelectorAll(".fen-board__piece").forEach(function (piece) {
       piece.remove();
     });
+
+    if (square.dataset.phantomPiece) {
+      square.appendChild(createPiece(square.dataset.phantomPiece, "phantom"));
+      square.dataset.fenPhantom = "true";
+    } else {
+      delete square.dataset.fenPhantom;
+    }
+
     if (square.dataset.piece) square.appendChild(createPiece(square.dataset.piece, "piece"));
-    if (square.dataset.phantomPiece) square.appendChild(createPiece(square.dataset.phantomPiece, "phantom"));
     square.setAttribute("aria-label", squareLabel(square));
   }
 

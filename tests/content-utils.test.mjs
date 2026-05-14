@@ -209,7 +209,8 @@ test("markdownToHtml renders Diagram FEN lines with cburnett piece assets", () =
   assert.ok(html.includes('data-fen-square data-square="e1" data-initial-piece="K" data-piece="K"'));
   assert.ok(html.includes('data-phantom-piece=""'));
   assert.ok(html.includes('data-fen-reset>Reset</button>'));
-  assert.ok(html.includes('data-fen-phantom="Q"'));
+  assert.equal(html.includes('data-fen-phantom="Q"'), false);
+  assert.equal(html.includes('data-fen-mode='), false);
   assert.ok(html.includes('<span class="fen-diagram__side">White to move</span>'));
   assert.ok(html.includes('src="/chess/cburnett/bK.svg"'));
   assert.ok(html.includes('src="/chess/cburnett/wK.svg"'));
