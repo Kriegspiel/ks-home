@@ -353,10 +353,10 @@ function renderFenDiagram(fen) {
   const squares = board.flatMap((row, rankIndex) => row.map((piece, fileIndex) => {
     const shade = (rankIndex + fileIndex) % 2 === 0 ? "light" : "dark";
     const square = `${FEN_FILES[fileIndex]}${FEN_RANKS[rankIndex]}`;
-    const rankLabel = fileIndex === 0 ? `<span class="fen-board__coord fen-board__coord--rank">${FEN_RANKS[rankIndex]}</span>` : "";
-    const fileLabel = rankIndex === 7 ? `<span class="fen-board__coord fen-board__coord--file">${FEN_FILES[fileIndex]}</span>` : "";
+    const rankLabel = fileIndex === 0 ? `<span class="fen-board__coord fen-board__coord--rank coord rank">${FEN_RANKS[rankIndex]}</span>` : "";
+    const fileLabel = rankIndex === 7 ? `<span class="fen-board__coord fen-board__coord--file coord file">${FEN_FILES[fileIndex]}</span>` : "";
     const pieceHtml = renderFenPiece(piece, "piece");
-    return `<button type="button" class="fen-board__square fen-board__square--${shade}" data-fen-square data-square="${square}" data-initial-piece="${piece || ""}" data-piece="${piece || ""}" data-phantom-piece="" aria-label="${escapeHtml(describeFenSquare(square, piece))}">${rankLabel}${fileLabel}${pieceHtml}</button>`;
+    return `<button type="button" class="fen-board__square fen-board__square--${shade} square ${shade}" data-fen-square data-square="${square}" data-initial-piece="${piece || ""}" data-piece="${piece || ""}" data-phantom-piece="" aria-label="${escapeHtml(describeFenSquare(square, piece))}">${rankLabel}${fileLabel}${pieceHtml}</button>`;
   })).join("");
 
   const sideHtml = sideToMove ? `<span class="fen-diagram__side">${escapeHtml(sideToMove)}</span>` : "";
@@ -376,7 +376,9 @@ function renderFenDiagram(fen) {
 function renderFenPiece(piece, kind) {
   if (!piece || !FEN_PIECE_ASSETS[piece]) return "";
   const phantomClass = kind === "phantom" ? " fen-board__piece--phantom" : "";
-  return `<span class="fen-board__piece${phantomClass}" draggable="true" data-fen-piece="${piece}" data-fen-piece-kind="${kind}"><img class="fen-board__piece-image" src="/chess/cburnett/${FEN_PIECE_ASSETS[piece]}" alt="" loading="lazy" decoding="async" draggable="false" /></span>`;
+  const appPieceClass = kind === "phantom" ? " phantom-piece-on-board" : ` piece ${piece === piece.toUpperCase() ? "white" : "black"}`;
+  const appImageClass = kind === "phantom" ? " phantom-piece-on-board__image" : " piece__image";
+  return `<span class="fen-board__piece${phantomClass}${appPieceClass}" draggable="true" data-fen-piece="${piece}" data-fen-piece-kind="${kind}"><img class="fen-board__piece-image${appImageClass}" src="/chess/cburnett/${FEN_PIECE_ASSETS[piece]}" alt="" loading="lazy" decoding="async" draggable="false" /></span>`;
 }
 
 function renderFenBoardTools() {
