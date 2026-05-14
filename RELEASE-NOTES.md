@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.2.7
+
+- **Problem Boards**: aligned interactive square highlighting with the main app
+  board by removing the extra focus outline, brightness boost, and z-index lifts.
+
 ## ks-home v. 1.2.6
 
 - **Problem Boards**: prevented phantom pieces from being placed on occupied
