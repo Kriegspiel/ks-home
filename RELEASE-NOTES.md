@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.2.8
+
+- **Problem Boards**: changed same-square clicks to deselect the selected piece
+  instead of removing it, while preserving dragged-off-board removal.
+
 ## ks-home v. 1.2.7
 
 - **Problem Boards**: aligned interactive square highlighting with the main app

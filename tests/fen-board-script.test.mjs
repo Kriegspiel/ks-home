@@ -45,3 +45,10 @@ test("FEN board script removes dragged-off-board pieces", () => {
   assert.ok(script.includes("removeSelectedPiece(diagram);"));
   assert.ok(script.includes("document.elementFromPoint(event.clientX, event.clientY)"));
 });
+
+test("FEN board script deselects instead of removing on same-square clicks", () => {
+  const script = fs.readFileSync(path.join(process.cwd(), "static", "fen-board.js"), "utf8");
+
+  assert.ok(script.includes("if (selectedSquareName === square.dataset.square) {\n        clearSelection(diagram);\n      } else {"));
+  assert.ok(!script.includes("if (selectedSquareName === square.dataset.square) {\n        removePiece(square, selectedKind);"));
+});

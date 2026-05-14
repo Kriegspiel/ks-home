@@ -86,7 +86,6 @@
     var selectedKind = diagram.dataset.fenSelectedKind || "";
     if (selectedSquareName && selectedKind) {
       if (selectedSquareName === square.dataset.square) {
-        removePiece(square, selectedKind);
         clearSelection(diagram);
       } else {
         movePiece(diagram, selectedSquareName, square.dataset.square, selectedKind);
