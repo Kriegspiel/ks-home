@@ -35,15 +35,36 @@ test("FEN board script keeps phantoms off occupied squares", () => {
   assert.ok(script.includes("if (square.dataset.piece) square.dataset.phantomPiece = \"\";"));
 });
 
-test("FEN board script removes dragged-off-board pieces", () => {
+test("FEN board script uses pointer events instead of native drag events", () => {
   const script = fs.readFileSync(path.join(process.cwd(), "static", "fen-board.js"), "utf8");
 
-  assert.ok(script.includes('diagram.addEventListener("dragend", handleDragEnd)'));
-  assert.ok(script.includes('diagram.dataset.fenDropHandled = "false"'));
-  assert.ok(script.includes('diagram.dataset.fenDropHandled = "true"'));
-  assert.ok(script.includes("function removeSelectedPiece(diagram)"));
-  assert.ok(script.includes("removeSelectedPiece(diagram);"));
-  assert.ok(script.includes("document.elementFromPoint(event.clientX, event.clientY)"));
+  assert.ok(script.includes('diagram.addEventListener("pointerdown", handlePointerDown)'));
+  assert.ok(script.includes('diagram.addEventListener("pointermove", handlePointerMove)'));
+  assert.ok(script.includes('diagram.addEventListener("pointerup", handlePointerUp)'));
+  assert.ok(script.includes('diagram.addEventListener("pointercancel", handlePointerCancel)'));
+  assert.ok(script.includes("function handlePointerMove(event)"));
+  assert.ok(!script.includes('diagram.addEventListener("dragstart"'));
+  assert.ok(!script.includes('diagram.addEventListener("dragover"'));
+  assert.ok(!script.includes("event.dataTransfer.setDragImage"));
+});
+
+test("FEN board script removes pointer-dragged pieces off board", () => {
+  const script = fs.readFileSync(path.join(process.cwd(), "static", "fen-board.js"), "utf8");
+
+  assert.ok(script.includes("function handlePointerUp(event)"));
+  assert.ok(script.includes("var square = squareFromPoint(diagram, event.clientX, event.clientY);"));
+  assert.ok(script.includes("if (sourceSquare) removePiece(sourceSquare, pointerDrag.kind);"));
+  assert.ok(script.includes("function squareFromPoint(diagram, x, y)"));
+  assert.ok(script.includes("var target = document.elementFromPoint(x, y);"));
+});
+
+test("FEN board script suppresses synthetic clicks after pointer drags", () => {
+  const script = fs.readFileSync(path.join(process.cwd(), "static", "fen-board.js"), "utf8");
+
+  assert.ok(script.includes("function suppressNextClick(diagram)"));
+  assert.ok(script.includes('diagram.dataset.fenSuppressClick = "true";'));
+  assert.ok(script.includes('if (diagram.dataset.fenSuppressClick === "true") {'));
+  assert.ok(script.includes("suppressNextClick(diagram);"));
 });
 
 test("FEN board script deselects instead of removing on same-square clicks", () => {
@@ -104,11 +125,10 @@ test("FEN board script moves existing piece nodes instead of recreating them", (
   assert.ok(script.includes("if (fromSquare === toSquare) {"));
 });
 
-test("FEN board script uses a lightweight drag image", () => {
+test("FEN board script disables native element dragging", () => {
   const script = fs.readFileSync(path.join(process.cwd(), "static", "fen-board.js"), "utf8");
 
-  assert.ok(script.includes("event.dataTransfer.setDragImage(getTransparentDragImage(), 0, 0);"));
-  assert.ok(script.includes("function getTransparentDragImage()"));
-  assert.ok(script.includes('transparentDragImage = document.createElement("canvas");'));
-  assert.ok(script.includes("transparentDragImage.width = 1;"));
+  assert.ok(script.includes("span.draggable = false;"));
+  assert.ok(script.includes("image.draggable = false;"));
+  assert.ok(!script.includes("function getTransparentDragImage()"));
 });

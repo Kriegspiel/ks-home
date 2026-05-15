@@ -378,7 +378,7 @@ function renderFenPiece(piece, kind) {
   const phantomClass = kind === "phantom" ? " fen-board__piece--phantom" : "";
   const appPieceClass = kind === "phantom" ? " phantom-piece-on-board" : ` piece ${piece === piece.toUpperCase() ? "white" : "black"}`;
   const appImageClass = kind === "phantom" ? " phantom-piece-on-board__image" : " piece__image";
-  return `<span class="fen-board__piece${phantomClass}${appPieceClass}" draggable="true" data-fen-piece="${piece}" data-fen-piece-kind="${kind}"><img class="fen-board__piece-image${appImageClass}" src="/chess/cburnett/${FEN_PIECE_ASSETS[piece]}" alt="" loading="lazy" decoding="async" draggable="false" /></span>`;
+  return `<span class="fen-board__piece${phantomClass}${appPieceClass}" draggable="false" data-fen-piece="${piece}" data-fen-piece-kind="${kind}"><img class="fen-board__piece-image${appImageClass}" src="/chess/cburnett/${FEN_PIECE_ASSETS[piece]}" alt="" loading="lazy" decoding="async" draggable="false" /></span>`;
 }
 
 function renderFenBoardTools() {

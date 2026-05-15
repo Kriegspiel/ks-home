@@ -32,7 +32,7 @@
   var activeMenuDiagram = null;
   var phantomMenu = null;
   var lazyObserver = null;
-  var transparentDragImage = null;
+  var DRAG_START_DISTANCE = 4;
 
   function init() {
     document.querySelectorAll("[data-fen-diagram]").forEach(scheduleDiagramInit);
@@ -93,11 +93,10 @@
         resetDiagram(diagram);
       });
     });
-    diagram.addEventListener("dragstart", handleDragStart);
-    diagram.addEventListener("dragover", handleDragOver);
-    diagram.addEventListener("dragleave", handleDragLeave);
-    diagram.addEventListener("drop", handleDrop);
-    diagram.addEventListener("dragend", handleDragEnd);
+    diagram.addEventListener("pointerdown", handlePointerDown);
+    diagram.addEventListener("pointermove", handlePointerMove);
+    diagram.addEventListener("pointerup", handlePointerUp);
+    diagram.addEventListener("pointercancel", handlePointerCancel);
   }
 
   function handleDocumentClick(event) {
@@ -110,6 +109,12 @@
   }
 
   function handleSquareClick(diagram, square, event) {
+    if (diagram.dataset.fenSuppressClick === "true") {
+      event.preventDefault();
+      event.stopPropagation();
+      delete diagram.dataset.fenSuppressClick;
+      return;
+    }
     if (event.button && event.button !== 0) return;
     event.stopPropagation();
     closeActiveMenu();
@@ -151,84 +156,97 @@
     openPhantomMenu(diagram, square, event);
   }
 
-  function handleDragStart(event) {
+  function handlePointerDown(event) {
+    if (event.button !== 0) return;
     var pieceNode = event.target.closest("[data-fen-piece]");
     var square = event.target.closest("[data-fen-square]");
     var diagram = event.currentTarget;
     if (!pieceNode || !square || !diagram.contains(square)) return;
 
-    var payload = {
+    var pointerDrag = {
+      pointerId: event.pointerId,
       square: square.dataset.square || "",
-      kind: pieceNode.dataset.fenPieceKind || "piece"
+      kind: pieceNode.dataset.fenPieceKind || "piece",
+      startX: event.clientX,
+      startY: event.clientY,
+      started: false
     };
-    if (!payload.square) return;
+    if (!pointerDrag.square) return;
 
-    selectSquare(diagram, square, payload.kind);
-    diagram.dataset.fenDropHandled = "false";
-    diagram.dataset.fenDragging = "true";
-    event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("application/x-ks-fen-piece", JSON.stringify(payload));
-    event.dataTransfer.setData("text/plain", payload.kind + ":" + payload.square);
-    if (event.dataTransfer.setDragImage) {
-      event.dataTransfer.setDragImage(getTransparentDragImage(), 0, 0);
+    closeActiveMenu();
+    diagram.fenPointerDrag = pointerDrag;
+    if (diagram.setPointerCapture) {
+      try {
+        diagram.setPointerCapture(event.pointerId);
+      } catch (error) {
+        // Pointer capture can fail if the browser already ended the pointer.
+      }
     }
   }
 
-  function handleDragOver(event) {
+  function handlePointerMove(event) {
     var diagram = event.currentTarget;
-    var square = event.target.closest("[data-fen-square]");
-    if (!square || !diagram.contains(square)) return;
+    var pointerDrag = diagram.fenPointerDrag;
+    if (!pointerDrag || pointerDrag.pointerId !== event.pointerId) return;
+
+    var dx = event.clientX - pointerDrag.startX;
+    var dy = event.clientY - pointerDrag.startY;
+    if (!pointerDrag.started && (dx * dx + dy * dy) < DRAG_START_DISTANCE * DRAG_START_DISTANCE) return;
+
     event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
+    if (!pointerDrag.started) {
+      var sourceSquare = findSquare(diagram, pointerDrag.square);
+      if (!sourceSquare) {
+        clearPointerDrag(diagram, event.pointerId);
+        return;
+      }
+      pointerDrag.started = true;
+      diagram.dataset.fenDragging = "true";
+      selectSquare(diagram, sourceSquare, pointerDrag.kind);
+    }
+
+    var square = squareFromPoint(diagram, event.clientX, event.clientY);
+    if (!square) {
+      clearDragTargets(diagram);
+      return;
+    }
     if (diagram.dataset.fenDragTargetSquare === square.dataset.square) return;
     markDragTarget(diagram, square);
   }
 
-  function handleDragLeave(event) {
+  function handlePointerUp(event) {
     var diagram = event.currentTarget;
-    var nextTarget = event.relatedTarget;
-    if (!nextTarget || !diagram.contains(nextTarget)) clearDragTargets(diagram);
-  }
+    var pointerDrag = diagram.fenPointerDrag;
+    if (!pointerDrag || pointerDrag.pointerId !== event.pointerId) return;
 
-  function handleDrop(event) {
-    var diagram = event.currentTarget;
-    var square = event.target.closest("[data-fen-square]");
-    if (!square || !diagram.contains(square)) return;
-    event.preventDefault();
-    diagram.dataset.fenDropHandled = "true";
-    clearDragTargets(diagram);
-
-    var payload = readDragPayload(event);
-    if (!payload.square || !payload.kind) return;
-    movePiece(diagram, payload.square, square.dataset.square, payload.kind);
-  }
-
-  function handleDragEnd(event) {
-    var diagram = event.currentTarget;
-    var dropHandled = diagram.dataset.fenDropHandled === "true";
-    delete diagram.dataset.fenDropHandled;
-    delete diagram.dataset.fenDragging;
-    clearDragTargets(diagram);
-
-    if (dropHandled) return;
-    if (isDropOutsideBoard(diagram, event)) {
-      removeSelectedPiece(diagram);
+    if (!pointerDrag.started) {
+      clearPointerDrag(diagram, event.pointerId);
       return;
     }
+
+    event.preventDefault();
+    suppressNextClick(diagram);
+    var square = squareFromPoint(diagram, event.clientX, event.clientY);
+    clearDragTargets(diagram);
+    clearPointerDrag(diagram, event.pointerId);
+
+    if (square) {
+      movePiece(diagram, pointerDrag.square, square.dataset.square, pointerDrag.kind);
+      return;
+    }
+
+    var sourceSquare = findSquare(diagram, pointerDrag.square);
+    if (sourceSquare) removePiece(sourceSquare, pointerDrag.kind);
     clearSelection(diagram);
   }
 
-  function readDragPayload(event) {
-    var raw = event.dataTransfer.getData("application/x-ks-fen-piece");
-    if (raw) {
-      try {
-        return JSON.parse(raw);
-      } catch (error) {
-        return {};
-      }
-    }
-    var fallback = event.dataTransfer.getData("text/plain").split(":");
-    return { kind: fallback[0] || "", square: fallback[1] || "" };
+  function handlePointerCancel(event) {
+    var diagram = event.currentTarget;
+    var pointerDrag = diagram.fenPointerDrag;
+    if (!pointerDrag || pointerDrag.pointerId !== event.pointerId) return;
+    clearDragTargets(diagram);
+    clearSelection(diagram);
+    clearPointerDrag(diagram, event.pointerId);
   }
 
   function movePiece(diagram, fromSquareName, toSquareName, kind) {
@@ -267,14 +285,6 @@
     var dataKey = kind === "phantom" ? "phantomPiece" : "piece";
     square.dataset[dataKey] = "";
     renderSquare(square);
-  }
-
-  function removeSelectedPiece(diagram) {
-    var selectedSquareName = diagram.dataset.fenSelectedSquare || "";
-    var selectedKind = diagram.dataset.fenSelectedKind || "";
-    var square = findSquare(diagram, selectedSquareName);
-    if (square && selectedKind) removePiece(square, selectedKind);
-    clearSelection(diagram);
   }
 
   function resetDiagram(diagram) {
@@ -428,11 +438,29 @@
     });
   }
 
-  function isDropOutsideBoard(diagram, event) {
-    if (event.clientX === 0 && event.clientY === 0) return false;
-    var grid = diagram.querySelector("[data-fen-grid]");
-    var target = document.elementFromPoint(event.clientX, event.clientY);
-    return !!grid && (!target || !grid.contains(target));
+  function squareFromPoint(diagram, x, y) {
+    var target = document.elementFromPoint(x, y);
+    var square = target && target.closest ? target.closest("[data-fen-square]") : null;
+    return square && diagram.contains(square) ? square : null;
+  }
+
+  function clearPointerDrag(diagram, pointerId) {
+    if (diagram.releasePointerCapture) {
+      try {
+        diagram.releasePointerCapture(pointerId);
+      } catch (error) {
+        // Release can fail after pointer cancellation; cleanup should continue.
+      }
+    }
+    delete diagram.fenPointerDrag;
+    delete diagram.dataset.fenDragging;
+  }
+
+  function suppressNextClick(diagram) {
+    diagram.dataset.fenSuppressClick = "true";
+    setTimeout(function () {
+      if (diagram.dataset.fenSuppressClick === "true") delete diagram.dataset.fenSuppressClick;
+    }, 0);
   }
 
   function closeActiveMenu() {
@@ -502,7 +530,7 @@
   function createPiece(piece, kind) {
     var span = document.createElement("span");
     span.className = pieceClassName(piece, kind);
-    span.draggable = true;
+    span.draggable = false;
     span.dataset.fenPiece = piece;
     span.dataset.fenPieceKind = kind;
 
@@ -515,22 +543,6 @@
     image.draggable = false;
     span.appendChild(image);
     return span;
-  }
-
-  function getTransparentDragImage() {
-    if (transparentDragImage) return transparentDragImage;
-    transparentDragImage = document.createElement("canvas");
-    transparentDragImage.width = 1;
-    transparentDragImage.height = 1;
-    transparentDragImage.style.position = "fixed";
-    transparentDragImage.style.left = "-10px";
-    transparentDragImage.style.top = "-10px";
-    transparentDragImage.style.width = "1px";
-    transparentDragImage.style.height = "1px";
-    transparentDragImage.style.opacity = "0";
-    transparentDragImage.style.pointerEvents = "none";
-    document.body.appendChild(transparentDragImage);
-    return transparentDragImage;
   }
 
   function pieceClassName(piece, kind) {
