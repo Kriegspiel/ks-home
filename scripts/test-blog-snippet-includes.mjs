@@ -8,7 +8,7 @@ const html = fs.readFileSync(path.join(process.cwd(), "dist/blog/bot-registratio
 assert.match(html, /<figcaption>register-bot-request\.sh<\/figcaption>/);
 assert.match(html, /<figcaption>register-bot-response\.json<\/figcaption>/);
 assert.match(html, /<code class="hljs language-bash">/);
-assert.match(html, /curl -X POST https:\/\/api\.kriegspiel\.org\/api\/auth\/bots\/register/);
+assert.match(html, /curl -X POST https:\/\/api\.kriegspiel\.org\/auth\/bots\/register/);
 assert.match(html, /<code class="hljs language-json">/);
 assert.match(html, /ksbot_abcd1234\.deadbeef/);
 console.log("snippet include test: ok");
