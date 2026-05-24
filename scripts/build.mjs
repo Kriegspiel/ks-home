@@ -3,8 +3,10 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { getContentRoot, loadCollection, loadSingletonEntry } from '../src/content-utils.mjs';
 import { renderHomePage, renderLeaderboardPage, renderPublicProfilePage, renderSimplePage, renderBlogIndex, renderBlogDetail, renderBlogArchive, renderChangelogIndex, renderChangelogDetail, renderRulesPage, renderRuleDetailPage, renderRulesComparisonPage, renderRedirectPage, renderSiteMarkdownPage } from '../src/pages.mjs';
+import { buildSitemapRoutes, buildUpdateFeedEntries, renderAtomFeed, renderRssFeed, renderSitemap } from '../src/site-feeds.mjs';
 
 const dist = path.resolve(process.cwd(), 'dist');
+const generatedAt = new Date().toISOString();
 const contentRoot = getContentRoot();
 const blogEntries = loadCollection(contentRoot, 'blog');
 const changelogEntries = loadCollection(contentRoot, 'changelog');
@@ -100,16 +102,29 @@ for (const entry of rulesEntries) writePage(path.join(dist, 'rules', entry.metad
 for (const profile of publicData.profiles) writePage(path.join(dist, 'players', profile.profile.username, 'index.html'), renderPublicProfilePage({ profile: profile.profile, games: profile.games, footerEntry }));
 writePage(path.join(dist, 'rules/wild-16/index.html'), renderRedirectPage({ fromPath: '/rules/wild-16', toPath: '/rules/wild16', title: 'Rules route updated', footerEntry }));
 
-writeJson(path.join(dist, '.regen-manifest.json'), {
-  generatedAt: new Date().toISOString(),
+const manifest = {
+  generatedAt,
   sourceHash: createHash('sha256').update(JSON.stringify({ blog: blogEntries.map((e) => [e.file, e.metadata.updatedAt]), changelog: changelogEntries.map((e) => [e.file, e.metadata.updatedAt]), rules: rulesEntries.map((e) => [e.file, e.metadata.updatedAt]), site: [[homeEntry.file, homeEntry.metadata.updatedAt], [privacyEntry.file, privacyEntry.metadata.updatedAt], [termsEntry.file, termsEntry.metadata.updatedAt], [aboutEntry.file, aboutEntry.metadata.updatedAt], [footerEntry.file, footerEntry.metadata.updatedAt]], players: publicData.entries.map((entry) => [entry.username, entry.rating, entry.gamesPlayed]) })).digest('hex'),
   blogRoutes: blogEntries.map((entry) => `/blog/${entry.metadata.slug}`),
   changelogRoutes: changelogEntries.map((entry) => `/changelog/${entry.metadata.slug}`),
   ruleRoutes: ['/rules', '/rules/comparison', ...rulesEntries.map((entry) => `/rules/${entry.metadata.slug}`)],
   playerRoutes: publicData.profiles.map((entry) => `/players/${entry.profile.username}`)
-});
+};
+writeJson(path.join(dist, '.regen-manifest.json'), manifest);
 
-console.log('build complete: marketing + leaderboard + player profiles + blog + changelog + rules routes generated');
+const updateEntries = buildUpdateFeedEntries(blogEntries, changelogEntries);
+writePage(path.join(dist, 'feed.xml'), renderRssFeed(updateEntries, generatedAt));
+writePage(path.join(dist, 'atom.xml'), renderAtomFeed(updateEntries, generatedAt));
+writePage(path.join(dist, 'sitemap.xml'), renderSitemap(buildSitemapRoutes({
+  blogEntries,
+  changelogEntries,
+  rulesEntries,
+  siteEntries: { home: homeEntry, privacy: privacyEntry, terms: termsEntry, about: aboutEntry },
+  playerRoutes: manifest.playerRoutes,
+  generatedAt,
+})));
+
+console.log('build complete: marketing + leaderboard + player profiles + blog + changelog + rules + feeds generated');
 
 function writePage(filePath, html) { fs.mkdirSync(path.dirname(filePath), { recursive: true }); fs.writeFileSync(filePath, html, 'utf8'); }
 function writeJson(filePath, value) { fs.mkdirSync(path.dirname(filePath), { recursive: true }); fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8'); }

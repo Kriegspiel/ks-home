@@ -19,9 +19,11 @@ test("renderShell falls back canonical paths and footer variants", () => {
   });
 
   assert.ok(emptyFooterHtml.includes('<link rel="canonical" href="https://kriegspiel.org/" />'));
+  assert.ok(emptyFooterHtml.includes('<link rel="alternate" type="application/rss+xml" title="Kriegspiel Updates RSS" href="https://kriegspiel.org/feed.xml" />'));
+  assert.ok(emptyFooterHtml.includes('<link rel="alternate" type="application/atom+xml" title="Kriegspiel Updates Atom" href="https://kriegspiel.org/atom.xml" />'));
   assert.ok(emptyFooterHtml.includes('<meta property="og:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
   assert.ok(emptyFooterHtml.includes('<meta name="twitter:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
-  assert.ok(emptyFooterHtml.includes('<script src="/fen-board.js?v=1.2.14" defer></script>'));
+  assert.ok(emptyFooterHtml.includes('<script src="/fen-board.js?v=1.2.15" defer></script>'));
   assert.ok(emptyFooterHtml.includes("--square-capture-overlay:transparent"));
   assert.ok(emptyFooterHtml.includes("var(--square-ring-capture),var(--square-ring-illegal),var(--square-ring-suggested)"));
   assert.ok(emptyFooterHtml.includes(".fen-board{width:22rem;max-width:100%;}"));
@@ -50,6 +52,7 @@ test("renderShell falls back canonical paths and footer variants", () => {
   });
   assert.ok(fallbackFooterHtml.includes(">Rules</h2>"));
   assert.ok(fallbackFooterHtml.includes(">Communication</h2>"));
+  assert.ok(fallbackFooterHtml.includes('<a href="/feed.xml">RSS</a>'));
   assert.ok(fallbackFooterHtml.includes(">Social</h2>"));
 });
 

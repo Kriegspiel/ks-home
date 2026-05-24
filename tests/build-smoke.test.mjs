@@ -11,4 +11,14 @@ test('build emits required public pages', () => {
   }
   assert.ok(fs.existsSync(path.join(process.cwd(), 'dist', 'social-card-20260511.png')), 'missing social-card-20260511.png');
   assert.ok(fs.existsSync(path.join(process.cwd(), 'dist', 'fen-board.js')), 'missing fen-board.js');
+  for (const xmlFile of ['feed.xml', 'atom.xml', 'sitemap.xml']) {
+    assert.ok(fs.existsSync(path.join(process.cwd(), 'dist', xmlFile)), `missing ${xmlFile}`);
+  }
+  const feed = fs.readFileSync(path.join(process.cwd(), 'dist', 'feed.xml'), 'utf8');
+  const atom = fs.readFileSync(path.join(process.cwd(), 'dist', 'atom.xml'), 'utf8');
+  const sitemap = fs.readFileSync(path.join(process.cwd(), 'dist', 'sitemap.xml'), 'utf8');
+  assert.ok(feed.includes('<rss version="2.0"'));
+  assert.ok(atom.includes('<feed xmlns="http://www.w3.org/2005/Atom"'));
+  assert.ok(sitemap.includes('https://kriegspiel.org/rules/berkeley'));
+  assert.ok(sitemap.includes('<lastmod>'));
 });

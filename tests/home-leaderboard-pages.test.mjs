@@ -162,15 +162,16 @@ test("public profile page renders stats and elo history", () => {
   assert.ok(html.includes("Back to leaderboard"));
 });
 
-test("blog pages show date and singular reading time without the visible author label", () => {
+test("blog pages show date, author, tags, and singular reading time", () => {
   const entry = {
     metadata: {
       slug: "welcome",
       title: "Launch notes for the website track",
       summary: "Just a launch note, to keep track of days.",
       publishedAt: "2026-03-27",
-      updatedAt: "2026-03-27",
-      author: "Kriegspiel Team"
+      updatedAt: "2026-03-28",
+      author: "Kriegspiel Team",
+      tags: ["website", "announcement"],
     },
     body: "Just a launch note, to keep track of days.",
     bodyHtml: "<p>Just a launch note, to keep track of days.</p>"
@@ -179,17 +180,22 @@ test("blog pages show date and singular reading time without the visible author 
   const indexHtml = renderBlogIndex([entry]);
   assert.ok(indexHtml.includes("Notes and updates about Kriegspiel."));
   assert.ok(indexHtml.includes("2026-03-27"));
+  assert.ok(indexHtml.includes('<time datetime="2026-03-27">2026-03-27</time>'));
+  assert.ok(indexHtml.includes("Kriegspiel Team"));
   assert.ok(indexHtml.includes("1 min read"));
   assert.ok(!indexHtml.includes("1 mins read"));
-  assert.ok(!indexHtml.includes("2026-03-27 • Kriegspiel Team •"));
-  assert.ok(!indexHtml.includes("Kriegspiel Team"));
+  assert.ok(indexHtml.includes('href="/feed.xml">RSS feed</a>'));
 
   const detailHtml = renderBlogDetail(entry);
   assert.ok(detailHtml.includes("2026-03-27"));
+  assert.ok(detailHtml.includes("Updated <time datetime=\"2026-03-28\">2026-03-28</time>"));
+  assert.ok(detailHtml.includes("By Kriegspiel Team"));
+  assert.ok(detailHtml.includes('<span class="article-tag">website</span>'));
+  assert.ok(detailHtml.includes('<span class="article-tag">announcement</span>'));
   assert.ok(detailHtml.includes("1 min read"));
   assert.ok(!detailHtml.includes("1 mins read"));
-  assert.ok(!detailHtml.includes("2026-03-27 • Kriegspiel Team •"));
-  assert.ok(!detailHtml.includes("Kriegspiel Team"));
+  assert.ok(detailHtml.includes('"@type":"BlogPosting"'));
+  assert.ok(detailHtml.includes('"author":{"@type":"Organization","name":"Kriegspiel Team"}'));
 });
 
 test("blog pages show plural reading time for longer posts", () => {
