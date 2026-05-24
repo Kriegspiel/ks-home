@@ -5,6 +5,12 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.2.15
+
+- **Blog Discoverability**: publish RSS, Atom, and sitemap XML from the normal
+  static build, add feed discovery links, and show blog author/date/tag
+  metadata on posts.
+
 ## ks-home v. 1.2.14
 
 - **Problem Boards**: replaced native HTML drag/drop with pointer-driven

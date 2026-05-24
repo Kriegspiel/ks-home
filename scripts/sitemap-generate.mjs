@@ -1,15 +1,33 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import { execSync } from "node:child_process";
+import { getContentRoot, loadCollection, loadSingletonEntry } from "../src/content-utils.mjs";
+import { buildSitemapRoutes, renderSitemap } from "../src/site-feeds.mjs";
 
-execSync("node scripts/build.mjs", { stdio: "pipe", env: { ...process.env, KS_CONTENT_PATH: process.env.KS_CONTENT_PATH || "../content" } });
-const manifest = JSON.parse(fs.readFileSync(path.join(process.cwd(), "dist/.regen-manifest.json"), "utf8"));
-const urls = ["/", "/leaderboard", "/blog", "/blog/archive", "/changelog", "/rules", ...manifest.blogRoutes, ...manifest.changelogRoutes];
-const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>https://kriegspiel.org${u}</loc></url>`).join("\n")}\n</urlset>\n`;
+const contentRoot = getContentRoot();
+const blogEntries = loadCollection(contentRoot, "blog");
+const changelogEntries = loadCollection(contentRoot, "changelog");
+const rulesEntries = loadCollection(contentRoot, "rules");
+const homeEntry = loadSingletonEntry(contentRoot, "site", "home");
+const privacyEntry = loadSingletonEntry(contentRoot, "site", "privacy");
+const termsEntry = loadSingletonEntry(contentRoot, "site", "terms");
+const aboutEntry = loadSingletonEntry(contentRoot, "site", "about");
+const manifestPath = path.join(process.cwd(), "dist/.regen-manifest.json");
+const manifest = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, "utf8")) : {};
+const xml = renderSitemap(buildSitemapRoutes({
+  blogEntries,
+  changelogEntries,
+  rulesEntries,
+  siteEntries: { home: homeEntry, privacy: privacyEntry, terms: termsEntry, about: aboutEntry },
+  playerRoutes: Array.isArray(manifest.playerRoutes) ? manifest.playerRoutes : [],
+  generatedAt: manifest.generatedAt || new Date().toISOString(),
+}));
+fs.mkdirSync(path.join(process.cwd(), "dist"), { recursive: true });
 fs.writeFileSync(path.join(process.cwd(), "dist/sitemap.xml"), xml, "utf8");
 if (process.argv.includes("--check")) {
   assert.ok(xml.includes("https://kriegspiel.org/blog"));
   assert.ok(xml.includes("https://kriegspiel.org/changelog"));
+  assert.ok(xml.includes("https://kriegspiel.org/rules/berkeley"));
+  assert.ok(xml.includes("<lastmod>"));
 }
 console.log("sitemap generated");

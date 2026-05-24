@@ -8,6 +8,8 @@ const requiredChecks = [
   { name: "<title>", re: /<title>[^<]+<\/title>/i },
   { name: "description", re: /<meta\s+name="description"\s+content="[^"]+"\s*\/>/i },
   { name: "canonical", re: /<link\s+rel="canonical"\s+href="[^"]+"\s*\/>/i },
+  { name: "rss alternate", re: /<link\s+rel="alternate"\s+type="application\/rss\+xml"\s+title="Kriegspiel Updates RSS"\s+href="https:\/\/kriegspiel\.org\/feed\.xml"\s*\/>/i },
+  { name: "atom alternate", re: /<link\s+rel="alternate"\s+type="application\/atom\+xml"\s+title="Kriegspiel Updates Atom"\s+href="https:\/\/kriegspiel\.org\/atom\.xml"\s*\/>/i },
   { name: "og:title", re: /<meta\s+property="og:title"\s+content="[^"]+"\s*\/>/i },
   { name: "og:image", re: /<meta\s+property="og:image"\s+content="https:\/\/kriegspiel\.org\/social-card-\d+\.png"\s*\/>/i },
   { name: "og:image:width", re: /<meta\s+property="og:image:width"\s+content="1200"\s*\/>/i },
