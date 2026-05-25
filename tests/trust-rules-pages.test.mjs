@@ -96,9 +96,11 @@ test('comparison page links all published rulesets', () => {
   assert.ok(html.indexOf('>CrazyKrieg rules</a>') < html.indexOf('>Dutch rules</a>'));
   assert.equal((html.match(/“Illegal” or “No” means the try is illegal on the true board/g) || []).length, 5);
   assert.equal((html.match(/After a legal capture, the captured square is announced to both players/g) || []).length, 4);
-  assert.equal((html.match(/En passant is announced like a regular capture, using the square from which the pawn is removed/g) || []).length, 6);
+  assert.equal((html.match(/En passant is announced like a regular capture, using the square from which the pawn is removed/g) || []).length, 5);
   assert.equal((html.match(/The referee also says whether the captured material was a pawn or a piece/g) || []).length, 3);
   assert.ok(html.includes('A capture is announced with the capture square, calculated from the captured player’s side.'));
+  assert.ok(html.includes('En passant is announced explicitly as en passant, using the capturing pawn’s landing square.'));
+  assert.ok(html.includes('The referee still does not generally name the capturing man or captured man.'));
   assert.ok(!html.includes('Neither the capturing man nor the captured man is named.'));
   assert.ok(html.includes('After a legal capture, the captured square and reserve identity are announced to both players.'));
   assert.ok(html.includes('The known Dutch note identifies the capture square and whether the capturing man was a pawn or a piece.'));
@@ -128,6 +130,7 @@ test('comparison page links all published rulesets', () => {
   assert.ok(!html.includes('Wild16 summary'));
   assert.ok(!html.includes('RAND summary'));
   assert.ok(!html.includes('English summary'));
+  assert.ok(html.includes('simple capture-square notices, explicit en-passant notices, and a classic Yes/No pawn-capture question.'));
   assert.ok(!html.includes('CrazyKrieg summary'));
   assert.ok(!html.includes('Dutch summary'));
 });
