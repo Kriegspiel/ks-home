@@ -5,6 +5,12 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.2.18
+
+- **English Rules**: clarify that English en-passant captures are announced
+  explicitly on the capturing pawn's landing square, while ordinary captures
+  still omit capturing/captured piece identity.
+
 ## ks-home v. 1.2.17
 
 - **Rules**: add Dutch as a historical/composition reference, clearly marked as
