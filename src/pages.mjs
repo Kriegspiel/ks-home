@@ -39,7 +39,7 @@ function parseFooterEntry(footerEntry) {
 function renderFooter(footerEntry) {
   const fallbackGroups = [
     { title: 'Rules', links: [['/rules/berkeley', 'Berkeley'], ['/rules/cincinnati', 'Cincinnati'], ['/rules/wild16', 'Wild 16'], ['/rules/rand', 'RAND'], ['/rules/english', 'English'], ['/rules/crazykrieg', 'CrazyKrieg'], ['/rules/comparison/', 'Comparison']] },
-    { title: 'Communication', links: [['/blog', 'Blog'], ['/changelog', 'Changelog'], ['/', 'About']] },
+    { title: 'Communication', links: [['/blog', 'Blog'], ['/changelog', 'Changelog'], ['/feed.xml', 'RSS'], ['/about', 'About']] },
     { title: 'Social', links: [['https://x.com/kriegspiel_org', 'X.com (@kriegspiel_org)'], ['https://github.com/Kriegspiel', 'GitHub']] }
   ];
   const groups = withFeedFooterLink(footerEntry ? parseFooterEntry(footerEntry) : fallbackGroups);
@@ -48,13 +48,17 @@ function renderFooter(footerEntry) {
 
 function withFeedFooterLink(groups = []) {
   const cloned = groups.map((group) => ({ title: group.title, links: Array.isArray(group.links) ? [...group.links] : [] }));
-  if (cloned.some((group) => group.links.some(([href]) => href === '/feed.xml'))) return cloned;
   const communication = cloned.find((group) => String(group.title).toLowerCase() === 'communication');
-  if (communication) {
-    communication.links.push(['/feed.xml', 'RSS']);
-  } else {
-    cloned.push({ title: 'Communication', links: [['/blog', 'Blog'], ['/feed.xml', 'RSS']] });
+  if (!communication) {
+    cloned.push({ title: 'Communication', links: [['/blog', 'Blog'], ['/changelog', 'Changelog'], ['/feed.xml', 'RSS'], ['/about', 'About']] });
+    return cloned;
   }
+
+  const existingFeedLink = communication.links.find(([href]) => href === '/feed.xml') || ['/feed.xml', 'RSS'];
+  const linksWithoutFeed = communication.links.filter(([href]) => href !== '/feed.xml');
+  const aboutIndex = linksWithoutFeed.findIndex(([href, label]) => href === '/about' || (href === '/' && label === 'About'));
+  linksWithoutFeed.splice(aboutIndex === -1 ? linksWithoutFeed.length : aboutIndex, 0, existingFeedLink);
+  communication.links = linksWithoutFeed;
   return cloned;
 }
 

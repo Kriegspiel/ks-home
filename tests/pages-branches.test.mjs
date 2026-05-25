@@ -8,6 +8,10 @@ import {
   renderShell,
 } from "../src/pages.mjs";
 
+function footerGroupHtml(html, label) {
+  return html.match(new RegExp(`<section class="footer__group" aria-label="${label}">[\\s\\S]*?</section>`))?.[0] ?? "";
+}
+
 test("renderShell falls back canonical paths and footer variants", () => {
   const emptyFooterHtml = renderShell({
     title: "Demo shell",
@@ -23,7 +27,7 @@ test("renderShell falls back canonical paths and footer variants", () => {
   assert.ok(emptyFooterHtml.includes('<link rel="alternate" type="application/atom+xml" title="Kriegspiel Updates Atom" href="https://kriegspiel.org/atom.xml" />'));
   assert.ok(emptyFooterHtml.includes('<meta property="og:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
   assert.ok(emptyFooterHtml.includes('<meta name="twitter:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
-  assert.ok(emptyFooterHtml.includes('<script src="/fen-board.js?v=1.2.15" defer></script>'));
+  assert.ok(emptyFooterHtml.includes('<script src="/fen-board.js?v=1.2.16" defer></script>'));
   assert.ok(emptyFooterHtml.includes("--square-capture-overlay:transparent"));
   assert.ok(emptyFooterHtml.includes("var(--square-ring-capture),var(--square-ring-illegal),var(--square-ring-suggested)"));
   assert.ok(emptyFooterHtml.includes(".fen-board{width:22rem;max-width:100%;}"));
@@ -54,6 +58,20 @@ test("renderShell falls back canonical paths and footer variants", () => {
   assert.ok(fallbackFooterHtml.includes(">Communication</h2>"));
   assert.ok(fallbackFooterHtml.includes('<a href="/feed.xml">RSS</a>'));
   assert.ok(fallbackFooterHtml.includes(">Social</h2>"));
+
+  const communicationFooter = footerGroupHtml(fallbackFooterHtml, "Communication");
+  assert.ok(communicationFooter.includes('<a href="/blog">Blog</a></li><li><a href="/changelog">Changelog</a></li><li><a href="/feed.xml">RSS</a></li><li><a href="/about">About</a>'));
+
+  const legacyFooterHtml = renderShell({
+    title: "Legacy footer shell",
+    description: "Footer description",
+    main: "<p>hello</p>",
+    footerEntry: {
+      body: "# Communication\n- [Blog](/blog)\n- [Changelog](/changelog)\n- [About](/about)\n",
+    },
+  });
+  const legacyCommunicationFooter = footerGroupHtml(legacyFooterHtml, "Communication");
+  assert.ok(legacyCommunicationFooter.includes('<a href="/blog">Blog</a></li><li><a href="/changelog">Changelog</a></li><li><a href="/feed.xml">RSS</a></li><li><a href="/about">About</a>'));
 });
 
 test("home page falls back when content is sparse or missing metadata wrappers", () => {
