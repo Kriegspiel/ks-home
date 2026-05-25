@@ -9,7 +9,8 @@ test('rules landing page shows implemented and reference rules plus comparison l
     { metadata: { slug: 'wild16', title: 'Wild 16', summary: 'ICC-style announcements.' }, body: '# Intro\n\n## Section Two' },
     { metadata: { slug: 'rand', title: 'RAND', summary: 'RAND reference.' }, body: '# Intro\n\n## Section Three' },
     { metadata: { slug: 'english', title: 'English kriegspiel rules', summary: 'Gambit Club rules.' }, body: '# Intro\n\n## Section Four' },
-    { metadata: { slug: 'crazykrieg', title: 'CrazyKrieg / Crazyhouse Kriegspiel rules', summary: 'Crazyhouse Kriegspiel reference.' }, body: '# Intro\n\n## Section Five' }
+    { metadata: { slug: 'crazykrieg', title: 'CrazyKrieg / Crazyhouse Kriegspiel rules', summary: 'Crazyhouse Kriegspiel reference.' }, body: '# Intro\n\n## Section Five' },
+    { metadata: { slug: 'dutch', title: 'Dutch kriegspiel rules', summary: 'Historical composition note.' }, body: '# Intro\n\n## Section Six' }
   ], []);
   assert.ok(html.includes('/rules/berkeley'));
   assert.ok(html.includes('/rules/cincinnati'));
@@ -17,20 +18,24 @@ test('rules landing page shows implemented and reference rules plus comparison l
   assert.ok(html.includes('/rules/rand'));
   assert.ok(html.includes('/rules/english'));
   assert.ok(html.includes('/rules/crazykrieg'));
+  assert.ok(html.includes('/rules/dutch'));
   assert.ok(html.includes('Cincinnati'));
   assert.ok(!html.includes('Cincinnati style'));
   assert.ok(html.includes('Historical public rules centered on legal tries'));
   assert.ok(html.includes('Wild 16'));
   assert.ok(html.includes('Different capture announcements and a built-in pawn-tries rule.'));
-  assert.ok(html.includes('All published rulesets are implemented online: Berkeley, Berkeley + Any, Cincinnati, Wild 16, RAND, English, and CrazyKrieg.'));
+  assert.ok(html.includes('Playable online: Berkeley, Berkeley + Any, Cincinnati, Wild 16, RAND, English, and CrazyKrieg. Historical and composition references are marked separately.'));
   assert.ok(html.includes('RAND'));
   assert.ok(html.includes('Historical RAND reference from J. D. Williams'));
   assert.ok(html.includes('English'));
   assert.ok(html.includes('Gambit Club English rules with three boards'));
   assert.ok(html.includes('CrazyKrieg'));
   assert.ok(html.includes('Crazyhouse mixed with Kriegspiel'));
+  assert.ok(html.includes('Dutch'));
+  assert.ok(html.includes('Historical composition note for the Dutch capture convention'));
   assert.ok(html.includes('/rules/comparison/'));
   assert.equal((html.match(/Implemented online/g) || []).length, 6);
+  assert.equal((html.match(/Historical reference: not playable online/g) || []).length, 1);
   assert.ok(!html.includes('RAND rules'));
   assert.ok(!html.includes('Planned ruleset'));
   assert.ok(!html.includes('Placeholder'));
@@ -39,6 +44,7 @@ test('rules landing page shows implemented and reference rules plus comparison l
   assert.ok(!html.includes('rules-berkeley-r1'));
   assert.ok(!html.includes('Linked changelog'));
   assert.ok(html.indexOf('>English</h2>') < html.indexOf('>CrazyKrieg</h2>'));
+  assert.ok(html.indexOf('>CrazyKrieg</h2>') < html.indexOf('>Dutch</h2>'));
 });
 
 test('rule detail page keeps comparison navigation but removes metadata and toc clutter', () => {
@@ -59,7 +65,8 @@ test('comparison page links all published rulesets', () => {
     { metadata: { slug: 'wild16', summary: 'Wild16 summary' } },
     { metadata: { slug: 'rand', summary: 'RAND summary' } },
     { metadata: { slug: 'english', summary: 'English summary' } },
-    { metadata: { slug: 'crazykrieg', summary: 'CrazyKrieg summary' } }
+    { metadata: { slug: 'crazykrieg', summary: 'CrazyKrieg summary' } },
+    { metadata: { slug: 'dutch', summary: 'Dutch summary' } }
   ]);
   assert.ok(html.includes('/rules/berkeley'));
   assert.ok(html.includes('/rules/cincinnati'));
@@ -67,6 +74,7 @@ test('comparison page links all published rulesets', () => {
   assert.ok(html.includes('/rules/rand'));
   assert.ok(html.includes('/rules/english'));
   assert.ok(html.includes('/rules/crazykrieg'));
+  assert.ok(html.includes('/rules/dutch'));
   assert.ok(html.includes('Published ruleset comparison'));
   assert.ok(html.includes('<a class="text-link" href="/rules/berkeley">Berkeley</a>'));
   assert.ok(html.includes('<a class="text-link" href="/rules/cincinnati">Cincinnati</a>'));
@@ -74,6 +82,7 @@ test('comparison page links all published rulesets', () => {
   assert.ok(html.includes('<a class="text-link" href="/rules/rand">RAND</a>'));
   assert.ok(html.includes('<a class="text-link" href="/rules/english">English</a>'));
   assert.ok(html.includes('<a class="text-link" href="/rules/crazykrieg">CrazyKrieg</a>'));
+  assert.ok(html.includes('<a class="text-link" href="/rules/dutch">Dutch</a>'));
   assert.ok(html.includes('Cincinnati'));
   assert.ok(html.includes('Wild 16'));
   assert.ok(html.includes('rules-comparison-callout__actions'));
@@ -82,7 +91,9 @@ test('comparison page links all published rulesets', () => {
   assert.ok(html.includes('>RAND rules</a>'));
   assert.ok(html.includes('>English rules</a>'));
   assert.ok(html.includes('>CrazyKrieg rules</a>'));
+  assert.ok(html.includes('>Dutch rules</a>'));
   assert.ok(html.indexOf('>English rules</a>') < html.indexOf('>CrazyKrieg rules</a>'));
+  assert.ok(html.indexOf('>CrazyKrieg rules</a>') < html.indexOf('>Dutch rules</a>'));
   assert.equal((html.match(/“Illegal” or “No” means the try is illegal on the true board/g) || []).length, 5);
   assert.equal((html.match(/After a legal capture, the captured square is announced to both players/g) || []).length, 4);
   assert.equal((html.match(/En passant is announced like a regular capture, using the square from which the pawn is removed/g) || []).length, 6);
@@ -90,6 +101,8 @@ test('comparison page links all published rulesets', () => {
   assert.ok(html.includes('A capture is announced with the capture square, calculated from the captured player’s side.'));
   assert.ok(!html.includes('Neither the capturing man nor the captured man is named.'));
   assert.ok(html.includes('After a legal capture, the captured square and reserve identity are announced to both players.'));
+  assert.ok(html.includes('The known Dutch note identifies the capture square and whether the capturing man was a pawn or a piece.'));
+  assert.ok(html.includes('Swart problem is framed in an “Are there any?” context'));
   assert.ok(html.includes('Promoted pawns are announced as pawns because they enter reserve as pawns.'));
   assert.ok(html.includes('File, rank, long diagonal, short diagonal, knight, and double checks are announced.'));
   assert.equal((html.match(/File, rank, long diagonal, short diagonal, knight, and double checks are announced/g) || []).length, 5);
@@ -116,6 +129,7 @@ test('comparison page links all published rulesets', () => {
   assert.ok(!html.includes('RAND summary'));
   assert.ok(!html.includes('English summary'));
   assert.ok(!html.includes('CrazyKrieg summary'));
+  assert.ok(!html.includes('Dutch summary'));
 });
 
 test('site markdown pages render policy content from content repo entries', () => {

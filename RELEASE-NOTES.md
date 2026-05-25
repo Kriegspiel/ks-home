@@ -5,6 +5,12 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.2.17
+
+- **Rules**: add Dutch as a historical/composition reference, clearly marked as
+  not playable online, and include it in the rules index, footer, and
+  comparison page.
+
 ## ks-home v. 1.2.15
 
 - **Blog Discoverability**: publish RSS, Atom, and sitemap XML from the normal
