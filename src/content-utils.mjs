@@ -585,9 +585,7 @@ export function validateEntry(entry) {
 }
 
 function defaultContentRoot() {
-  const canonicalRoot = path.resolve(process.cwd(), "../ks-content");
-  if (fs.existsSync(canonicalRoot)) return canonicalRoot;
-  return path.resolve(process.cwd(), "../content");
+  return path.resolve(process.cwd(), "../ks-content");
 }
 
 export function getContentRoot() { return path.resolve(process.cwd(), process.env.KS_CONTENT_PATH || defaultContentRoot()); }
