@@ -38,7 +38,7 @@ function parseFooterEntry(footerEntry) {
 
 function renderFooter(footerEntry) {
   const fallbackGroups = [
-    { title: 'Rules', links: [['/rules/berkeley', 'Berkeley'], ['/rules/cincinnati', 'Cincinnati'], ['/rules/wild16', 'Wild 16'], ['/rules/rand', 'RAND'], ['/rules/english', 'English'], ['/rules/crazykrieg', 'CrazyKrieg'], ['/rules/dutch', 'Dutch'], ['/rules/comparison/', 'Comparison']] },
+    { title: 'Rules', links: [['/rules/berkeley', 'Berkeley'], ['/rules/cincinnati', 'Cincinnati'], ['/rules/wild16', 'Wild 16'], ['/rules/rand', 'RAND'], ['/rules/english', 'English'], ['/rules/crazykrieg', 'CrazyKrieg'], ['/rules/comparison/', 'Comparison']] },
     { title: 'Communication', links: [['/blog', 'Blog'], ['/changelog', 'Changelog'], ['/feed.xml', 'RSS'], ['/about', 'About']] },
     { title: 'Social', links: [['https://x.com/kriegspiel_org', 'X.com (@kriegspiel_org)'], ['https://github.com/Kriegspiel', 'GitHub']] }
   ];

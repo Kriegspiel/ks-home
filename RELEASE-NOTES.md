@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.2.21
+
+- **Footer Rules Links**: remove the incomplete Dutch ruleset from the public
+  footer while keeping the full rules page and comparison material available.
+
 ## ks-home v. 1.2.18
 
 - **English Rules**: clarify that English en-passant captures are announced
