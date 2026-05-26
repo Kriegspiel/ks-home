@@ -584,7 +584,13 @@ export function validateEntry(entry) {
   return issues;
 }
 
-export function getContentRoot() { return path.resolve(process.cwd(), process.env.KS_CONTENT_PATH || "../content"); }
+function defaultContentRoot() {
+  const canonicalRoot = path.resolve(process.cwd(), "../ks-content");
+  if (fs.existsSync(canonicalRoot)) return canonicalRoot;
+  return path.resolve(process.cwd(), "../content");
+}
+
+export function getContentRoot() { return path.resolve(process.cwd(), process.env.KS_CONTENT_PATH || defaultContentRoot()); }
 export function readingTimeMinutes(text) { const words = text.trim().split(/\s+/).filter(Boolean).length; return Math.max(1, Math.ceil(words / 220)); }
 export function hashFile(filePath) { return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex"); }
 export function loadSingletonEntry(contentRoot, collection, slug) {

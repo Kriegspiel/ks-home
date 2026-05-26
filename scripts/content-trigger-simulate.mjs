@@ -5,7 +5,8 @@ import { execSync } from "node:child_process";
 
 const fromArg = process.argv.find((arg) => arg.startsWith("--from="));
 const verify = process.argv.includes("--verify-static-regen");
-const fromPath = fromArg ? fromArg.split("=")[1] : "../content";
+const defaultFromPath = fs.existsSync(path.resolve(process.cwd(), "../ks-content")) ? "../ks-content" : "../content";
+const fromPath = fromArg ? fromArg.split("=")[1] : defaultFromPath;
 assert.ok(fs.existsSync(path.resolve(process.cwd(), fromPath)), `missing content path ${fromPath}`);
 execSync("node scripts/build.mjs", { stdio: "pipe", env: { ...process.env, KS_CONTENT_PATH: fromPath } });
 const manifest = JSON.parse(fs.readFileSync(path.join(process.cwd(), "dist/.regen-manifest.json"), "utf8"));

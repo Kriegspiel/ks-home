@@ -135,7 +135,7 @@ test('comparison page links all published rulesets', () => {
   assert.ok(!html.includes('Dutch summary'));
 });
 
-test('site markdown pages render policy content from content repo entries', () => {
+test('site markdown pages render policy content from ks-content entries', () => {
   const privacyHtml = renderSiteMarkdownPage({ metadata: { title: 'Privacy Policy', summary: 'Privacy notice', slug: 'privacy' }, bodyHtml: '<p>Policy owner: legal@kriegspiel.org</p>' });
   const termsHtml = renderSiteMarkdownPage({ metadata: { title: 'Terms of Use', summary: 'Terms notice', slug: 'terms' }, bodyHtml: '<p>Policy owner: legal@kriegspiel.org</p>' });
   assert.ok(privacyHtml.includes('Privacy Policy'));

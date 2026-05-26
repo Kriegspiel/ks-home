@@ -10,7 +10,7 @@
     "draft"
   ],
   "versionRequiredFor": ["changelog", "rules"],
-  "sourceOfTruth": "../content",
+  "sourceOfTruth": "../ks-content",
   "collections": {
     "blog": "blog/*/README.md",
     "changelog": "changelog/*.md",
