@@ -64,6 +64,7 @@ copyStaticAsset('static/logo-theme-toggle.png', 'logo-theme-toggle.png');
 copyStaticAsset('static/social-card-20260511.png', 'social-card-20260511.png');
 copyStaticAsset('static/fen-board.js', 'fen-board.js');
 for (const asset of CHESS_PIECE_ASSETS) copyStaticAsset(`static/chess/cburnett/${asset}`, `chess/cburnett/${asset}`);
+copyStaticTree('static/social', 'social');
 copyContentAsset('binary/logo/favicon.ico', 'favicon.ico');
 copyContentAsset('binary/logo/favicon-16x16.png', 'favicon-16x16.png');
 copyContentAsset('binary/logo/favicon-32x32.png', 'favicon-32x32.png');
@@ -130,6 +131,25 @@ function writePage(filePath, html) { fs.mkdirSync(path.dirname(filePath), { recu
 function writeJson(filePath, value) { fs.mkdirSync(path.dirname(filePath), { recursive: true }); fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8'); }
 
 function copyStaticAsset(fromRelative, toRelative) { const from = path.resolve(process.cwd(), fromRelative); const to = path.join(dist, toRelative); fs.mkdirSync(path.dirname(to), { recursive: true }); fs.copyFileSync(from, to); }
+function copyStaticTree(fromRelative, toRelative) {
+  const fromRoot = path.resolve(process.cwd(), fromRelative);
+  if (!fs.existsSync(fromRoot)) return;
+  const visit = (directory) => {
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      const from = path.join(directory, entry.name);
+      if (entry.isDirectory()) {
+        visit(from);
+        continue;
+      }
+      if (!entry.isFile()) continue;
+      const relative = path.relative(fromRoot, from);
+      const to = path.join(dist, toRelative, relative);
+      fs.mkdirSync(path.dirname(to), { recursive: true });
+      fs.copyFileSync(from, to);
+    }
+  }
+  visit(fromRoot);
+}
 function copyContentAsset(fromRelative, toRelative) { const from = path.join(contentRoot, fromRelative); const to = path.join(dist, toRelative); fs.mkdirSync(path.dirname(to), { recursive: true }); fs.copyFileSync(from, to); }
 
 async function loadPublicPlayerData() {
