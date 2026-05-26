@@ -10,6 +10,8 @@ test('build emits required public pages', () => {
     assert.ok(fs.existsSync(path.join(process.cwd(), 'dist', routeFile)), `missing ${routeFile}`);
   }
   assert.ok(fs.existsSync(path.join(process.cwd(), 'dist', 'social-card-20260511.png')), 'missing social-card-20260511.png');
+  assert.ok(fs.existsSync(path.join(process.cwd(), 'dist', 'social/reddit/2026-05-ruleset-default/kriegspiel-ruleset-default-reddit.gif')), 'missing Reddit ruleset GIF');
+  assert.ok(fs.existsSync(path.join(process.cwd(), 'dist', 'social/reddit/2026-05-ruleset-default/kriegspiel-ruleset-default-reddit.png')), 'missing Reddit ruleset PNG');
   assert.ok(fs.existsSync(path.join(process.cwd(), 'dist', 'fen-board.js')), 'missing fen-board.js');
   for (const xmlFile of ['feed.xml', 'atom.xml', 'sitemap.xml']) {
     assert.ok(fs.existsSync(path.join(process.cwd(), 'dist', xmlFile)), `missing ${xmlFile}`);
