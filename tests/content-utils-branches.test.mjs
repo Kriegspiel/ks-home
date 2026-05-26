@@ -99,23 +99,18 @@ test("markdownToHtml covers include-code aliases, unknown extensions, and guardr
   }
 });
 
-test("getContentRoot prefers ks-content sibling and falls back to legacy content", () => {
+test("getContentRoot uses the ks-content sibling by default", () => {
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ks-home-content-root-"));
   const previousContentPath = process.env.KS_CONTENT_PATH;
   const previousCwd = process.cwd();
 
   try {
     const homeRoot = path.join(tempRoot, "ks-home");
-    const legacyRoot = path.join(tempRoot, "content");
     const canonicalRoot = path.join(tempRoot, "ks-content");
     fs.mkdirSync(homeRoot);
-    fs.mkdirSync(legacyRoot);
     delete process.env.KS_CONTENT_PATH;
 
     process.chdir(homeRoot);
-    assert.equal(getContentRoot(), legacyRoot);
-
-    fs.mkdirSync(canonicalRoot);
     assert.equal(getContentRoot(), canonicalRoot);
   } finally {
     process.chdir(previousCwd);

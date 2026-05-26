@@ -4,9 +4,6 @@ set -euo pipefail
 ROOT="${ROOT:-/home/fil/dev/kriegspiel}"
 KS_HOME_REPO="${KS_HOME_REPO:-$ROOT/ks-home}"
 CONTENT_REPO="${CONTENT_REPO:-$ROOT/ks-content}"
-if [[ ! -d "$CONTENT_REPO/.git" && -d "$ROOT/content/.git" ]]; then
-  CONTENT_REPO="$ROOT/content"
-fi
 WORK_ROOT="${WORK_ROOT:-$ROOT/.site-refresh}"
 KS_API_BASE="${KS_API_BASE:-https://api.kriegspiel.org}"
 HOME_BRANCH="${HOME_BRANCH:-master}"
