@@ -10,7 +10,7 @@ if (!contract.policy?.sourceOfTruthLocked) {
   process.exit(1);
 }
 
-const sourcePath = path.resolve(process.cwd(), contract.sourcePath);
+const sourcePath = path.resolve(process.cwd(), process.env.KS_CONTENT_PATH || contract.sourcePath);
 if (!fs.existsSync(sourcePath)) {
   console.error(`source repo path not found: ${sourcePath}`);
   process.exit(1);
@@ -33,4 +33,4 @@ for (const forbidden of contract.policy.forbiddenLocalOverrides || []) {
 }
 
 console.log("content-source-contract-check: PASS");
-console.log(`Kriegspiel/content source lock is valid at ${sourcePath}`);
+console.log(`${contract.sourceRepo} source lock is valid at ${sourcePath}`);

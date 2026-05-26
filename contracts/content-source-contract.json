@@ -1,6 +1,6 @@
 {
-  "sourceRepo": "Kriegspiel/content",
-  "sourcePath": "../content",
+  "sourceRepo": "Kriegspiel/ks-content",
+  "sourcePath": "../ks-content",
   "consumedCollections": ["blog", "changelog", "rules", "site"],
   "policy": {
     "sourceOfTruthLocked": true,

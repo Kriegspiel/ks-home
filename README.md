@@ -4,7 +4,7 @@ Step-900 Slice-910 + Slice-920 includes:
 
 - canonical route map and URL policy
 - navigation/footer contract
-- content source contract (`../content` as source of truth)
+- content source contract (`../ks-content` as source of truth)
 - markdown frontmatter schema checks
 - landing/home experience sections + CTA telemetry hook
 - leaderboard experience with loading/empty/error/stale states
