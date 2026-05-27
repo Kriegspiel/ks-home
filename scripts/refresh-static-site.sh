@@ -24,6 +24,19 @@ ensure_worktree() {
 
   git -C "$repo" fetch origin "$branch"
 
+  if [[ -e "$worktree" ]] && ! git -C "$worktree" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    case "$worktree" in
+      "$WORK_ROOT"/*)
+        rm -rf -- "$worktree"
+        git -C "$repo" worktree prune
+        ;;
+      *)
+        echo "Refusing to remove unmanaged worktree path: $worktree" >&2
+        exit 2
+        ;;
+    esac
+  fi
+
   if [[ ! -d "$worktree" ]]; then
     git -C "$repo" worktree add --detach "$worktree" "origin/$branch"
   else
