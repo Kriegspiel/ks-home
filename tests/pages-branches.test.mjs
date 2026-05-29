@@ -27,10 +27,10 @@ test("renderShell falls back canonical paths and footer variants", () => {
   assert.ok(emptyFooterHtml.includes('<link rel="alternate" type="application/atom+xml" title="Kriegspiel Updates Atom" href="https://kriegspiel.org/atom.xml" />'));
   assert.ok(emptyFooterHtml.includes('<meta property="og:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
   assert.ok(emptyFooterHtml.includes('<meta name="twitter:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
-  assert.ok(emptyFooterHtml.includes('<script src="/fen-board.js?v=1.2.21" defer></script>'));
+  assert.ok(emptyFooterHtml.includes('<script src="/fen-board.js?v=1.2.22" defer></script>'));
   assert.ok(emptyFooterHtml.includes("--square-capture-overlay:transparent"));
   assert.ok(emptyFooterHtml.includes("var(--square-ring-capture),var(--square-ring-illegal),var(--square-ring-suggested)"));
-  assert.ok(emptyFooterHtml.includes(".fen-board{width:22rem;max-width:100%;}"));
+  assert.ok(emptyFooterHtml.includes(".fen-board{width:22rem;max-width:100%;user-select:none;-webkit-user-select:none;}"));
   assert.ok(emptyFooterHtml.includes(".fen-board{flex:0 1 auto;min-width:0;}"));
   assert.ok(emptyFooterHtml.includes("@media (max-width:640px){.fen-board{width:30rem;max-width:100%;}"));
   assert.ok(emptyFooterHtml.includes("@media (max-width:640px){.fen-diagram__workspace{gap:.45rem;}.fen-board{width:30rem;max-width:100%;flex:0 1 auto;}"));
@@ -40,7 +40,9 @@ test("renderShell falls back canonical paths and footer variants", () => {
   assert.ok(emptyFooterHtml.includes(".fen-board__coord{font-size:.52rem;}.fen-board__coord--file{bottom:.32rem;}"));
   assert.ok(emptyFooterHtml.includes(".fen-board__square.square--highlighted"));
   assert.ok(emptyFooterHtml.includes(".fen-board__square.square--suggested"));
+  assert.ok(emptyFooterHtml.includes("touch-action:none;-webkit-tap-highlight-color:transparent;transition:filter .12s ease;"));
   assert.ok(emptyFooterHtml.includes(".fen-board__piece{touch-action:none;user-select:none;-webkit-user-select:none;}"));
+  assert.ok(emptyFooterHtml.includes("@media (hover:none),(pointer:coarse){.fen-board__grid .fen-board__square"));
   assert.ok(emptyFooterHtml.includes(".fen-diagram[data-fen-dragging=\"true\"] .fen-board__piece{cursor:grabbing;}"));
   assert.ok(emptyFooterHtml.includes(".fen-board__grid .fen-board__square:hover,.fen-board__grid .fen-board__square:focus-visible,.fen-board__grid .fen-board__square:active{border-color:transparent;transform:none;outline:none;filter:none;}"));
   assert.ok(emptyFooterHtml.includes(".fen-board__square.square--suggested,.fen-board__square[data-fen-drag-over=\"true\"]{--square-ring-suggested:inset 0 0 0 .16rem rgba(34,197,94,.78);}"));

@@ -52,9 +52,9 @@ test("FEN board script removes pointer-dragged pieces off board", () => {
   const script = fs.readFileSync(path.join(process.cwd(), "static", "fen-board.js"), "utf8");
 
   assert.ok(script.includes("function handlePointerUp(event)"));
-  assert.ok(script.includes("var square = squareFromPoint(diagram, event.clientX, event.clientY);"));
+  assert.ok(script.includes("var square = squareFromPoint(diagram, event.clientX, event.clientY, pointerDrag.boardRect);"));
   assert.ok(script.includes("if (sourceSquare) removePiece(sourceSquare, pointerDrag.kind);"));
-  assert.ok(script.includes("function squareFromPoint(diagram, x, y)"));
+  assert.ok(script.includes("function squareFromPoint(diagram, x, y, cachedRect)"));
   assert.ok(script.includes("var target = document.elementFromPoint(x, y);"));
 });
 
@@ -111,6 +111,9 @@ test("FEN board script optimizes drag target updates", () => {
 
   assert.ok(script.includes("diagram.fenSquareMap = Object.create(null);"));
   assert.ok(script.includes("diagram.fenSquareMap[square.dataset.square] = square;"));
+  assert.ok(script.includes("boardRect: readBoardRect(diagram),"));
+  assert.ok(script.includes("function readBoardRect(diagram)"));
+  assert.ok(script.includes("return findSquare(diagram, FEN_FILES[fileIndex] + FEN_RANKS[rankIndex]);"));
   assert.ok(script.includes("if (diagram.dataset.fenDragTargetSquare === square.dataset.square) return;"));
   assert.ok(script.includes("var previousSquare = findSquare(diagram, diagram.dataset.fenDragTargetSquare || \"\");"));
   assert.ok(script.includes("diagram.dataset.fenDragTargetSquare = square.dataset.square || \"\";"));

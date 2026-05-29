@@ -27,6 +27,8 @@
     n: "Black knight",
     p: "Black pawn"
   };
+  var FEN_FILES = ["a", "b", "c", "d", "e", "f", "g", "h"];
+  var FEN_RANKS = [8, 7, 6, 5, 4, 3, 2, 1];
   var PHANTOM_PIECES = ["K", "Q", "R", "B", "N", "P", "k", "q", "r", "b", "n", "p"];
   var activeMenu = null;
   var activeMenuDiagram = null;
@@ -169,6 +171,7 @@
       kind: pieceNode.dataset.fenPieceKind || "piece",
       startX: event.clientX,
       startY: event.clientY,
+      boardRect: readBoardRect(diagram),
       started: false
     };
     if (!pointerDrag.square) return;
@@ -205,7 +208,7 @@
       selectSquare(diagram, sourceSquare, pointerDrag.kind);
     }
 
-    var square = squareFromPoint(diagram, event.clientX, event.clientY);
+    var square = squareFromPoint(diagram, event.clientX, event.clientY, pointerDrag.boardRect);
     if (!square) {
       clearDragTargets(diagram);
       return;
@@ -226,7 +229,7 @@
 
     event.preventDefault();
     suppressNextClick(diagram);
-    var square = squareFromPoint(diagram, event.clientX, event.clientY);
+    var square = squareFromPoint(diagram, event.clientX, event.clientY, pointerDrag.boardRect);
     clearDragTargets(diagram);
     clearPointerDrag(diagram, event.pointerId);
 
@@ -438,7 +441,31 @@
     });
   }
 
-  function squareFromPoint(diagram, x, y) {
+  function readBoardRect(diagram) {
+    var grid = diagram.querySelector("[data-fen-grid]");
+    var rect = grid && grid.getBoundingClientRect ? grid.getBoundingClientRect() : null;
+    if (!rect || rect.width <= 0 || rect.height <= 0) return null;
+    return {
+      left: rect.left,
+      top: rect.top,
+      width: rect.width,
+      height: rect.height
+    };
+  }
+
+  function squareFromPoint(diagram, x, y, cachedRect) {
+    var boardRect = cachedRect || readBoardRect(diagram);
+    if (boardRect && Number.isFinite(x) && Number.isFinite(y)) {
+      var relativeX = x - boardRect.left;
+      var relativeY = y - boardRect.top;
+      if (relativeX >= 0 && relativeY >= 0 && relativeX <= boardRect.width && relativeY <= boardRect.height) {
+        var fileIndex = Math.min(7, Math.max(0, Math.floor((relativeX / boardRect.width) * 8)));
+        var rankIndex = Math.min(7, Math.max(0, Math.floor((relativeY / boardRect.height) * 8)));
+        return findSquare(diagram, FEN_FILES[fileIndex] + FEN_RANKS[rankIndex]);
+      }
+    }
+
+    if (!document.elementFromPoint) return null;
     var target = document.elementFromPoint(x, y);
     var square = target && target.closest ? target.closest("[data-fen-square]") : null;
     return square && diagram.contains(square) ? square : null;
