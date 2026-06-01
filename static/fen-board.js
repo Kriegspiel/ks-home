@@ -285,13 +285,15 @@
       clearSelection(diagram);
       return;
     }
-    if (kind === "phantom" && !canPlacePhantom(toSquare)) {
+    var capturedPiece = kind === "phantom" ? (toSquare.dataset.piece || "") : "";
+    if (kind === "phantom" && !canPlacePhantom(toSquare) && !capturedPiece) {
       clearSelection(diagram);
       return;
     }
 
     var movingNode = findPieceNode(fromSquare, kind);
     fromSquare.dataset[dataKey] = "";
+    if (kind === "phantom" && capturedPiece) toSquare.dataset.piece = "";
     toSquare.dataset[dataKey] = piece;
     if (kind !== "phantom") toSquare.dataset.phantomPiece = "";
     movePieceNode(fromSquare, toSquare, movingNode);
