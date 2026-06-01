@@ -53,7 +53,7 @@ test("FEN board script removes pointer-dragged pieces off board", () => {
 
   assert.ok(script.includes("function handlePointerUp(event)"));
   assert.ok(script.includes("var square = squareFromPoint(diagram, event.clientX, event.clientY, pointerDrag.boardRect);"));
-  assert.ok(script.includes("if (sourceSquare) removePiece(sourceSquare, pointerDrag.kind);"));
+  assert.ok(script.includes("if (sourceSquare) removePiece(diagram, sourceSquare, pointerDrag.kind);"));
   assert.ok(script.includes("function squareFromPoint(diagram, x, y, cachedRect)"));
   assert.ok(script.includes("var target = document.elementFromPoint(x, y);"));
 });
@@ -134,4 +134,23 @@ test("FEN board script disables native element dragging", () => {
   assert.ok(script.includes("span.draggable = false;"));
   assert.ok(script.includes("image.draggable = false;"));
   assert.ok(!script.includes("function getTransparentDragImage()"));
+});
+
+test("FEN board script tracks undo and redo snapshots", () => {
+  const script = fs.readFileSync(path.join(process.cwd(), "static", "fen-board.js"), "utf8");
+
+  assert.ok(script.includes('diagram.querySelectorAll("[data-fen-undo]").forEach(function (button)'));
+  assert.ok(script.includes('diagram.querySelectorAll("[data-fen-redo]").forEach(function (button)'));
+  assert.ok(script.includes("stepHistory(diagram, -1);"));
+  assert.ok(script.includes("stepHistory(diagram, 1);"));
+  assert.ok(script.includes("function initializeHistory(diagram)"));
+  assert.ok(script.includes("diagram.fenHistory = [readDiagramState(diagram)];"));
+  assert.ok(script.includes("function recordHistory(diagram)"));
+  assert.ok(script.includes("diagram.fenHistory = diagram.fenHistory.slice(0, index + 1);"));
+  assert.ok(script.includes("function restoreDiagramState(diagram, state)"));
+  assert.ok(script.includes("square.dataset.piece = entry.piece || \"\";"));
+  assert.ok(script.includes("square.dataset.phantomPiece = entry.phantomPiece || \"\";"));
+  assert.ok(script.includes("function updateHistoryControls(diagram)"));
+  assert.ok(script.includes("button.disabled = !canUndo;"));
+  assert.ok(script.includes("button.disabled = !canRedo;"));
 });

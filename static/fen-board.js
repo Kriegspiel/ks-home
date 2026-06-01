@@ -35,6 +35,7 @@
   var phantomMenu = null;
   var lazyObserver = null;
   var DRAG_START_DISTANCE = 4;
+  var HISTORY_LIMIT = 200;
 
   function init() {
     document.querySelectorAll("[data-fen-diagram]").forEach(scheduleDiagramInit);
@@ -95,10 +96,23 @@
         resetDiagram(diagram);
       });
     });
+    diagram.querySelectorAll("[data-fen-undo]").forEach(function (button) {
+      button.addEventListener("click", function (event) {
+        event.stopPropagation();
+        stepHistory(diagram, -1);
+      });
+    });
+    diagram.querySelectorAll("[data-fen-redo]").forEach(function (button) {
+      button.addEventListener("click", function (event) {
+        event.stopPropagation();
+        stepHistory(diagram, 1);
+      });
+    });
     diagram.addEventListener("pointerdown", handlePointerDown);
     diagram.addEventListener("pointermove", handlePointerMove);
     diagram.addEventListener("pointerup", handlePointerUp);
     diagram.addEventListener("pointercancel", handlePointerCancel);
+    initializeHistory(diagram);
   }
 
   function handleDocumentClick(event) {
@@ -146,6 +160,7 @@
     if (square.dataset.phantomPiece) {
       square.dataset.phantomPiece = "";
       renderSquare(square);
+      recordHistory(diagram);
       closeActiveMenu();
       return;
     }
@@ -239,7 +254,7 @@
     }
 
     var sourceSquare = findSquare(diagram, pointerDrag.square);
-    if (sourceSquare) removePiece(sourceSquare, pointerDrag.kind);
+    if (sourceSquare) removePiece(diagram, sourceSquare, pointerDrag.kind);
     clearSelection(diagram);
   }
 
@@ -281,13 +296,16 @@
     if (kind !== "phantom") toSquare.dataset.phantomPiece = "";
     movePieceNode(fromSquare, toSquare, movingNode);
     markLastMove(diagram, fromSquare, toSquare);
+    recordHistory(diagram);
     clearSelection(diagram);
   }
 
-  function removePiece(square, kind) {
+  function removePiece(diagram, square, kind) {
     var dataKey = kind === "phantom" ? "phantomPiece" : "piece";
+    if (!square.dataset[dataKey]) return;
     square.dataset[dataKey] = "";
     renderSquare(square);
+    recordHistory(diagram);
   }
 
   function resetDiagram(diagram) {
@@ -299,6 +317,102 @@
     clearSelection(diagram);
     clearLastMove(diagram);
     closeActiveMenu();
+    initializeHistory(diagram);
+  }
+
+  function initializeHistory(diagram) {
+    diagram.fenHistory = [readDiagramState(diagram)];
+    diagram.fenHistoryIndex = 0;
+    updateHistoryControls(diagram);
+  }
+
+  function recordHistory(diagram) {
+    if (!diagram.fenHistory) initializeHistory(diagram);
+    var nextState = readDiagramState(diagram);
+    var index = Number.isFinite(diagram.fenHistoryIndex) ? diagram.fenHistoryIndex : 0;
+    var currentState = diagram.fenHistory[index];
+    if (statesEqual(currentState, nextState)) {
+      updateHistoryControls(diagram);
+      return;
+    }
+
+    diagram.fenHistory = diagram.fenHistory.slice(0, index + 1);
+    diagram.fenHistory.push(nextState);
+    if (diagram.fenHistory.length > HISTORY_LIMIT) {
+      diagram.fenHistory.shift();
+    }
+    diagram.fenHistoryIndex = diagram.fenHistory.length - 1;
+    updateHistoryControls(diagram);
+  }
+
+  function stepHistory(diagram, delta) {
+    if (!diagram.fenHistory || !diagram.fenHistory.length) initializeHistory(diagram);
+    var index = Number.isFinite(diagram.fenHistoryIndex) ? diagram.fenHistoryIndex : 0;
+    var nextIndex = index + delta;
+    if (nextIndex < 0 || nextIndex >= diagram.fenHistory.length) {
+      updateHistoryControls(diagram);
+      return;
+    }
+
+    diagram.fenHistoryIndex = nextIndex;
+    restoreDiagramState(diagram, diagram.fenHistory[nextIndex]);
+    updateHistoryControls(diagram);
+  }
+
+  function readDiagramState(diagram) {
+    var squares = [];
+    diagram.querySelectorAll("[data-fen-square]").forEach(function (square) {
+      squares.push({
+        square: square.dataset.square || "",
+        piece: square.dataset.piece || "",
+        phantomPiece: square.dataset.phantomPiece || ""
+      });
+    });
+
+    var lastMoveSquares = [];
+    diagram.querySelectorAll("[data-fen-last-move]").forEach(function (square) {
+      lastMoveSquares.push(square.dataset.square || "");
+    });
+    return { squares: squares, lastMoveSquares: lastMoveSquares };
+  }
+
+  function restoreDiagramState(diagram, state) {
+    closeActiveMenu();
+    clearSelection(diagram);
+    clearDragTargets(diagram);
+    clearLastMove(diagram);
+
+    (state && state.squares ? state.squares : []).forEach(function (entry) {
+      var square = findSquare(diagram, entry.square || "");
+      if (!square) return;
+      square.dataset.piece = entry.piece || "";
+      square.dataset.phantomPiece = entry.phantomPiece || "";
+      renderSquare(square);
+    });
+
+    (state && state.lastMoveSquares ? state.lastMoveSquares : []).forEach(function (squareName) {
+      var square = findSquare(diagram, squareName);
+      if (!square) return;
+      square.dataset.fenLastMove = "true";
+      square.classList.add("square--last-move");
+    });
+  }
+
+  function statesEqual(left, right) {
+    return JSON.stringify(left || null) === JSON.stringify(right || null);
+  }
+
+  function updateHistoryControls(diagram) {
+    var index = Number.isFinite(diagram.fenHistoryIndex) ? diagram.fenHistoryIndex : 0;
+    var length = diagram.fenHistory ? diagram.fenHistory.length : 0;
+    var canUndo = index > 0;
+    var canRedo = index + 1 < length;
+    diagram.querySelectorAll("[data-fen-undo]").forEach(function (button) {
+      button.disabled = !canUndo;
+    });
+    diagram.querySelectorAll("[data-fen-redo]").forEach(function (button) {
+      button.disabled = !canRedo;
+    });
   }
 
   function getPhantomMenu() {
@@ -339,6 +453,7 @@
       if (square && canPlacePhantom(square) && PIECE_ASSETS[piece]) {
         square.dataset.phantomPiece = piece;
         renderSquare(square);
+        recordHistory(diagram);
       }
       closeActiveMenu();
     });
