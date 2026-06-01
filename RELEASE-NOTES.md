@@ -5,6 +5,12 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.2.24
+
+- **Problem Boards**: allow moved phantom pieces to capture real pieces during
+  scratch-board exploration, while keeping new phantom placement limited to
+  empty squares.
+
 ## ks-home v. 1.2.23
 
 - **Problem Boards**: add undo and redo arrow controls for scratch-board

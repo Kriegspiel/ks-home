@@ -25,12 +25,14 @@ test("FEN board script renders pieces with live-board class aliases", () => {
   assert.ok(script.includes('"fen-board__piece-image piece__image"'));
 });
 
-test("FEN board script keeps phantoms off occupied squares", () => {
+test("FEN board script keeps new phantoms off occupied squares while moved phantoms capture", () => {
   const script = fs.readFileSync(path.join(process.cwd(), "static", "fen-board.js"), "utf8");
 
   assert.ok(script.includes("function canPlacePhantom(square)"));
   assert.ok(script.includes('if (!canPlacePhantom(square)) {'));
-  assert.ok(script.includes('if (kind === "phantom" && !canPlacePhantom(toSquare))'));
+  assert.ok(script.includes('var capturedPiece = kind === "phantom" ? (toSquare.dataset.piece || "") : "";'));
+  assert.ok(script.includes('if (kind === "phantom" && !canPlacePhantom(toSquare) && !capturedPiece)'));
+  assert.ok(script.includes('if (kind === "phantom" && capturedPiece) toSquare.dataset.piece = "";'));
   assert.ok(script.includes("square && canPlacePhantom(square) && PIECE_ASSETS[piece]"));
   assert.ok(script.includes("if (square.dataset.piece) square.dataset.phantomPiece = \"\";"));
 });
