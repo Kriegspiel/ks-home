@@ -382,7 +382,7 @@ function renderFenPiece(piece, kind) {
 }
 
 function renderFenBoardTools() {
-  return `<div class="fen-board-tools" aria-label="Board tools"><button type="button" class="fen-board-tools__reset" data-fen-reset>Reset</button></div>`;
+  return `<div class="fen-board-tools" aria-label="Board tools"><button type="button" class="fen-board-tools__button fen-board-tools__history" data-fen-undo aria-label="Undo board edit" disabled>&larr;</button><button type="button" class="fen-board-tools__button fen-board-tools__history" data-fen-redo aria-label="Redo board edit" disabled>&rarr;</button><button type="button" class="fen-board-tools__button fen-board-tools__reset" data-fen-reset>Reset</button></div>`;
 }
 
 function parseFenBoard(fen) {

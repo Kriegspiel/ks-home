@@ -213,6 +213,8 @@ test("markdownToHtml renders Diagram FEN lines with cburnett piece assets", () =
   assert.ok(html.includes('class="fen-board__piece piece white" draggable="false" data-fen-piece="K"'));
   assert.ok(html.includes('class="fen-board__piece-image piece__image"'));
   assert.ok(html.includes('class="fen-board__coord fen-board__coord--rank coord rank"'));
+  assert.ok(html.includes('data-fen-undo aria-label="Undo board edit" disabled>&larr;</button>'));
+  assert.ok(html.includes('data-fen-redo aria-label="Redo board edit" disabled>&rarr;</button>'));
   assert.ok(html.includes('data-fen-reset>Reset</button>'));
   assert.equal(html.includes('data-fen-phantom="Q"'), false);
   assert.equal(html.includes('data-fen-mode='), false);
