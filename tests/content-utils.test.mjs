@@ -168,8 +168,39 @@ test("markdownToHtml collapses solution paragraphs", () => {
 
   assert.equal(
     html,
-    '<details class="solution-block"><summary>Show solution</summary><p>The key is <code>1.Rg3</code>, threatening <strong>mate</strong>.</p></details>',
+    '<details class="solution-block"><summary>Show solution</summary><div class="solution-block__body"><p>The key is <code>1.Rg3</code>, threatening <strong>mate</strong>.</p></div></details>',
   );
+});
+
+test("markdownToHtml keeps multi-paragraph solutions inside one spoiler", () => {
+  const html = markdownToHtml([
+    "### 7.3.8 - G. Foster 1996",
+    "",
+    "Stipulation: mate in two.",
+    "",
+    "Solution: White must reconstruct part of Black's position.",
+    "",
+    "The black king can only be on a few squares.",
+    "",
+    "Capture cases: if the king is on a6, play `2.Rd6#`.",
+    "",
+    "### 7.3.9 - J. Roche 1986",
+    "",
+    "Stipulation: mate in two."
+  ].join("\n"));
+
+  const detailsStart = html.indexOf('<details class="solution-block">');
+  const detailsEnd = html.indexOf("</details>", detailsStart);
+  const nextHeading = html.indexOf("<h3>7.3.9 - J. Roche 1986</h3>");
+  const detailsHtml = html.slice(detailsStart, detailsEnd);
+
+  assert.ok(detailsStart > -1);
+  assert.ok(detailsEnd > detailsStart);
+  assert.ok(nextHeading > detailsEnd);
+  assert.ok(detailsHtml.includes("White must reconstruct part of Black&#39;s position."));
+  assert.ok(detailsHtml.includes("The black king can only be on a few squares."));
+  assert.ok(detailsHtml.includes("Capture cases: if the king is on a6, play <code>2.Rd6#</code>."));
+  assert.equal((html.match(/class="solution-block"/g) || []).length, 1);
 });
 
 test("markdownToHtml renders markdown tables", () => {

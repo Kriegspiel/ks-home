@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
 import {
   renderHomePage,
@@ -7,6 +8,8 @@ import {
   renderPublicProfilePage,
   renderShell,
 } from "../src/pages.mjs";
+
+const PACKAGE_VERSION = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")).version;
 
 function footerGroupHtml(html, label) {
   return html.match(new RegExp(`<section class="footer__group" aria-label="${label}">[\\s\\S]*?</section>`))?.[0] ?? "";
@@ -27,7 +30,7 @@ test("renderShell falls back canonical paths and footer variants", () => {
   assert.ok(emptyFooterHtml.includes('<link rel="alternate" type="application/atom+xml" title="Kriegspiel Updates Atom" href="https://kriegspiel.org/atom.xml" />'));
   assert.ok(emptyFooterHtml.includes('<meta property="og:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
   assert.ok(emptyFooterHtml.includes('<meta name="twitter:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
-  assert.ok(emptyFooterHtml.includes('<script src="/fen-board.js?v=1.2.24" defer></script>'));
+  assert.ok(emptyFooterHtml.includes(`<script src="/fen-board.js?v=${PACKAGE_VERSION}" defer></script>`));
   assert.ok(emptyFooterHtml.includes("--square-capture-overlay:transparent"));
   assert.ok(emptyFooterHtml.includes("var(--square-ring-capture),var(--square-ring-illegal),var(--square-ring-suggested)"));
   assert.ok(emptyFooterHtml.includes(".fen-board{width:22rem;max-width:100%;user-select:none;-webkit-user-select:none;}"));

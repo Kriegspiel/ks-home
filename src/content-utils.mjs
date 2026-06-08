@@ -111,6 +111,7 @@ function parseValue(value) {
 
 export function markdownToHtml(markdown, options = {}) {
   const baseDir = options.baseDir ? path.resolve(options.baseDir) : null;
+  const renderSolutions = options.renderSolutions !== false;
   const lines = String(markdown || "").split(/\r?\n/);
   const html = [];
   let paragraph = [];
@@ -119,7 +120,7 @@ export function markdownToHtml(markdown, options = {}) {
 
   const flushParagraph = () => {
     if (!paragraph.length) return;
-    html.push(renderParagraph(paragraph.join(" ")));
+    html.push(renderParagraph(paragraph.join(" "), { renderSolutions }));
     paragraph = [];
   };
 
@@ -152,6 +153,15 @@ export function markdownToHtml(markdown, options = {}) {
     const trimmed = rawLine.trim();
     if (!trimmed) {
       flushParagraph();
+      continue;
+    }
+
+    const solutionMatch = renderSolutions ? trimmed.match(/^Solution:\s*(.*)$/i) : null;
+    if (solutionMatch) {
+      flushParagraph();
+      const solution = collectSolutionBlock(lines, index, solutionMatch[1]);
+      html.push(renderSolutionBlock(solution.markdown, options));
+      index = solution.endIndex;
       continue;
     }
 
@@ -334,15 +344,33 @@ function renderIncludedCodeBlock(argumentString, baseDir) {
   return `<figure class="code-snippet"><figcaption>${escapeHtml(label)}</figcaption>${renderCodeBlock(code, language)}</figure>`;
 }
 
-function renderParagraph(text) {
+function renderParagraph(text, options = {}) {
   const solutionMatch = String(text || "").match(/^Solution:\s*(.*)$/i);
-  if (solutionMatch) return renderSolutionBlock(solutionMatch[1]);
+  if (options.renderSolutions !== false && solutionMatch) return renderSolutionBlock(solutionMatch[1], options);
   return `<p>${inlineMarkdown(text)}</p>`;
 }
 
-function renderSolutionBlock(solutionText) {
-  const body = String(solutionText || "").trim();
-  const bodyHtml = body ? `<p>${inlineMarkdown(body)}</p>` : "";
+function collectSolutionBlock(lines, startIndex, firstLine) {
+  const solutionLines = [firstLine || ""];
+  let endIndex = startIndex;
+  let codeFence = false;
+
+  for (let index = startIndex + 1; index < lines.length; index += 1) {
+    const rawLine = lines[index];
+    const trimmed = rawLine.trim();
+    if (!codeFence && /^(#{1,3})\s+(.+)$/.test(trimmed)) break;
+
+    solutionLines.push(rawLine);
+    endIndex = index;
+    if (/^```\s*([^\s`]+)?\s*$/.test(rawLine)) codeFence = !codeFence;
+  }
+
+  return { markdown: solutionLines.join("\n").trim(), endIndex };
+}
+
+function renderSolutionBlock(solutionMarkdown, options = {}) {
+  const body = String(solutionMarkdown || "").trim();
+  const bodyHtml = body ? `<div class="solution-block__body">${markdownToHtml(body, { ...options, renderSolutions: false })}</div>` : "";
   return `<details class="solution-block"><summary>Show solution</summary>${bodyHtml}</details>`;
 }
 
