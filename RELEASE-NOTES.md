@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.2.26
+
+- **Campaign Attribution**: load a privacy-minimal UTM capture script on static
+  pages and include `campaign_visit` in the public analytics contract.
+
 ## ks-home v. 1.2.25
 
 - **Blog Spoilers**: keep multi-paragraph `Solution:` sections inside the same

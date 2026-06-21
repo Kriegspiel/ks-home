@@ -62,6 +62,7 @@ fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
 copyStaticAsset('static/logo-theme-toggle.png', 'logo-theme-toggle.png');
 copyStaticAsset('static/social-card-20260511.png', 'social-card-20260511.png');
+copyStaticAsset('static/attribution.js', 'attribution.js');
 copyStaticAsset('static/fen-board.js', 'fen-board.js');
 for (const asset of CHESS_PIECE_ASSETS) copyStaticAsset(`static/chess/cburnett/${asset}`, `chess/cburnett/${asset}`);
 copyStaticTree('static/social', 'social');

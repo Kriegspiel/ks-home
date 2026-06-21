@@ -31,6 +31,7 @@ test("renderShell falls back canonical paths and footer variants", () => {
   assert.ok(emptyFooterHtml.includes('<meta property="og:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
   assert.ok(emptyFooterHtml.includes('<meta name="twitter:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
   assert.ok(emptyFooterHtml.includes(`<script src="/fen-board.js?v=${PACKAGE_VERSION}" defer></script>`));
+  assert.ok(emptyFooterHtml.includes(`<script src="/attribution.js?v=${PACKAGE_VERSION}" defer></script>`));
   assert.ok(emptyFooterHtml.includes("--square-capture-overlay:transparent"));
   assert.ok(emptyFooterHtml.includes("var(--square-ring-capture),var(--square-ring-illegal),var(--square-ring-suggested)"));
   assert.ok(emptyFooterHtml.includes(".fen-board{width:22rem;max-width:100%;user-select:none;-webkit-user-select:none;}"));

@@ -1,5 +1,16 @@
 {
   "events": {
+    "campaign_visit": {
+      "allowedFields": [
+        "landing_path",
+        "referrer_host",
+        "utm.source",
+        "utm.medium",
+        "utm.campaign",
+        "utm.content",
+        "utm.term"
+      ]
+    },
     "home_cta_click": { "allowedFields": ["route", "placement"] },
     "leaderboard_sort": { "allowedFields": ["route", "field"] },
     "leaderboard_retry": { "allowedFields": ["route"] }
