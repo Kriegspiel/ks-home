@@ -156,3 +156,16 @@ test('site markdown pages keep wrapped tables as scrollable tables on narrow scr
   assert.ok(html.includes('.prose-card .table-wrap code{white-space:normal;overflow-wrap:anywhere;word-break:break-word;}'));
   assert.ok(html.includes('@media (min-width:701px){.prose-card .table-wrap th:first-child,.prose-card .table-wrap td:first-child{width:26%;min-width:12rem;}}'));
 });
+
+test('site markdown pages include tier feature matrix styles', () => {
+  const html = renderSiteMarkdownPage({
+    metadata: { title: 'Kriegspiel Levels', summary: 'Levels page', slug: 'levels' },
+    bodyHtml: '<div class="table-wrap tier-feature-table-wrap"><table class="tier-feature-table"></table></div>'
+  });
+
+  assert.ok(html.includes('<section class="content-section content-section--wide"><article class="prose-card prose-card--wide">'));
+  assert.ok(html.includes('.content-section--wide{width:100%;}'));
+  assert.ok(html.includes('.tier-feature-table-wrap .tier-feature-table{min-width:86rem;table-layout:fixed;'));
+  assert.ok(html.includes('.tier-feature-table__mark--yes'));
+  assert.ok(html.includes('.tier-feature-table__mark--no'));
+});
