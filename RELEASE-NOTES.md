@@ -5,6 +5,10 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.3.2
+
+- **Levels**: make the `T#` tier code badges square instead of rounded.
+
 ## ks-home v. 1.3.1
 
 - **Levels**: render tier headers as `Tier T#` labels with the `T#` code in a
