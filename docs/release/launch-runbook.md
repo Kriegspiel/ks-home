@@ -29,7 +29,7 @@
 
 ```bash
 # from ks-home
-BASE_URL="https://kriegspiel.org" ./scripts/deploy/smoke.sh --routes "/,/leaderboard,/blog,/changelog,/rules"
+BASE_URL="https://kriegspiel.org" ./scripts/deploy/smoke.sh --routes "/,/leaderboard,/blog,/changelog,/rules,/playing"
 ```
 
 ## Failed Deploy Policy
@@ -39,7 +39,7 @@ If smoke fails after production cutover:
 2. Execute rollback immediately:
    ```bash
    ./scripts/deploy/rollback.sh --to previous
-   BASE_URL="https://kriegspiel.org" ./scripts/deploy/smoke.sh --routes "/,/leaderboard,/blog,/changelog,/rules"
+   BASE_URL="https://kriegspiel.org" ./scripts/deploy/smoke.sh --routes "/,/leaderboard,/blog,/changelog,/rules,/playing"
    ```
 3. Page release owner and engineering owner.
 4. Keep release frozen until root cause and remediation PR are approved.

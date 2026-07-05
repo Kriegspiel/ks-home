@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const targets = ["/", "/blog", "/changelog", "/rules"];
+const targets = ["/", "/blog", "/changelog", "/rules", "/playing"];
 let failures = 0;
 for (const route of targets) {
   const rel = route === "/" ? "index.html" : `${route.replace(/^\//, "")}/index.html`;
