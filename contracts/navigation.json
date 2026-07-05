@@ -19,6 +19,14 @@
   ],
   "footerGroups": [
     {
+      "title": "Game",
+      "links": [
+        { "label": "Play online", "href": "https://app.kriegspiel.org/" },
+        { "label": "Playing guide", "href": "/playing" },
+        { "label": "Leaderboard", "href": "/leaderboard" }
+      ]
+    },
+    {
       "title": "Policy",
       "links": [
         { "label": "Privacy", "href": "/privacy" },
@@ -46,13 +54,6 @@
       ]
     },
     {
-      "title": "Game",
-      "links": [
-        { "label": "Leaderboard", "href": "/leaderboard" },
-        { "label": "Play online", "href": "https://app.kriegspiel.org/" }
-      ]
-    },
-    {
       "title": "Development",
       "links": [
         { "label": "API docs", "href": "https://api.kriegspiel.org/docs" },
@@ -67,6 +68,9 @@
     }
   ],
   "footerLinks": [
+    { "label": "Play online", "href": "https://app.kriegspiel.org/" },
+    { "label": "Playing guide", "href": "/playing" },
+    { "label": "Leaderboard", "href": "/leaderboard" },
     { "label": "Privacy", "href": "/privacy" },
     { "label": "Terms", "href": "/terms" },
     { "label": "Berkeley", "href": "/rules/berkeley" },
@@ -79,8 +83,6 @@
     { "label": "Blog", "href": "/blog" },
     { "label": "Changelog", "href": "/changelog" },
     { "label": "About", "href": "/about" },
-    { "label": "Leaderboard", "href": "/leaderboard" },
-    { "label": "Play online", "href": "https://app.kriegspiel.org/" },
     { "label": "API docs", "href": "https://api.kriegspiel.org/docs" },
     { "label": "GitHub", "href": "https://github.com/Kriegspiel" },
     { "label": "X.com", "href": "https://x.com/kriegspiel_org" }

@@ -12,13 +12,14 @@ const homeEntry = loadSingletonEntry(contentRoot, "site", "home");
 const privacyEntry = loadSingletonEntry(contentRoot, "site", "privacy");
 const termsEntry = loadSingletonEntry(contentRoot, "site", "terms");
 const aboutEntry = loadSingletonEntry(contentRoot, "site", "about");
+const playingEntry = loadSingletonEntry(contentRoot, "site", "playing");
 const manifestPath = path.join(process.cwd(), "dist/.regen-manifest.json");
 const manifest = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, "utf8")) : {};
 const xml = renderSitemap(buildSitemapRoutes({
   blogEntries,
   changelogEntries,
   rulesEntries,
-  siteEntries: { home: homeEntry, privacy: privacyEntry, terms: termsEntry, about: aboutEntry },
+  siteEntries: { home: homeEntry, privacy: privacyEntry, terms: termsEntry, about: aboutEntry, playing: playingEntry },
   playerRoutes: Array.isArray(manifest.playerRoutes) ? manifest.playerRoutes : [],
   generatedAt: manifest.generatedAt || new Date().toISOString(),
 }));

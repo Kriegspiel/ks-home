@@ -55,6 +55,7 @@ function renderFooterLink([href, label]) {
 
 function renderFooter(footerEntry) {
   const fallbackGroups = [
+    { title: 'Game', links: [['https://app.kriegspiel.org/', 'Play online'], ['/playing', 'Playing guide'], ['/leaderboard', 'Leaderboard']] },
     { title: 'Rules', links: [['/rules/berkeley', 'Berkeley'], ['/rules/cincinnati', 'Cincinnati'], ['/rules/wild16', 'Wild 16'], ['/rules/rand', 'RAND'], ['/rules/english', 'English'], ['/rules/crazykrieg', 'CrazyKrieg'], ['/rules/comparison/', 'Comparison']] },
     { title: 'Communication', links: [['/blog', 'Blog'], ['/changelog', 'Changelog'], ['/feed.xml', 'RSS'], ['/about', 'About']] },
     { title: 'Development', links: [['https://api.kriegspiel.org/docs', 'API docs'], ['https://github.com/Kriegspiel', 'GitHub']] },
