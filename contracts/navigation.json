@@ -13,6 +13,10 @@
       "href": "/rules"
     },
     {
+      "label": "Levels",
+      "href": "/levels"
+    },
+    {
       "label": "Play",
       "href": "https://app.kriegspiel.org/"
     }

@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const arg = process.argv.find((a) => a.startsWith("--routes="));
-const routes = (arg ? arg.split("=")[1] : "/,/leaderboard,/blog,/changelog,/rules,/playing").split(",");
+const routes = (arg ? arg.split("=")[1] : "/,/leaderboard,/blog,/changelog,/rules,/playing,/levels").split(",");
 
 const requiredChecks = [
   { name: "<title>", re: /<title>[^<]+<\/title>/i },
