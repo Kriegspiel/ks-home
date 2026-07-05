@@ -314,7 +314,14 @@ function renderMarkdownTable(headerCells, rows) {
 function isTierFeatureTable(headerCells) {
   if (!Array.isArray(headerCells) || headerCells.length < 3) return false;
   if (String(headerCells[0]).trim().toLowerCase() !== "feature") return false;
-  return headerCells.slice(1).every((cell) => /^Tier\s+\d+\s+\S+/i.test(String(cell).trim()));
+  return headerCells.slice(1).every((cell) => parseTierHeader(cell));
+}
+
+function parseTierHeader(cell) {
+  const tier = String(cell).trim().match(/^Tier\s+(T?\d+)\s+(.+)$/i);
+  if (!tier) return null;
+  const tierCode = tier[1].toUpperCase().startsWith("T") ? tier[1].toUpperCase() : `T${tier[1]}`;
+  return { tierCode, tierName: tier[2] };
 }
 
 function renderTierFeatureTable(headerCells, rows) {
@@ -322,10 +329,10 @@ function renderTierFeatureTable(headerCells, rows) {
   const normalize = (cells) => Array.from({ length: columnCount }, (_, index) => cells[index] || "");
   const headHtml = `<thead><tr>${normalize(headerCells).map((cell, index) => {
     if (index === 0) return `<th scope="col">${inlineMarkdown(cell)}</th>`;
-    const tier = String(cell).trim().match(/^(Tier\s+\d+)\s+(.+)$/i);
-    const tierNumber = tier?.[1] || cell;
-    const tierName = tier?.[2] || "";
-    return `<th scope="col"><span class="tier-feature-table__heading"><span class="tier-feature-table__number">${inlineMarkdown(tierNumber)}</span><span class="tier-feature-table__name">${inlineMarkdown(tierName)}</span></span></th>`;
+    const tier = parseTierHeader(cell);
+    const tierCode = tier?.tierCode || cell;
+    const tierName = tier?.tierName || "";
+    return `<th scope="col"><span class="tier-feature-table__heading"><span class="tier-feature-table__tier-label"><span class="tier-feature-table__tier-prefix">Tier</span><span class="tier-feature-table__number">${inlineMarkdown(tierCode)}</span></span><span class="tier-feature-table__name">${inlineMarkdown(tierName)}</span></span></th>`;
   }).join("")}</tr></thead>`;
   const bodyRows = rows
     .map((cells) => `<tr>${normalize(cells).map((cell, index) => {
