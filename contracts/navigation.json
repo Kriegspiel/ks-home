@@ -62,8 +62,7 @@
     {
       "title": "Social",
       "links": [
-        { "label": "X.com", "href": "https://x.com/kriegspiel_org" },
-        { "label": "GitHub", "href": "https://github.com/Kriegspiel" }
+        { "label": "X.com", "href": "https://x.com/kriegspiel_org" }
       ]
     }
   ],

@@ -65,11 +65,19 @@ test("renderShell falls back canonical paths and footer variants", () => {
   assert.ok(fallbackFooterHtml.includes(">Rules</h2>"));
   assert.ok(!fallbackFooterHtml.includes('<a href="/rules/dutch">Dutch</a>'));
   assert.ok(fallbackFooterHtml.includes(">Communication</h2>"));
-  assert.ok(fallbackFooterHtml.includes('<a href="/feed.xml">RSS</a>'));
+  assert.ok(fallbackFooterHtml.includes('<a class="footer__link" href="/feed.xml">RSS</a>'));
+  assert.ok(fallbackFooterHtml.includes(">Development</h2>"));
   assert.ok(fallbackFooterHtml.includes(">Social</h2>"));
 
   const communicationFooter = footerGroupHtml(fallbackFooterHtml, "Communication");
-  assert.ok(communicationFooter.includes('<a href="/blog">Blog</a></li><li><a href="/changelog">Changelog</a></li><li><a href="/feed.xml">RSS</a></li><li><a href="/about">About</a>'));
+  assert.ok(communicationFooter.includes('<a class="footer__link" href="/blog">Blog</a></li><li><a class="footer__link" href="/changelog">Changelog</a></li><li><a class="footer__link" href="/feed.xml">RSS</a></li><li><a class="footer__link" href="/about">About</a>'));
+
+  const developmentFooter = footerGroupHtml(fallbackFooterHtml, "Development");
+  assert.ok(developmentFooter.includes('<a class="footer__link footer__link--external" href="https://github.com/Kriegspiel" target="_blank" rel="noreferrer noopener">GitHub<span class="footer__external-icon" aria-hidden="true">&#8599;</span></a>'));
+
+  const socialFooter = footerGroupHtml(fallbackFooterHtml, "Social");
+  assert.ok(socialFooter.includes('<a class="footer__link footer__link--external" href="https://x.com/kriegspiel_org" target="_blank" rel="noreferrer noopener">X.com (@kriegspiel_org)<span class="footer__external-icon" aria-hidden="true">&#8599;</span></a>'));
+  assert.ok(!socialFooter.includes("GitHub"));
 
   const legacyFooterHtml = renderShell({
     title: "Legacy footer shell",
@@ -80,7 +88,7 @@ test("renderShell falls back canonical paths and footer variants", () => {
     },
   });
   const legacyCommunicationFooter = footerGroupHtml(legacyFooterHtml, "Communication");
-  assert.ok(legacyCommunicationFooter.includes('<a href="/blog">Blog</a></li><li><a href="/changelog">Changelog</a></li><li><a href="/feed.xml">RSS</a></li><li><a href="/about">About</a>'));
+  assert.ok(legacyCommunicationFooter.includes('<a class="footer__link" href="/blog">Blog</a></li><li><a class="footer__link" href="/changelog">Changelog</a></li><li><a class="footer__link" href="/feed.xml">RSS</a></li><li><a class="footer__link" href="/about">About</a>'));
 });
 
 test("home page falls back when content is sparse or missing metadata wrappers", () => {
