@@ -300,6 +300,8 @@ function renderListNode(list) {
 }
 
 function renderMarkdownTable(headerCells, rows) {
+  if (isTierFeatureTable(headerCells)) return renderTierFeatureTable(headerCells, rows);
+
   const columnCount = headerCells.length;
   const normalize = (cells) => Array.from({ length: columnCount }, (_, index) => cells[index] || "");
   const headHtml = `<thead><tr>${normalize(headerCells).map((cell) => `<th>${inlineMarkdown(cell)}</th>`).join("")}</tr></thead>`;
@@ -307,6 +309,38 @@ function renderMarkdownTable(headerCells, rows) {
     .map((cells) => `<tr>${normalize(cells).map((cell) => `<td>${inlineMarkdown(cell)}</td>`).join("")}</tr>`)
     .join("");
   return `<div class="table-wrap"><table>${headHtml}<tbody>${bodyRows}</tbody></table></div>`;
+}
+
+function isTierFeatureTable(headerCells) {
+  if (!Array.isArray(headerCells) || headerCells.length < 3) return false;
+  if (String(headerCells[0]).trim().toLowerCase() !== "feature") return false;
+  return headerCells.slice(1).every((cell) => /^Tier\s+\d+\s+\S+/i.test(String(cell).trim()));
+}
+
+function renderTierFeatureTable(headerCells, rows) {
+  const columnCount = headerCells.length;
+  const normalize = (cells) => Array.from({ length: columnCount }, (_, index) => cells[index] || "");
+  const headHtml = `<thead><tr>${normalize(headerCells).map((cell, index) => {
+    if (index === 0) return `<th scope="col">${inlineMarkdown(cell)}</th>`;
+    const tier = String(cell).trim().match(/^(Tier\s+\d+)\s+(.+)$/i);
+    const tierNumber = tier?.[1] || cell;
+    const tierName = tier?.[2] || "";
+    return `<th scope="col"><span class="tier-feature-table__heading"><span class="tier-feature-table__number">${inlineMarkdown(tierNumber)}</span><span class="tier-feature-table__name">${inlineMarkdown(tierName)}</span></span></th>`;
+  }).join("")}</tr></thead>`;
+  const bodyRows = rows
+    .map((cells) => `<tr>${normalize(cells).map((cell, index) => {
+      if (index === 0) return `<th scope="row">${inlineMarkdown(cell)}</th>`;
+      return `<td>${renderAvailabilityMark(cell)}</td>`;
+    }).join("")}</tr>`)
+    .join("");
+  return `<div class="table-wrap tier-feature-table-wrap"><table class="tier-feature-table">${headHtml}<tbody>${bodyRows}</tbody></table></div>`;
+}
+
+function renderAvailabilityMark(cell) {
+  const value = String(cell || "").trim();
+  if (/^yes$/i.test(value)) return '<span class="tier-feature-table__mark tier-feature-table__mark--yes">Yes</span>';
+  if (/^no$/i.test(value)) return '<span class="tier-feature-table__mark tier-feature-table__mark--no">No</span>';
+  return inlineMarkdown(value);
 }
 
 function isMarkdownTableSeparator(line) {

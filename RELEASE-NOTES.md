@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.2.31
+
+- **Levels**: style the public levels page as a tier feature matrix with
+  tiered access columns and explicit Yes/No availability marks.
+
 ## ks-home v. 1.2.29
 
 - **Playing Guide**: add a short platform play guide at `/playing` and link it
