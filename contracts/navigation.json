@@ -22,7 +22,7 @@
       "title": "Game",
       "links": [
         { "label": "Play online", "href": "https://app.kriegspiel.org/" },
-        { "label": "Playing here", "href": "/playing" },
+        { "label": "Playing guide", "href": "/playing" },
         { "label": "Leaderboard", "href": "/leaderboard" }
       ]
     },
@@ -69,7 +69,7 @@
   ],
   "footerLinks": [
     { "label": "Play online", "href": "https://app.kriegspiel.org/" },
-    { "label": "Playing here", "href": "/playing" },
+    { "label": "Playing guide", "href": "/playing" },
     { "label": "Leaderboard", "href": "/leaderboard" },
     { "label": "Privacy", "href": "/privacy" },
     { "label": "Terms", "href": "/terms" },

@@ -63,7 +63,7 @@ test("renderShell falls back canonical paths and footer variants", () => {
     main: "<p>hello</p>",
   });
   assert.ok(fallbackFooterHtml.includes(">Game</h2>"));
-  assert.ok(fallbackFooterHtml.includes('<a href="/playing">Playing here</a>'));
+  assert.ok(fallbackFooterHtml.includes('<a href="/playing">Playing guide</a>'));
   assert.ok(fallbackFooterHtml.includes(">Rules</h2>"));
   assert.ok(!fallbackFooterHtml.includes('<a href="/rules/dutch">Dutch</a>'));
   assert.ok(fallbackFooterHtml.includes(">Communication</h2>"));
