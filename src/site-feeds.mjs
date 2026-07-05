@@ -56,6 +56,7 @@ export function buildSitemapRoutes({
     { path: "/terms", lastmod: siteEntries.terms?.metadata?.updatedAt },
     { path: "/about", lastmod: siteEntries.about?.metadata?.updatedAt },
     { path: "/playing", lastmod: siteEntries.playing?.metadata?.updatedAt },
+    { path: "/levels", lastmod: siteEntries.levels?.metadata?.updatedAt },
     ...blogEntries.map((entry) => ({ path: `/blog/${entry.metadata.slug}`, lastmod: entry.metadata.updatedAt || entry.metadata.publishedAt })),
     ...changelogEntries.map((entry) => ({ path: `/changelog/${entry.metadata.slug}`, lastmod: entry.metadata.updatedAt || entry.metadata.publishedAt })),
     ...rulesEntries.map((entry) => ({ path: `/rules/${entry.metadata.slug}`, lastmod: entry.metadata.updatedAt || entry.metadata.publishedAt })),

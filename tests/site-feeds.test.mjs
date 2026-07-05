@@ -73,6 +73,7 @@ test("sitemap includes static, content, and player routes with lastmod", () => {
       terms: { metadata: { updatedAt: "2026-03-29" } },
       about: { metadata: { updatedAt: "2026-03-30" } },
       playing: { metadata: { updatedAt: "2026-07-05" } },
+      levels: { metadata: { updatedAt: "2026-07-05" } },
     },
     playerRoutes: ["/players/refereefox", "/blog/research-map"],
     generatedAt: "2026-05-24T00:00:00.000Z",
@@ -83,6 +84,7 @@ test("sitemap includes static, content, and player routes with lastmod", () => {
   const sitemap = renderSitemap(routes);
   assert.ok(sitemap.includes("<loc>https://kriegspiel.org/</loc><lastmod>2026-03-27</lastmod>"));
   assert.ok(sitemap.includes("<loc>https://kriegspiel.org/playing</loc><lastmod>2026-07-05</lastmod>"));
+  assert.ok(sitemap.includes("<loc>https://kriegspiel.org/levels</loc><lastmod>2026-07-05</lastmod>"));
   assert.ok(sitemap.includes("<loc>https://kriegspiel.org/rules/berkeley</loc><lastmod>2026-04-01</lastmod>"));
   assert.ok(sitemap.includes("<loc>https://kriegspiel.org/players/refereefox</loc><lastmod>2026-05-24</lastmod>"));
 });

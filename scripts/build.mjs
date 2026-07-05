@@ -16,6 +16,7 @@ const privacyEntry = loadSingletonEntry(contentRoot, 'site', 'privacy');
 const termsEntry = loadSingletonEntry(contentRoot, 'site', 'terms');
 const aboutEntry = loadSingletonEntry(contentRoot, 'site', 'about');
 const playingEntry = loadSingletonEntry(contentRoot, 'site', 'playing');
+const levelsEntry = loadSingletonEntry(contentRoot, 'site', 'levels');
 const footerEntry = loadSingletonEntry(contentRoot, 'site', 'footer');
 const CHESS_PIECE_ASSETS = [
   'LICENSE.md',
@@ -98,6 +99,7 @@ writePage(path.join(dist, 'privacy/index.html'), renderSiteMarkdownPage(privacyE
 writePage(path.join(dist, 'terms/index.html'), renderSiteMarkdownPage(termsEntry, footerEntry));
 writePage(path.join(dist, 'about/index.html'), renderSiteMarkdownPage(aboutEntry, footerEntry));
 writePage(path.join(dist, 'playing/index.html'), renderSiteMarkdownPage(playingEntry, footerEntry));
+writePage(path.join(dist, 'levels/index.html'), renderSiteMarkdownPage(levelsEntry, footerEntry));
 writePage(path.join(dist, '404.html'), renderSimplePage('Not Found', footerEntry));
 
 for (const entry of blogEntries) writePage(path.join(dist, 'blog', entry.metadata.slug, 'index.html'), renderBlogDetail(entry, footerEntry));
@@ -108,7 +110,7 @@ writePage(path.join(dist, 'rules/wild-16/index.html'), renderRedirectPage({ from
 
 const manifest = {
   generatedAt,
-  sourceHash: createHash('sha256').update(JSON.stringify({ blog: blogEntries.map((e) => [e.file, e.metadata.updatedAt]), changelog: changelogEntries.map((e) => [e.file, e.metadata.updatedAt]), rules: rulesEntries.map((e) => [e.file, e.metadata.updatedAt]), site: [[homeEntry.file, homeEntry.metadata.updatedAt], [privacyEntry.file, privacyEntry.metadata.updatedAt], [termsEntry.file, termsEntry.metadata.updatedAt], [aboutEntry.file, aboutEntry.metadata.updatedAt], [playingEntry.file, playingEntry.metadata.updatedAt], [footerEntry.file, footerEntry.metadata.updatedAt]], players: publicData.entries.map((entry) => [entry.username, entry.rating, entry.gamesPlayed]) })).digest('hex'),
+  sourceHash: createHash('sha256').update(JSON.stringify({ blog: blogEntries.map((e) => [e.file, e.metadata.updatedAt]), changelog: changelogEntries.map((e) => [e.file, e.metadata.updatedAt]), rules: rulesEntries.map((e) => [e.file, e.metadata.updatedAt]), site: [[homeEntry.file, homeEntry.metadata.updatedAt], [privacyEntry.file, privacyEntry.metadata.updatedAt], [termsEntry.file, termsEntry.metadata.updatedAt], [aboutEntry.file, aboutEntry.metadata.updatedAt], [playingEntry.file, playingEntry.metadata.updatedAt], [levelsEntry.file, levelsEntry.metadata.updatedAt], [footerEntry.file, footerEntry.metadata.updatedAt]], players: publicData.entries.map((entry) => [entry.username, entry.rating, entry.gamesPlayed]) })).digest('hex'),
   blogRoutes: blogEntries.map((entry) => `/blog/${entry.metadata.slug}`),
   changelogRoutes: changelogEntries.map((entry) => `/changelog/${entry.metadata.slug}`),
   ruleRoutes: ['/rules', '/rules/comparison', ...rulesEntries.map((entry) => `/rules/${entry.metadata.slug}`)],
@@ -123,7 +125,7 @@ writePage(path.join(dist, 'sitemap.xml'), renderSitemap(buildSitemapRoutes({
   blogEntries,
   changelogEntries,
   rulesEntries,
-  siteEntries: { home: homeEntry, privacy: privacyEntry, terms: termsEntry, about: aboutEntry, playing: playingEntry },
+  siteEntries: { home: homeEntry, privacy: privacyEntry, terms: termsEntry, about: aboutEntry, playing: playingEntry, levels: levelsEntry },
   playerRoutes: manifest.playerRoutes,
   generatedAt,
 })));
