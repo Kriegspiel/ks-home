@@ -126,6 +126,71 @@ function formatThousandsPlus(value, fallbackValue = 21000) {
   const safeValue = Number.isFinite(selected) && selected >= 1000 ? selected : 21000;
   return `${Math.floor(safeValue / 1000)}k+`;
 }
+const WEEKLY_MEETUP_ZONES = [
+  ['China', 'Asia/Shanghai'],
+  ['Central Europe', 'Europe/Berlin'],
+  ['UK', 'Europe/London'],
+  ['U.S. Pacific', 'America/Los_Angeles'],
+];
+function parseUtcClock(value = '15:00') {
+  const match = String(value || '').match(/(\d{1,2})(?::(\d{2}))?/);
+  const hour = match ? Number(match[1]) : 15;
+  const minute = match?.[2] ? Number(match[2]) : 0;
+  return {
+    hour: Number.isInteger(hour) && hour >= 0 && hour <= 23 ? hour : 15,
+    minute: Number.isInteger(minute) && minute >= 0 && minute <= 59 ? minute : 0,
+  };
+}
+function nextWeeklyMeetupUtcDate(referenceValue, utcClock = '15:00') {
+  const reference = new Date(referenceValue || Date.now());
+  const safeReference = Number.isNaN(reference.getTime()) ? new Date() : reference;
+  const { hour, minute } = parseUtcClock(utcClock);
+  const candidate = new Date(Date.UTC(
+    safeReference.getUTCFullYear(),
+    safeReference.getUTCMonth(),
+    safeReference.getUTCDate(),
+    hour,
+    minute,
+    0,
+  ));
+  candidate.setUTCDate(candidate.getUTCDate() + ((6 - candidate.getUTCDay() + 7) % 7));
+  if (candidate.getTime() < safeReference.getTime()) candidate.setUTCDate(candidate.getUTCDate() + 7);
+  return candidate;
+}
+function zonedOffsetMinutes(date, timeZone) {
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    hourCycle: 'h23',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  }).formatToParts(date).filter((part) => part.type !== 'literal').map((part) => [part.type, Number(part.value)]));
+  const asUtc = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second);
+  return Math.round((asUtc - date.getTime()) / 60000);
+}
+function activeZoneCode(date, timeZone) {
+  const offset = zonedOffsetMinutes(date, timeZone);
+  if (timeZone === 'Asia/Shanghai') return 'CST';
+  if (timeZone === 'Europe/Berlin') return offset === 120 ? 'CEST' : 'CET';
+  if (timeZone === 'Europe/London') return offset === 60 ? 'BST' : 'GMT';
+  if (timeZone === 'America/Los_Angeles') return offset === -420 ? 'PDT' : 'PST';
+  return 'UTC';
+}
+function formatCurrentMeetupTimes(utcClock = '15:00', generatedAt = null) {
+  const meetupDate = nextWeeklyMeetupUtcDate(generatedAt, utcClock);
+  return `${WEEKLY_MEETUP_ZONES.map(([label, timeZone]) => {
+    const localTime = new Intl.DateTimeFormat('en-GB', {
+      timeZone,
+      hour: '2-digit',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    }).format(meetupDate);
+    return `${label} ${localTime} ${activeZoneCode(meetupDate, timeZone)}`;
+  }).join('; ')}.`;
+}
 function formatDateLabel(value) { if (!value) return 'Unknown'; const parsed = new Date(value); return Number.isNaN(parsed.getTime()) ? esc(value) : esc(parsed.toLocaleDateString()); }
 function dateTimeAttribute(value) { const parsed = new Date(value); return Number.isNaN(parsed.getTime()) ? String(value || '') : parsed.toISOString().slice(0, 10); }
 function formatUtcTimestamp(value) {
@@ -191,20 +256,21 @@ export function renderShell({ title, description, main, activeNav = '/', canonic
   return `<!doctype html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="theme-color" content="#f7efe3" /><link rel="icon" href="https://kriegspiel.org/favicon.ico?v=ks-org-20260330" sizes="any" /><link rel="shortcut icon" href="https://kriegspiel.org/favicon.ico?v=ks-org-20260330" /><link rel="icon" type="image/png" sizes="32x32" href="https://kriegspiel.org/favicon-32x32.png?v=ks-org-20260330" /><link rel="icon" type="image/png" sizes="16x16" href="https://kriegspiel.org/favicon-16x16.png?v=ks-org-20260330" /><link rel="icon" type="image/png" sizes="192x192" href="https://kriegspiel.org/favicon-192.png?v=ks-org-20260330" /><link rel="apple-touch-icon" sizes="180x180" href="https://kriegspiel.org/apple-touch-icon.png?v=ks-org-20260330" /><link rel="manifest" href="https://kriegspiel.org/site.webmanifest?v=ks-org-20260330" />${metaTags({ title, description, canonicalPath, ogType })}<style>${baseStyles()}${footerExternalLinkStyles()}${proseTableOverflowStyles()}${tierFeatureMatrixStyles()}${fenDiagramStyles()}${fenInteractionStyles()}${fenPointerDragStyles()}${solutionBlockStyles()}</style>${THEME_TOGGLE_SCRIPT}${ATTRIBUTION_SCRIPT}${FEN_BOARD_SCRIPT}${jsonLd(siteLd)}${structuredData ? jsonLd(structuredData) : ''}</head><body><header class="site-header"><div class="site-header__inner"><div class="site-branding"><a class="site-brand" href="/">Kriegspiel</a><button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Toggle color theme"><img class="theme-toggle__logo" src="/logo-theme-toggle.png" alt="" /></button></div><div class="site-header__actions"><nav class="site-nav" aria-label="Primary">${navHtml}</nav></div></div></header><main><div class="page-shell">${main}</div></main><footer class="site-footer"><div class="site-footer__inner">${footer}</div></footer></body></html>`;
 }
 
-function renderHomeCommunityTiles(content = {}, lobbyStats = null) {
+function renderHomeCommunityTiles(content = {}, lobbyStats = null, generatedAt = null) {
   const gamesLabel = formatThousandsPlus(lobbyStats?.completed_total, content.communityGamesFallbackValue);
   const gamesTitle = content.communityGamesTitle || 'Total games played as of now.';
   const gamesBody = content.communityGamesBody || '';
   const gamesBodyHtml = gamesBody ? `<span>${esc(gamesBody)}</span>` : '';
-  const inviteTitle = content.communityInviteTitle || 'Saturday human games';
-  const inviteBody = content.communityInviteBody || 'Come play human vs human every Saturday at 15:00 UTC.';
-  const inviteTimes = content.communityInviteTimes || 'China 23:00; Central Europe 17:00 summer / 16:00 winter; UK 16:00 summer / 15:00 winter; U.S. Pacific 08:00 summer / 07:00 winter.';
+  const inviteTitle = content.communityInviteTitle || 'Saturday games meetup';
+  const inviteBody = content.communityInviteBody || '';
+  const inviteBodyHtml = inviteBody ? `<span>${esc(inviteBody)}</span>` : '';
+  const inviteTimes = content.communityInviteTimes || formatCurrentMeetupTimes(content.communityInviteUtcTime, generatedAt);
   const inviteCtaLabel = content.communityInviteCtaLabel || 'Play human games';
   const inviteCtaHref = content.communityInviteCtaHref || content.heroPrimaryCtaHref || 'https://app.kriegspiel.org/';
-  return `<div class="feature-grid feature-grid--three home-list home-list--compact home-rendezvous-grid" aria-label="Community play"><div class="surface-card home-list__card home-stat-card"><strong class="home-stat-card__value" aria-label="${esc(`${gamesLabel} games played`)}"><span class="home-stat-card__count">${esc(gamesLabel)}</span><span class="home-stat-card__label">games played</span></strong><span>${esc(gamesTitle)}</span>${gamesBodyHtml}</div><div class="surface-card home-list__card home-rendezvous-card"><strong>${esc(inviteTitle)}</strong><span>${esc(inviteBody)}</span><span class="home-rendezvous-card__times">${esc(inviteTimes)}</span><div class="home-rendezvous-card__actions"><a class="button-link button-link--primary" href="${esc(inviteCtaHref)}">${esc(inviteCtaLabel)}</a></div></div></div>`;
+  return `<div class="feature-grid feature-grid--three home-list home-list--compact home-rendezvous-grid" aria-label="Community play"><div class="surface-card home-list__card home-stat-card"><strong class="home-stat-card__value" aria-label="${esc(`${gamesLabel} games played`)}"><span class="home-stat-card__count">${esc(gamesLabel)}</span><span class="home-stat-card__label">games played</span></strong><span>${esc(gamesTitle)}</span>${gamesBodyHtml}</div><div class="surface-card home-list__card home-rendezvous-card"><strong>${esc(inviteTitle)}</strong>${inviteBodyHtml}<span class="home-rendezvous-card__times">${esc(inviteTimes)}</span><div class="home-rendezvous-card__actions"><a class="button-link button-link--primary" href="${esc(inviteCtaHref)}">${esc(inviteCtaLabel)}</a></div></div></div>`;
 }
 
-export function renderHomePage({ rulesCount = 0, blogCount = 0, homeContent, footerEntry, lobbyStats = null }) {
+export function renderHomePage({ rulesCount = 0, blogCount = 0, homeContent, footerEntry, lobbyStats = null, generatedAt = null }) {
   const content = homeContent?.metadata || homeContent || {};
   const interpolate = (value = '') => String(value).replaceAll('{{rulesCount}}', String(rulesCount)).replaceAll('{{blogCount}}', String(blogCount));
   return renderShell({
@@ -213,7 +279,7 @@ export function renderHomePage({ rulesCount = 0, blogCount = 0, homeContent, foo
     description: content.summary || 'Play hidden-information chess online with trusted referee semantics.',
     activeNav: '/',
     canonicalPath: '/',
-    main: `<section id="hero" class="hero-card"><p class="hero-card__eyebrow"${content.eyebrow ? '' : ' hidden'}>${esc(content.eyebrow)}</p><h1>${esc(content.heroTitle)}</h1><p class="hero-card__lede">${esc(content.heroLede)}</p><div class="hero-card__actions"><a class="button-link button-link--primary" href="${esc(content.heroPrimaryCtaHref)}" data-telemetry-event="home_cta_click">${esc(content.heroPrimaryCtaLabel)}</a><a class="button-link button-link--secondary" href="${esc(content.heroSecondaryCtaHref)}">${esc(content.heroSecondaryCtaLabel)}</a></div></section><section id="how-it-works" class="content-section home-section home-section--compact"><div class="section-heading"><h2>${esc(content.flowTitle)}</h2><p>${esc(content.flowIntro)}</p></div><ol class="feature-grid feature-grid--three home-list home-list--compact"><li class="surface-card home-list__card"><strong>${esc(content.flowStep1Title)}</strong><span>${esc(content.flowStep1Body)}</span></li><li class="surface-card home-list__card"><strong>${esc(content.flowStep2Title)}</strong><span>${esc(content.flowStep2Body)}</span></li><li class="surface-card home-list__card"><strong>${esc(content.flowStep3Title)}</strong><span>${esc(content.flowStep3Body)}</span></li></ol>${renderHomeCommunityTiles(content, lobbyStats)}</section><section id="cta" class="content-section home-section home-section--compact"><div class="cta-panel"><div class="section-heading"><h2>${esc(content.ctaTitle)}</h2><p>${esc(content.ctaBody)}</p></div><div class="cta-panel__actions"><a class="button-link button-link--primary" href="${esc(content.ctaPrimaryHref)}">${esc(content.ctaPrimaryLabel)}</a><a class="button-link button-link--secondary" href="${esc(content.ctaSecondaryHref)}">${esc(content.ctaSecondaryLabel)}</a></div></div></section>`
+    main: `<section id="hero" class="hero-card"><p class="hero-card__eyebrow"${content.eyebrow ? '' : ' hidden'}>${esc(content.eyebrow)}</p><h1>${esc(content.heroTitle)}</h1><p class="hero-card__lede">${esc(content.heroLede)}</p><div class="hero-card__actions"><a class="button-link button-link--primary" href="${esc(content.heroPrimaryCtaHref)}" data-telemetry-event="home_cta_click">${esc(content.heroPrimaryCtaLabel)}</a><a class="button-link button-link--secondary" href="${esc(content.heroSecondaryCtaHref)}">${esc(content.heroSecondaryCtaLabel)}</a></div></section><section id="how-it-works" class="content-section home-section home-section--compact"><div class="section-heading"><h2>${esc(content.flowTitle)}</h2><p>${esc(content.flowIntro)}</p></div><ol class="feature-grid feature-grid--three home-list home-list--compact"><li class="surface-card home-list__card"><strong>${esc(content.flowStep1Title)}</strong><span>${esc(content.flowStep1Body)}</span></li><li class="surface-card home-list__card"><strong>${esc(content.flowStep2Title)}</strong><span>${esc(content.flowStep2Body)}</span></li><li class="surface-card home-list__card"><strong>${esc(content.flowStep3Title)}</strong><span>${esc(content.flowStep3Body)}</span></li></ol>${renderHomeCommunityTiles(content, lobbyStats, generatedAt)}</section><section id="cta" class="content-section home-section home-section--compact"><div class="cta-panel"><div class="section-heading"><h2>${esc(content.ctaTitle)}</h2><p>${esc(content.ctaBody)}</p></div><div class="cta-panel__actions"><a class="button-link button-link--primary" href="${esc(content.ctaPrimaryHref)}">${esc(content.ctaPrimaryLabel)}</a><a class="button-link button-link--secondary" href="${esc(content.ctaSecondaryHref)}">${esc(content.ctaSecondaryLabel)}</a></div></div></section>`
   });
 }
 
