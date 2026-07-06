@@ -169,6 +169,7 @@ test('site markdown pages include tier feature matrix styles', () => {
   assert.ok(html.includes('.tier-feature-table-wrap .tier-feature-table{min-width:86rem;table-layout:fixed;'));
   assert.ok(html.includes('.tier-feature-table thead th{position:sticky;top:0;z-index:4;'));
   assert.ok(html.includes('.tier-feature-table__tier-label'));
+  assert.ok(html.includes('.tier-feature-table__detail{max-width:100%;font-size:.78rem;'));
   assert.ok(html.includes('background:#111;color:#fff'));
   assert.ok(html.includes('width:2rem;min-width:2rem;height:2rem;padding:0;border-radius:0'));
   assert.ok(html.includes('.tier-feature-table__mark--yes'));

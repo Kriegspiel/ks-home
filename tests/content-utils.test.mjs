@@ -219,13 +219,15 @@ test("markdownToHtml renders markdown tables", () => {
 
 test("markdownToHtml renders tier feature tables with availability marks", () => {
   const html = markdownToHtml([
-    "| Feature | Tier T0 Guest | Tier T1 Casual | Tier T2 Club |",
+    "| Feature | Tier T0 Guest (Free) | Tier T1 Casual (Free) | Tier T2 Club ($10/mo / $100/yr) |",
     "| --- | --- | --- | --- |",
     "| Play language-model bots | No | Yes | Yes |"
   ].join("\n"));
 
   assert.ok(html.includes('<div class="table-wrap tier-feature-table-wrap"><table class="tier-feature-table">'));
   assert.ok(html.includes('<span class="tier-feature-table__tier-label"><span class="tier-feature-table__tier-prefix">Tier</span><span class="tier-feature-table__number">T0</span></span><span class="tier-feature-table__name">Guest</span>'));
+  assert.ok(html.includes('<span class="tier-feature-table__detail">Free</span>'));
+  assert.ok(html.includes('<span class="tier-feature-table__detail">$10/mo / $100/yr</span>'));
   assert.ok(html.includes('<th scope="row">Play language-model bots</th>'));
   assert.ok(html.includes('<span class="tier-feature-table__mark tier-feature-table__mark--no">No</span>'));
   assert.ok(html.includes('<span class="tier-feature-table__mark tier-feature-table__mark--yes">Yes</span>'));

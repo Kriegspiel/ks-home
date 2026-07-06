@@ -321,7 +321,13 @@ function parseTierHeader(cell) {
   const tier = String(cell).trim().match(/^Tier\s+(T?\d+)\s+(.+)$/i);
   if (!tier) return null;
   const tierCode = tier[1].toUpperCase().startsWith("T") ? tier[1].toUpperCase() : `T${tier[1]}`;
-  return { tierCode, tierName: tier[2] };
+  const rawTierName = tier[2].trim();
+  const detail = rawTierName.match(/^(.*?)\s+\(([^)]+)\)$/);
+  return {
+    tierCode,
+    tierName: detail ? detail[1].trim() : rawTierName,
+    tierDetail: detail ? detail[2].trim() : ""
+  };
 }
 
 function renderTierFeatureTable(headerCells, rows) {
@@ -332,7 +338,9 @@ function renderTierFeatureTable(headerCells, rows) {
     const tier = parseTierHeader(cell);
     const tierCode = tier?.tierCode || cell;
     const tierName = tier?.tierName || "";
-    return `<th scope="col"><span class="tier-feature-table__heading"><span class="tier-feature-table__tier-label"><span class="tier-feature-table__tier-prefix">Tier</span><span class="tier-feature-table__number">${inlineMarkdown(tierCode)}</span></span><span class="tier-feature-table__name">${inlineMarkdown(tierName)}</span></span></th>`;
+    const tierDetail = tier?.tierDetail || "";
+    const detailHtml = tierDetail ? `<span class="tier-feature-table__detail">${inlineMarkdown(tierDetail)}</span>` : "";
+    return `<th scope="col"><span class="tier-feature-table__heading"><span class="tier-feature-table__tier-label"><span class="tier-feature-table__tier-prefix">Tier</span><span class="tier-feature-table__number">${inlineMarkdown(tierCode)}</span></span><span class="tier-feature-table__name">${inlineMarkdown(tierName)}</span>${detailHtml}</span></th>`;
   }).join("")}</tr></thead>`;
   const bodyRows = rows
     .map((cells) => `<tr>${normalize(cells).map((cell, index) => {
