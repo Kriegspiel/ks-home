@@ -222,21 +222,23 @@ test("markdownToHtml renders tier feature tables with availability marks", () =>
     "| Feature | Tier T0 Guest (Free) | Tier T1 Casual (Free) | Tier T2 Club ($10/mo / $100/yr) | Tier T5 Master (Not available yet) | Tier T6 Elite (Not available yet) |",
     "| --- | --- | --- | --- | --- | --- |",
     "| Play language-model bots | No | Yes | Yes | — | — |",
-    "| Play T2 bots | No | No | [OpenAI GPTNano](https://app.kriegspiel.org/user/llm_gptnano) | — | GPT-5.5 Pro |"
+    "| Play T2 bots | No | No | [OpenAI GPTNano](https://app.kriegspiel.org/user/llm_gptnano) | GPT-5.5 Pro | GPT-5.5 Pro |"
   ].join("\n"));
 
   assert.ok(html.includes('<div class="table-wrap tier-feature-table-wrap"><table class="tier-feature-table">'));
   assert.ok(html.includes('<th scope="col" class="tier-feature-table__tier-column tier-feature-table__tier-column--t0"><span class="tier-feature-table__heading"><span class="tier-feature-table__tier-label"><span class="tier-feature-table__tier-prefix">Tier</span><span class="tier-feature-table__number tier-feature-table__number--t0">T0</span></span><span class="tier-feature-table__name">Guest</span>'));
   assert.ok(html.includes('<span class="tier-feature-table__number tier-feature-table__number--t2">T2</span>'));
   assert.ok(html.includes('<th scope="col" class="tier-feature-table__tier-column tier-feature-table__tier-column--t5 tier-feature-table__tier-column--unavailable">'));
-  assert.ok(html.includes('<td class="tier-feature-table__tier-column tier-feature-table__tier-column--t6 tier-feature-table__tier-column--unavailable">—</td>'));
+  assert.ok(html.includes('<td class="tier-feature-table__tier-column tier-feature-table__tier-column--t1" colspan="2"><span class="tier-feature-table__mark tier-feature-table__mark--yes">Yes</span></td>'));
+  assert.ok(html.includes('<td class="tier-feature-table__tier-column tier-feature-table__tier-column--t5 tier-feature-table__tier-column--unavailable" colspan="2">—</td>'));
   assert.ok(html.includes('<span class="tier-feature-table__detail">Free</span>'));
   assert.ok(html.includes('<span class="tier-feature-table__detail">$10/mo / $100/yr</span>'));
   assert.ok(html.includes('<th scope="row">Play language-model bots</th>'));
   assert.ok(html.includes('<span class="tier-feature-table__mark tier-feature-table__mark--no">No</span>'));
   assert.ok(html.includes('<span class="tier-feature-table__mark tier-feature-table__mark--yes">Yes</span>'));
+  assert.ok(html.includes('<td class="tier-feature-table__tier-column tier-feature-table__tier-column--t0" colspan="2"><span class="tier-feature-table__mark tier-feature-table__mark--no">No</span></td>'));
   assert.ok(html.includes('<td class="tier-feature-table__tier-column tier-feature-table__tier-column--t2 tier-feature-table__cell-text"><a href="https://app.kriegspiel.org/user/llm_gptnano">OpenAI GPTNano</a></td>'));
-  assert.ok(html.includes('<td class="tier-feature-table__tier-column tier-feature-table__tier-column--t6 tier-feature-table__tier-column--unavailable tier-feature-table__cell-text">GPT-5.5 Pro</td>'));
+  assert.ok(html.includes('<td class="tier-feature-table__tier-column tier-feature-table__tier-column--t5 tier-feature-table__tier-column--unavailable tier-feature-table__cell-text" colspan="2">GPT-5.5 Pro</td>'));
 });
 
 test("markdownToHtml renders thematic breaks as horizontal rules", () => {

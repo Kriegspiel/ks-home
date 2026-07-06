@@ -356,15 +356,27 @@ function renderTierFeatureTable(headerCells, rows) {
     return `<th scope="col"${tierColumnClass}><span class="tier-feature-table__heading"><span class="tier-feature-table__tier-label"><span class="tier-feature-table__tier-prefix">Tier</span><span class="${tierNumberClass}">${inlineMarkdown(tierCode)}</span></span><span class="tier-feature-table__name">${inlineMarkdown(tierName)}</span>${detailHtml}</span></th>`;
   }).join("")}</tr></thead>`;
   const bodyRows = rows
-    .map((cells) => `<tr>${normalize(cells).map((cell, index) => {
-      if (index === 0) return `<th scope="row">${inlineMarkdown(cell)}</th>`;
-      const cellClasses = tierColumnClasses[index] ? [tierColumnClasses[index]] : [];
-      if (!isCompactAvailabilityCell(cell)) cellClasses.push("tier-feature-table__cell-text");
-      const tierColumnClass = cellClasses.length ? ` class="${cellClasses.join(" ")}"` : "";
-      return `<td${tierColumnClass}>${renderAvailabilityMark(cell)}</td>`;
-    }).join("")}</tr>`)
+    .map((cells) => `<tr>${renderMergedTierFeatureRow(normalize(cells), tierColumnClasses)}</tr>`)
     .join("");
   return `<div class="table-wrap tier-feature-table-wrap"><table class="tier-feature-table">${headHtml}<tbody>${bodyRows}</tbody></table></div>`;
+}
+
+function renderMergedTierFeatureRow(cells, tierColumnClasses) {
+  const renderedCells = [`<th scope="row">${inlineMarkdown(cells[0])}</th>`];
+  let index = 1;
+  while (index < cells.length) {
+    const cell = cells[index];
+    const mergeKey = tierCellMergeKey(cell);
+    let span = 1;
+    while (mergeKey && index + span < cells.length && tierCellMergeKey(cells[index + span]) === mergeKey) span += 1;
+    const cellClasses = tierColumnClasses[index] ? [tierColumnClasses[index]] : [];
+    if (!isCompactAvailabilityCell(cell)) cellClasses.push("tier-feature-table__cell-text");
+    const classAttribute = cellClasses.length ? ` class="${cellClasses.join(" ")}"` : "";
+    const colspanAttribute = span > 1 ? ` colspan="${span}"` : "";
+    renderedCells.push(`<td${classAttribute}${colspanAttribute}>${renderAvailabilityMark(cell)}</td>`);
+    index += span;
+  }
+  return renderedCells.join("");
 }
 
 function tierCodeCssClass(tierCode) {
@@ -381,6 +393,14 @@ function renderAvailabilityMark(cell) {
 function isCompactAvailabilityCell(cell) {
   const value = String(cell || "").trim();
   return /^yes$/i.test(value) || /^no$/i.test(value) || value === "—";
+}
+
+function tierCellMergeKey(cell) {
+  const value = String(cell || "").trim();
+  if (!value) return "";
+  if (/^yes$/i.test(value)) return "yes";
+  if (/^no$/i.test(value)) return "no";
+  return value;
 }
 
 function isMarkdownTableSeparator(line) {
