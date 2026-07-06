@@ -87,8 +87,9 @@ for (const section of ['blog', 'blog/archive', 'changelog']) {
 }
 
 const publicData = await loadPublicPlayerData();
+const lobbyStats = await loadLobbyStats();
 
-writePage(path.join(dist, 'index.html'), renderHomePage({ rulesCount: rulesEntries.length, blogCount: blogEntries.length, homeContent: homeEntry, footerEntry }));
+writePage(path.join(dist, 'index.html'), renderHomePage({ rulesCount: rulesEntries.length, blogCount: blogEntries.length, homeContent: homeEntry, footerEntry, lobbyStats }));
 writePage(path.join(dist, 'leaderboard/index.html'), renderLeaderboardPage(publicData.entries, footerEntry));
 writePage(path.join(dist, 'blog/index.html'), renderBlogIndex(blogEntries, footerEntry));
 writePage(path.join(dist, 'blog/archive/index.html'), renderBlogArchive(blogEntries, footerEntry));
@@ -110,7 +111,7 @@ writePage(path.join(dist, 'rules/wild-16/index.html'), renderRedirectPage({ from
 
 const manifest = {
   generatedAt,
-  sourceHash: createHash('sha256').update(JSON.stringify({ blog: blogEntries.map((e) => [e.file, e.metadata.updatedAt]), changelog: changelogEntries.map((e) => [e.file, e.metadata.updatedAt]), rules: rulesEntries.map((e) => [e.file, e.metadata.updatedAt]), site: [[homeEntry.file, homeEntry.metadata.updatedAt], [privacyEntry.file, privacyEntry.metadata.updatedAt], [termsEntry.file, termsEntry.metadata.updatedAt], [aboutEntry.file, aboutEntry.metadata.updatedAt], [playingEntry.file, playingEntry.metadata.updatedAt], [levelsEntry.file, levelsEntry.metadata.updatedAt], [footerEntry.file, footerEntry.metadata.updatedAt]], players: publicData.entries.map((entry) => [entry.username, entry.rating, entry.gamesPlayed]) })).digest('hex'),
+  sourceHash: createHash('sha256').update(JSON.stringify({ blog: blogEntries.map((e) => [e.file, e.metadata.updatedAt]), changelog: changelogEntries.map((e) => [e.file, e.metadata.updatedAt]), rules: rulesEntries.map((e) => [e.file, e.metadata.updatedAt]), site: [[homeEntry.file, homeEntry.metadata.updatedAt], [privacyEntry.file, privacyEntry.metadata.updatedAt], [termsEntry.file, termsEntry.metadata.updatedAt], [aboutEntry.file, aboutEntry.metadata.updatedAt], [playingEntry.file, playingEntry.metadata.updatedAt], [levelsEntry.file, levelsEntry.metadata.updatedAt], [footerEntry.file, footerEntry.metadata.updatedAt]], players: publicData.entries.map((entry) => [entry.username, entry.rating, entry.gamesPlayed]), lobbyStats: lobbyStats?.completed_total ?? null })).digest('hex'),
   blogRoutes: blogEntries.map((entry) => `/blog/${entry.metadata.slug}`),
   changelogRoutes: changelogEntries.map((entry) => `/changelog/${entry.metadata.slug}`),
   ruleRoutes: ['/rules', '/rules/comparison', ...rulesEntries.map((entry) => `/rules/${entry.metadata.slug}`)],
@@ -177,6 +178,16 @@ async function loadPublicPlayerData() {
     });
   }
   return { entries: players, profiles };
+}
+
+async function loadLobbyStats() {
+  if (!apiBase) return null;
+  try {
+    return await fetchJson(`${apiBase}/game/stats`);
+  } catch (error) {
+    console.warn(`lobby stats unavailable: ${error.message}`);
+    return null;
+  }
 }
 
 async function loadLeaderboardEntriesFromApi() {

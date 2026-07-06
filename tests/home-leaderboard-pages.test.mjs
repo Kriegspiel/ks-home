@@ -25,6 +25,14 @@ const homeContent = {
   flowStep2Body: "The referee handles what each player is allowed to know.",
   flowStep3Title: "Stay in the mystery",
   flowStep3Body: "Every turn keeps the tension that makes Kriegspiel fun.",
+  communityGamesTitle: "Total games played",
+  communityGamesFallbackValue: "27000",
+  communityGamesBody: "Rounded down to the nearest thousand and refreshed weekly.",
+  communityInviteTitle: "Saturday human games",
+  communityInviteBody: "Join the weekly human-vs-human meetup at 15:00 UTC.",
+  communityInviteTimes: "China 23:00; Central Europe 17:00 summer / 16:00 winter; UK 16:00 summer / 15:00 winter; U.S. Pacific 08:00 summer / 07:00 winter.",
+  communityInviteCtaLabel: "Play human games",
+  communityInviteCtaHref: "https://app.kriegspiel.org/",
   featuresKicker: "Why it feels different",
   featuresTitle: "Key features",
   featuresIntro: "Closer to the app’s product language, still clearly a public-facing landing page.",
@@ -50,7 +58,12 @@ const homeContent = {
 };
 
 test("home page keeps a simplified play-first layout with CTA telemetry", () => {
-  const html = renderHomePage({ rulesCount: 2, blogCount: 3, homeContent });
+  const html = renderHomePage({
+    rulesCount: 2,
+    blogCount: 3,
+    homeContent,
+    lobbyStats: { completed_total: 21012 },
+  });
   for (const id of ["hero", "how-it-works", "cta"]) {
     assert.ok(html.includes(`id="${id}"`), `missing section ${id}`);
   }
@@ -64,6 +77,14 @@ test("home page keeps a simplified play-first layout with CTA telemetry", () => 
   assert.ok(html.includes('class="hero-card__eyebrow" hidden'));
   assert.ok(!html.includes('class="hero-card__eyebrow">Kriegspiel.org<'));
   assert.ok(!html.includes('3 public updates are already live.'));
+  assert.ok(html.includes('21k+ games played'));
+  assert.ok(html.includes('Total games played'));
+  assert.ok(html.includes('Rounded down to the nearest thousand and refreshed weekly.'));
+  assert.ok(html.includes('Saturday human games'));
+  assert.ok(html.includes('Join the weekly human-vs-human meetup at 15:00 UTC.'));
+  assert.ok(html.includes('China 23:00; Central Europe 17:00 summer / 16:00 winter; UK 16:00 summer / 15:00 winter; U.S. Pacific 08:00 summer / 07:00 winter.'));
+  assert.ok(html.includes('home-rendezvous-card'));
+  assert.ok(html.includes('>Play human games</a>'));
 });
 
 test("leaderboard page includes resilient state containers, telemetry hooks, and shared play CTA", () => {

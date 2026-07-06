@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.3.8
+
+- **Homepage**: add a rounded all-time games-played tile and a Saturday
+  human-vs-human meetup invitation to the “Start in under a minute” section.
+
 ## ks-home v. 1.3.7
 
 - **Levels**: keep the feature matrix full-height on the page instead of
