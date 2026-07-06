@@ -225,7 +225,8 @@ test("markdownToHtml renders tier feature tables with availability marks", () =>
   ].join("\n"));
 
   assert.ok(html.includes('<div class="table-wrap tier-feature-table-wrap"><table class="tier-feature-table">'));
-  assert.ok(html.includes('<span class="tier-feature-table__tier-label"><span class="tier-feature-table__tier-prefix">Tier</span><span class="tier-feature-table__number">T0</span></span><span class="tier-feature-table__name">Guest</span>'));
+  assert.ok(html.includes('<span class="tier-feature-table__tier-label"><span class="tier-feature-table__tier-prefix">Tier</span><span class="tier-feature-table__number tier-feature-table__number--t0">T0</span></span><span class="tier-feature-table__name">Guest</span>'));
+  assert.ok(html.includes('<span class="tier-feature-table__number tier-feature-table__number--t2">T2</span>'));
   assert.ok(html.includes('<span class="tier-feature-table__detail">Free</span>'));
   assert.ok(html.includes('<span class="tier-feature-table__detail">$10/mo / $100/yr</span>'));
   assert.ok(html.includes('<th scope="row">Play language-model bots</th>'));
