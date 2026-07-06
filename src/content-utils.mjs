@@ -358,7 +358,9 @@ function renderTierFeatureTable(headerCells, rows) {
   const bodyRows = rows
     .map((cells) => `<tr>${normalize(cells).map((cell, index) => {
       if (index === 0) return `<th scope="row">${inlineMarkdown(cell)}</th>`;
-      const tierColumnClass = tierColumnClasses[index] ? ` class="${tierColumnClasses[index]}"` : "";
+      const cellClasses = tierColumnClasses[index] ? [tierColumnClasses[index]] : [];
+      if (!isCompactAvailabilityCell(cell)) cellClasses.push("tier-feature-table__cell-text");
+      const tierColumnClass = cellClasses.length ? ` class="${cellClasses.join(" ")}"` : "";
       return `<td${tierColumnClass}>${renderAvailabilityMark(cell)}</td>`;
     }).join("")}</tr>`)
     .join("");
@@ -374,6 +376,11 @@ function renderAvailabilityMark(cell) {
   if (/^yes$/i.test(value)) return '<span class="tier-feature-table__mark tier-feature-table__mark--yes">Yes</span>';
   if (/^no$/i.test(value)) return '<span class="tier-feature-table__mark tier-feature-table__mark--no">No</span>';
   return inlineMarkdown(value);
+}
+
+function isCompactAvailabilityCell(cell) {
+  const value = String(cell || "").trim();
+  return /^yes$/i.test(value) || /^no$/i.test(value) || value === "—";
 }
 
 function isMarkdownTableSeparator(line) {
