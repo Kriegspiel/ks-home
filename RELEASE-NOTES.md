@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.3.10
+
+- **Homepage**: restore the compact `k+` games-played label and enlarge the
+  numeric count within the tile.
+
 ## ks-home v. 1.3.9
 
 - **Homepage**: simplify the games-played tile to the current rounded total

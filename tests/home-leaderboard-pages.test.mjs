@@ -76,7 +76,10 @@ test("home page keeps a simplified play-first layout with CTA telemetry", () => 
   assert.ok(html.includes('class="hero-card__eyebrow" hidden'));
   assert.ok(!html.includes('class="hero-card__eyebrow">Kriegspiel.org<'));
   assert.ok(!html.includes('3 public updates are already live.'));
-  assert.ok(html.includes('21K plus games played'));
+  assert.ok(html.includes('aria-label="21k+ games played"'));
+  assert.ok(html.includes('<span class="home-stat-card__count">21k+</span>'));
+  assert.ok(html.includes('home-stat-card__count{font-size:2.15rem;'));
+  assert.ok(!html.includes('21K plus games played'));
   assert.ok(html.includes('Total games played as of now.'));
   assert.ok(!html.includes('Rounded down to the nearest thousand and refreshed weekly.'));
   assert.ok(html.includes('Saturday human games'));
