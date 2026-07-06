@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.3.22
+
+- **Levels**: refresh the public site release for the renamed “Levels and
+  pricing” page.
+
 ## ks-home v. 1.3.14
 
 - **Homepage**: include the canonical UTC meetup time in the Saturday games
