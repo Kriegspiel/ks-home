@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.3.7
+
+- **Levels**: keep the feature matrix full-height on the page instead of
+  using an internal vertical scroll area.
+
 ## ks-home v. 1.3.6
 
 - **Levels**: mute unavailable Master and Elite feature columns and render
