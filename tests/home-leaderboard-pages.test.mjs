@@ -25,9 +25,8 @@ const homeContent = {
   flowStep2Body: "The referee handles what each player is allowed to know.",
   flowStep3Title: "Stay in the mystery",
   flowStep3Body: "Every turn keeps the tension that makes Kriegspiel fun.",
-  communityGamesTitle: "Total games played",
+  communityGamesTitle: "Total games played as of now.",
   communityGamesFallbackValue: "27000",
-  communityGamesBody: "Rounded down to the nearest thousand and refreshed weekly.",
   communityInviteTitle: "Saturday human games",
   communityInviteBody: "Join the weekly human-vs-human meetup at 15:00 UTC.",
   communityInviteTimes: "China 23:00; Central Europe 17:00 summer / 16:00 winter; UK 16:00 summer / 15:00 winter; U.S. Pacific 08:00 summer / 07:00 winter.",
@@ -77,9 +76,9 @@ test("home page keeps a simplified play-first layout with CTA telemetry", () => 
   assert.ok(html.includes('class="hero-card__eyebrow" hidden'));
   assert.ok(!html.includes('class="hero-card__eyebrow">Kriegspiel.org<'));
   assert.ok(!html.includes('3 public updates are already live.'));
-  assert.ok(html.includes('21k+ games played'));
-  assert.ok(html.includes('Total games played'));
-  assert.ok(html.includes('Rounded down to the nearest thousand and refreshed weekly.'));
+  assert.ok(html.includes('21K plus games played'));
+  assert.ok(html.includes('Total games played as of now.'));
+  assert.ok(!html.includes('Rounded down to the nearest thousand and refreshed weekly.'));
   assert.ok(html.includes('Saturday human games'));
   assert.ok(html.includes('Join the weekly human-vs-human meetup at 15:00 UTC.'));
   assert.ok(html.includes('China 23:00; Central Europe 17:00 summer / 16:00 winter; UK 16:00 summer / 15:00 winter; U.S. Pacific 08:00 summer / 07:00 winter.'));

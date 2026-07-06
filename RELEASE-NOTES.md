@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.3.9
+
+- **Homepage**: simplify the games-played tile to the current rounded total
+  and a single “Total games played as of now.” line.
+
 ## ks-home v. 1.3.8
 
 - **Homepage**: add a rounded all-time games-played tile and a Saturday

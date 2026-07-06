@@ -124,7 +124,7 @@ function formatThousandsPlus(value, fallbackValue = 21000) {
   const fallback = Number(fallbackValue);
   const selected = Number.isFinite(number) && number >= 1000 ? number : fallback;
   const safeValue = Number.isFinite(selected) && selected >= 1000 ? selected : 21000;
-  return `${Math.floor(safeValue / 1000)}k+`;
+  return `${Math.floor(safeValue / 1000)}K plus`;
 }
 function formatDateLabel(value) { if (!value) return 'Unknown'; const parsed = new Date(value); return Number.isNaN(parsed.getTime()) ? esc(value) : esc(parsed.toLocaleDateString()); }
 function dateTimeAttribute(value) { const parsed = new Date(value); return Number.isNaN(parsed.getTime()) ? String(value || '') : parsed.toISOString().slice(0, 10); }
@@ -193,14 +193,15 @@ export function renderShell({ title, description, main, activeNav = '/', canonic
 
 function renderHomeCommunityTiles(content = {}, lobbyStats = null) {
   const gamesLabel = formatThousandsPlus(lobbyStats?.completed_total, content.communityGamesFallbackValue);
-  const gamesTitle = content.communityGamesTitle || 'Total games played';
-  const gamesBody = content.communityGamesBody || 'Rounded down to the nearest thousand and refreshed weekly.';
+  const gamesTitle = content.communityGamesTitle || 'Total games played as of now.';
+  const gamesBody = content.communityGamesBody || '';
+  const gamesBodyHtml = gamesBody ? `<span>${esc(gamesBody)}</span>` : '';
   const inviteTitle = content.communityInviteTitle || 'Saturday human games';
   const inviteBody = content.communityInviteBody || 'Come play human vs human every Saturday at 15:00 UTC.';
   const inviteTimes = content.communityInviteTimes || 'China 23:00; Central Europe 17:00 summer / 16:00 winter; UK 16:00 summer / 15:00 winter; U.S. Pacific 08:00 summer / 07:00 winter.';
   const inviteCtaLabel = content.communityInviteCtaLabel || 'Play human games';
   const inviteCtaHref = content.communityInviteCtaHref || content.heroPrimaryCtaHref || 'https://app.kriegspiel.org/';
-  return `<div class="feature-grid feature-grid--three home-list home-list--compact home-rendezvous-grid" aria-label="Community play"><div class="surface-card home-list__card home-stat-card"><strong class="home-stat-card__value">${esc(gamesLabel)} games played</strong><span>${esc(gamesTitle)}</span><span>${esc(gamesBody)}</span></div><div class="surface-card home-list__card home-rendezvous-card"><strong>${esc(inviteTitle)}</strong><span>${esc(inviteBody)}</span><span class="home-rendezvous-card__times">${esc(inviteTimes)}</span><div class="home-rendezvous-card__actions"><a class="button-link button-link--primary" href="${esc(inviteCtaHref)}">${esc(inviteCtaLabel)}</a></div></div></div>`;
+  return `<div class="feature-grid feature-grid--three home-list home-list--compact home-rendezvous-grid" aria-label="Community play"><div class="surface-card home-list__card home-stat-card"><strong class="home-stat-card__value">${esc(gamesLabel)} games played</strong><span>${esc(gamesTitle)}</span>${gamesBodyHtml}</div><div class="surface-card home-list__card home-rendezvous-card"><strong>${esc(inviteTitle)}</strong><span>${esc(inviteBody)}</span><span class="home-rendezvous-card__times">${esc(inviteTimes)}</span><div class="home-rendezvous-card__actions"><a class="button-link button-link--primary" href="${esc(inviteCtaHref)}">${esc(inviteCtaLabel)}</a></div></div></div>`;
 }
 
 export function renderHomePage({ rulesCount = 0, blogCount = 0, homeContent, footerEntry, lobbyStats = null }) {
