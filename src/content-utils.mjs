@@ -398,8 +398,7 @@ function isCompactAvailabilityCell(cell) {
 function tierCellMergeKey(cell) {
   const value = String(cell || "").trim();
   if (!value) return "";
-  if (/^yes$/i.test(value)) return "yes";
-  if (/^no$/i.test(value)) return "no";
+  if (/^yes$/i.test(value) || /^no$/i.test(value) || value === "—") return "";
   return value;
 }
 
