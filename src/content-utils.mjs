@@ -646,6 +646,7 @@ function inlineMarkdown(text) {
   };
 
   let rendered = String(text || "")
+    .replace(/<br\s*\/?>/gi, () => placeholder("<br />"))
     .replace(/`([^`]+)`/g, (_, code) => placeholder(`<code>${escapeHtml(code)}</code>`))
     .replace(/\[(.+?)\]\((.+?)\)/g, (_, label, href) => placeholder(`<a href="${escapeAttribute(href)}">${escapeHtml(label)}</a>`));
 
