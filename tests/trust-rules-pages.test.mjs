@@ -170,7 +170,14 @@ test('site markdown pages include tier feature matrix styles', () => {
   assert.ok(html.includes('.tier-feature-table thead th{position:sticky;top:0;z-index:4;'));
   assert.ok(html.includes('.tier-feature-table__tier-label'));
   assert.ok(html.includes('.tier-feature-table__detail{max-width:100%;font-size:.78rem;'));
-  assert.ok(html.includes('background:#111;color:#fff'));
+  assert.ok(html.includes('background:#2a231d;color:#f4ede4'));
+  assert.ok(html.includes('.tier-feature-table__number--t1{background:#4a3325;}'));
+  assert.ok(html.includes('.tier-feature-table__number--t2{background:#5a4a1f;}'));
+  assert.ok(html.includes('.tier-feature-table__number--t3{background:#31553f;}'));
+  assert.ok(html.includes('.tier-feature-table__number--t4{background:#255660;}'));
+  assert.ok(html.includes('.tier-feature-table__number--t5{background:#2f4772;}'));
+  assert.ok(html.includes('.tier-feature-table__number--t6{background:#56345d;}'));
+  assert.ok(html.includes('html[data-theme="dark"] .tier-feature-table__number{border-color:rgba(255,248,240,.24);'));
   assert.ok(html.includes('width:2rem;min-width:2rem;height:2rem;padding:0;border-radius:0'));
   assert.ok(html.includes('.tier-feature-table__mark--yes'));
   assert.ok(html.includes('.tier-feature-table__mark--no'));

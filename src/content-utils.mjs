@@ -339,8 +339,10 @@ function renderTierFeatureTable(headerCells, rows) {
     const tierCode = tier?.tierCode || cell;
     const tierName = tier?.tierName || "";
     const tierDetail = tier?.tierDetail || "";
+    const tierCodeClass = String(tierCode).toLowerCase().replace(/[^a-z0-9-]/g, "");
+    const tierNumberClass = ["tier-feature-table__number", tierCodeClass ? `tier-feature-table__number--${tierCodeClass}` : ""].filter(Boolean).join(" ");
     const detailHtml = tierDetail ? `<span class="tier-feature-table__detail">${inlineMarkdown(tierDetail)}</span>` : "";
-    return `<th scope="col"><span class="tier-feature-table__heading"><span class="tier-feature-table__tier-label"><span class="tier-feature-table__tier-prefix">Tier</span><span class="tier-feature-table__number">${inlineMarkdown(tierCode)}</span></span><span class="tier-feature-table__name">${inlineMarkdown(tierName)}</span>${detailHtml}</span></th>`;
+    return `<th scope="col"><span class="tier-feature-table__heading"><span class="tier-feature-table__tier-label"><span class="tier-feature-table__tier-prefix">Tier</span><span class="${tierNumberClass}">${inlineMarkdown(tierCode)}</span></span><span class="tier-feature-table__name">${inlineMarkdown(tierName)}</span>${detailHtml}</span></th>`;
   }).join("")}</tr></thead>`;
   const bodyRows = rows
     .map((cells) => `<tr>${normalize(cells).map((cell, index) => {

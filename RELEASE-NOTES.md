@@ -5,6 +5,10 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.3.5
+
+- **Levels**: color the tier code badges with the platform tier palette.
+
 ## ks-home v. 1.3.4
 
 - **Levels**: show tier price and availability details in the matrix column
