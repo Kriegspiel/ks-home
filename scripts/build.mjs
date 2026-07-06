@@ -89,7 +89,7 @@ for (const section of ['blog', 'blog/archive', 'changelog']) {
 const publicData = await loadPublicPlayerData();
 const lobbyStats = await loadLobbyStats();
 
-writePage(path.join(dist, 'index.html'), renderHomePage({ rulesCount: rulesEntries.length, blogCount: blogEntries.length, homeContent: homeEntry, footerEntry, lobbyStats }));
+writePage(path.join(dist, 'index.html'), renderHomePage({ rulesCount: rulesEntries.length, blogCount: blogEntries.length, homeContent: homeEntry, footerEntry, lobbyStats, generatedAt }));
 writePage(path.join(dist, 'leaderboard/index.html'), renderLeaderboardPage(publicData.entries, footerEntry));
 writePage(path.join(dist, 'blog/index.html'), renderBlogIndex(blogEntries, footerEntry));
 writePage(path.join(dist, 'blog/archive/index.html'), renderBlogArchive(blogEntries, footerEntry));

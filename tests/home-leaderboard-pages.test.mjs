@@ -27,9 +27,8 @@ const homeContent = {
   flowStep3Body: "Every turn keeps the tension that makes Kriegspiel fun.",
   communityGamesTitle: "Total games played as of now.",
   communityGamesFallbackValue: "27000",
-  communityInviteTitle: "Saturday human games",
-  communityInviteBody: "Join the weekly human-vs-human meetup at 15:00 UTC.",
-  communityInviteTimes: "China 23:00; Central Europe 17:00 summer / 16:00 winter; UK 16:00 summer / 15:00 winter; U.S. Pacific 08:00 summer / 07:00 winter.",
+  communityInviteTitle: "Saturday games meetup",
+  communityInviteUtcTime: "15:00",
   communityInviteCtaLabel: "Play human games",
   communityInviteCtaHref: "https://app.kriegspiel.org/",
   featuresKicker: "Why it feels different",
@@ -62,6 +61,7 @@ test("home page keeps a simplified play-first layout with CTA telemetry", () => 
     blogCount: 3,
     homeContent,
     lobbyStats: { completed_total: 21012 },
+    generatedAt: "2026-07-06T00:00:00.000Z",
   });
   for (const id of ["hero", "how-it-works", "cta"]) {
     assert.ok(html.includes(`id="${id}"`), `missing section ${id}`);
@@ -82,11 +82,27 @@ test("home page keeps a simplified play-first layout with CTA telemetry", () => 
   assert.ok(!html.includes('21K plus games played'));
   assert.ok(html.includes('Total games played as of now.'));
   assert.ok(!html.includes('Rounded down to the nearest thousand and refreshed weekly.'));
-  assert.ok(html.includes('Saturday human games'));
-  assert.ok(html.includes('Join the weekly human-vs-human meetup at 15:00 UTC.'));
-  assert.ok(html.includes('China 23:00; Central Europe 17:00 summer / 16:00 winter; UK 16:00 summer / 15:00 winter; U.S. Pacific 08:00 summer / 07:00 winter.'));
+  assert.ok(html.includes('Saturday games meetup'));
+  assert.ok(!html.includes('Join the weekly human-vs-human meetup at 15:00 UTC.'));
+  assert.ok(html.includes('China 23:00 CST; Central Europe 17:00 CEST; UK 16:00 BST; U.S. Pacific 08:00 PDT.'));
+  assert.ok(!html.includes('summer /'));
+  assert.ok(!html.includes('winter'));
   assert.ok(html.includes('home-rendezvous-card'));
   assert.ok(html.includes('>Play human games</a>'));
+});
+
+test("home page derives current meetup time zones for winter refreshes", () => {
+  const html = renderHomePage({
+    rulesCount: 2,
+    blogCount: 3,
+    homeContent,
+    lobbyStats: { completed_total: 21012 },
+    generatedAt: "2026-12-07T00:00:00.000Z",
+  });
+
+  assert.ok(html.includes('China 23:00 CST; Central Europe 16:00 CET; UK 15:00 GMT; U.S. Pacific 07:00 PST.'));
+  assert.ok(!html.includes('CEST summer'));
+  assert.ok(!html.includes('PDT summer'));
 });
 
 test("leaderboard page includes resilient state containers, telemetry hooks, and shared play CTA", () => {
