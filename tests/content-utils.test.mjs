@@ -221,7 +221,8 @@ test("markdownToHtml renders tier feature tables with availability marks", () =>
   const html = markdownToHtml([
     "| Feature | Tier T0 Guest (Free) | Tier T1 Casual (Free) | Tier T2 Club ($10/mo / $100/yr) | Tier T5 Master (Not available yet) | Tier T6 Elite (Not available yet) |",
     "| --- | --- | --- | --- | --- | --- |",
-    "| Play language-model bots | No | Yes | Yes | — | — |"
+    "| Play language-model bots | No | Yes | Yes | — | — |",
+    "| Play T2 bots | No | No | [OpenAI GPTNano](https://app.kriegspiel.org/user/llm_gptnano) | — | GPT-5.5 Pro |"
   ].join("\n"));
 
   assert.ok(html.includes('<div class="table-wrap tier-feature-table-wrap"><table class="tier-feature-table">'));
@@ -234,6 +235,8 @@ test("markdownToHtml renders tier feature tables with availability marks", () =>
   assert.ok(html.includes('<th scope="row">Play language-model bots</th>'));
   assert.ok(html.includes('<span class="tier-feature-table__mark tier-feature-table__mark--no">No</span>'));
   assert.ok(html.includes('<span class="tier-feature-table__mark tier-feature-table__mark--yes">Yes</span>'));
+  assert.ok(html.includes('<td class="tier-feature-table__tier-column tier-feature-table__tier-column--t2 tier-feature-table__cell-text"><a href="https://app.kriegspiel.org/user/llm_gptnano">OpenAI GPTNano</a></td>'));
+  assert.ok(html.includes('<td class="tier-feature-table__tier-column tier-feature-table__tier-column--t6 tier-feature-table__tier-column--unavailable tier-feature-table__cell-text">GPT-5.5 Pro</td>'));
 });
 
 test("markdownToHtml renders thematic breaks as horizontal rules", () => {

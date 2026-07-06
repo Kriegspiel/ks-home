@@ -171,6 +171,7 @@ test('site markdown pages include tier feature matrix styles', () => {
   assert.ok(html.includes('.tier-feature-table thead th{position:sticky;top:0;z-index:4;'));
   assert.ok(html.includes('.tier-feature-table__tier-label'));
   assert.ok(html.includes('.tier-feature-table__detail{max-width:100%;font-size:.78rem;'));
+  assert.ok(html.includes('.tier-feature-table tbody td.tier-feature-table__cell-text{text-align:left;vertical-align:top;'));
   assert.ok(html.includes('background:#2a231d;color:#f4ede4'));
   assert.ok(html.includes('.tier-feature-table__number--t1{background:#4a3325;}'));
   assert.ok(html.includes('.tier-feature-table__number--t2{background:#5a4a1f;}'));
@@ -182,6 +183,7 @@ test('site markdown pages include tier feature matrix styles', () => {
   assert.ok(html.includes('.tier-feature-table th.tier-feature-table__tier-column--unavailable,.tier-feature-table td.tier-feature-table__tier-column--unavailable{background:color-mix(in srgb,var(--surface-alt) 86%,#8a8580);'));
   assert.ok(html.includes('.tier-feature-table__tier-column--unavailable .tier-feature-table__number{background:#6f6a64;color:#f4ede4;}'));
   assert.ok(html.includes('.tier-feature-table tbody td.tier-feature-table__tier-column--unavailable{font-size:1.3rem;font-weight:800;'));
+  assert.ok(html.includes('.tier-feature-table tbody td.tier-feature-table__tier-column--unavailable.tier-feature-table__cell-text{font-size:.84rem;font-weight:600;'));
   assert.ok(html.includes('width:2rem;min-width:2rem;height:2rem;padding:0;border-radius:0'));
   assert.ok(html.includes('.tier-feature-table__mark--yes'));
   assert.ok(html.includes('.tier-feature-table__mark--no'));
