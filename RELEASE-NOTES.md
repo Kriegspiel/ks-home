@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.3.12
+
+- **Homepage**: stack the games-played tile so the count and “games played”
+  label appear on separate lines.
+
 ## ks-home v. 1.3.11
 
 - **Homepage**: simplify the Saturday meetup copy and derive current local
