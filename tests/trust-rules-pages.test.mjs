@@ -178,6 +178,9 @@ test('site markdown pages include tier feature matrix styles', () => {
   assert.ok(html.includes('.tier-feature-table__number--t5{background:#2f4772;}'));
   assert.ok(html.includes('.tier-feature-table__number--t6{background:#56345d;}'));
   assert.ok(html.includes('html[data-theme="dark"] .tier-feature-table__number{border-color:rgba(255,248,240,.24);'));
+  assert.ok(html.includes('.tier-feature-table th.tier-feature-table__tier-column--unavailable,.tier-feature-table td.tier-feature-table__tier-column--unavailable{background:color-mix(in srgb,var(--surface-alt) 86%,#8a8580);'));
+  assert.ok(html.includes('.tier-feature-table__tier-column--unavailable .tier-feature-table__number{background:#6f6a64;color:#f4ede4;}'));
+  assert.ok(html.includes('.tier-feature-table tbody td.tier-feature-table__tier-column--unavailable{font-size:1.3rem;font-weight:800;'));
   assert.ok(html.includes('width:2rem;min-width:2rem;height:2rem;padding:0;border-radius:0'));
   assert.ok(html.includes('.tier-feature-table__mark--yes'));
   assert.ok(html.includes('.tier-feature-table__mark--no'));
