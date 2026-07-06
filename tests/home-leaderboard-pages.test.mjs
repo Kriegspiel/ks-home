@@ -85,7 +85,7 @@ test("home page keeps a simplified play-first layout with CTA telemetry", () => 
   assert.ok(!html.includes('21K plus games played'));
   assert.ok(html.includes('Total games played as of now.'));
   assert.ok(!html.includes('Rounded down to the nearest thousand and refreshed weekly.'));
-  assert.ok(html.includes('Saturday games meetup'));
+  assert.ok(html.includes('Saturday games meetup: 15:00 UTC'));
   assert.ok(!html.includes('Join the weekly human-vs-human meetup at 15:00 UTC.'));
   assert.ok(html.includes('China 23:00 CST; Central Europe 17:00 CEST; UK 16:00 BST; U.S. Pacific 08:00 PDT.'));
   assert.ok(!html.includes('summer /'));

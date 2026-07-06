@@ -141,6 +141,10 @@ function parseUtcClock(value = '15:00') {
     minute: Number.isInteger(minute) && minute >= 0 && minute <= 59 ? minute : 0,
   };
 }
+function formatUtcClockLabel(value = '15:00') {
+  const { hour, minute } = parseUtcClock(value);
+  return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+}
 function nextWeeklyMeetupUtcDate(referenceValue, utcClock = '15:00') {
   const reference = new Date(referenceValue || Date.now());
   const safeReference = Number.isNaN(reference.getTime()) ? new Date() : reference;
@@ -261,7 +265,8 @@ function renderHomeCommunityTiles(content = {}, lobbyStats = null, generatedAt =
   const gamesTitle = content.communityGamesTitle || 'Total games played as of now.';
   const gamesBody = content.communityGamesBody || '';
   const gamesBodyHtml = gamesBody ? `<span>${esc(gamesBody)}</span>` : '';
-  const inviteTitle = content.communityInviteTitle || 'Saturday games meetup';
+  const inviteTitleBase = content.communityInviteTitle || 'Saturday games meetup';
+  const inviteTitle = /\bUTC\b/.test(inviteTitleBase) ? inviteTitleBase : `${inviteTitleBase}: ${formatUtcClockLabel(content.communityInviteUtcTime)} UTC`;
   const inviteBody = content.communityInviteBody || '';
   const inviteBodyHtml = inviteBody ? `<span>${esc(inviteBody)}</span>` : '';
   const inviteTimes = content.communityInviteTimes || formatCurrentMeetupTimes(content.communityInviteUtcTime, generatedAt);

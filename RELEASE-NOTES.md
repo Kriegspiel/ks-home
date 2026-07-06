@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.3.14
+
+- **Homepage**: include the canonical UTC meetup time in the Saturday games
+  meetup heading.
+
 ## ks-home v. 1.3.13
 
 - **Homepage**: add a structural line break between the games count and the
