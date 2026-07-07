@@ -166,10 +166,12 @@ test('site markdown pages include tier feature matrix styles', () => {
   assert.ok(html.includes('<section class="content-section content-section--wide"><article class="prose-card prose-card--wide">'));
   assert.ok(html.includes('.content-section--wide{width:100%;}'));
   assert.ok(html.includes('.tier-feature-table-wrap{max-height:72vh;overflow:auto;'));
-  assert.ok(html.includes('isolation:isolate;position:relative;'));
+  assert.ok(html.includes('isolation:isolate;position:relative;overscroll-behavior:contain;'));
   assert.ok(html.includes('.tier-feature-table-wrap .tier-feature-table{min-width:86rem;table-layout:fixed;border:0;border-radius:0;border-collapse:separate;border-spacing:0;'));
-  assert.ok(html.includes('.tier-feature-table thead th{position:sticky;top:0;z-index:4;'));
-  assert.ok(html.includes('.tier-feature-table thead th:first-child{left:0;z-index:6;width:14rem;min-width:14rem;'));
+  assert.ok(html.includes('.tier-feature-table thead{position:sticky;top:0;z-index:5;}'));
+  assert.ok(html.includes('.tier-feature-table thead tr{position:sticky;top:0;z-index:5;}'));
+  assert.ok(html.includes('.tier-feature-table thead th{position:sticky;top:0;z-index:5;'));
+  assert.ok(html.includes('.tier-feature-table thead th:first-child{left:0;z-index:7;width:14rem;min-width:14rem;'));
   assert.ok(html.includes('.prose-card .tier-feature-table-wrap .tier-feature-table tbody th:first-child,.prose-card .tier-feature-table-wrap .tier-feature-table tbody td:first-child{width:14rem;min-width:14rem;position:sticky;left:0;z-index:3;'));
   assert.ok(html.includes('.tier-feature-table__tier-label{display:grid;justify-items:center;align-content:center;gap:.22rem;width:100%;min-height:3.3rem;}'));
   assert.ok(html.includes('.tier-feature-table__tier-prefix{display:block;font-size:.82rem;font-weight:800;line-height:1.2;text-align:center;'));
