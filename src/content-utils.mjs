@@ -358,7 +358,7 @@ function renderTierFeatureTable(headerCells, rows) {
   const bodyRows = rows
     .map((cells) => `<tr>${renderMergedTierFeatureRow(normalize(cells), tierColumnClasses)}</tr>`)
     .join("");
-  return `<div class="table-wrap tier-feature-table-wrap"><table class="tier-feature-table">${headHtml}<tbody>${bodyRows}</tbody></table></div>`;
+  return `<div class="table-wrap tier-feature-table-wrap" data-tier-feature-table><div class="tier-feature-table__frozen-header" data-tier-feature-table-header><table class="tier-feature-table tier-feature-table--header">${headHtml}</table></div><div class="tier-feature-table__body-scroll" data-tier-feature-table-body tabindex="0" role="region" aria-label="Feature availability by tier"><table class="tier-feature-table tier-feature-table--body"><tbody>${bodyRows}</tbody></table></div></div>`;
 }
 
 function renderMergedTierFeatureRow(cells, tierColumnClasses) {

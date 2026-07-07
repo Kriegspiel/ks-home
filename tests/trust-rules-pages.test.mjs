@@ -160,19 +160,21 @@ test('site markdown pages keep wrapped tables as scrollable tables on narrow scr
 test('site markdown pages include tier feature matrix styles', () => {
   const html = renderSiteMarkdownPage({
     metadata: { title: 'Levels and pricing', summary: 'Levels page', slug: 'levels' },
-    bodyHtml: '<div class="table-wrap tier-feature-table-wrap"><table class="tier-feature-table"></table></div>'
+    bodyHtml: '<div class="table-wrap tier-feature-table-wrap" data-tier-feature-table><div class="tier-feature-table__frozen-header" data-tier-feature-table-header></div><div class="tier-feature-table__body-scroll" data-tier-feature-table-body></div></div>'
   });
 
   assert.ok(html.includes('<section class="content-section content-section--wide"><article class="prose-card prose-card--wide">'));
   assert.ok(html.includes('.content-section--wide{width:100%;}'));
-  assert.ok(html.includes('.tier-feature-table-wrap{max-height:72vh;overflow:auto;'));
-  assert.ok(html.includes('isolation:isolate;position:relative;overscroll-behavior:contain;'));
-  assert.ok(html.includes('.tier-feature-table-wrap .tier-feature-table{min-width:86rem;table-layout:fixed;border:0;border-radius:0;border-collapse:separate;border-spacing:0;'));
-  assert.ok(html.includes('.tier-feature-table thead{position:sticky;top:0;z-index:5;}'));
-  assert.ok(html.includes('.tier-feature-table thead tr{position:sticky;top:0;z-index:5;}'));
-  assert.ok(html.includes('.tier-feature-table thead th{position:sticky;top:0;z-index:5;'));
-  assert.ok(html.includes('.tier-feature-table thead th:first-child{left:0;z-index:7;width:14rem;min-width:14rem;'));
-  assert.ok(html.includes('.prose-card .tier-feature-table-wrap .tier-feature-table tbody th:first-child,.prose-card .tier-feature-table-wrap .tier-feature-table tbody td:first-child{width:14rem;min-width:14rem;position:sticky;left:0;z-index:3;'));
+  assert.ok(html.includes('.tier-feature-table-wrap{overflow:visible;border:1px solid var(--border);'));
+  assert.ok(html.includes('isolation:isolate;position:relative;'));
+  assert.ok(html.includes('.tier-feature-table__frozen-header{position:sticky;top:var(--tier-feature-sticky-top,0px);z-index:9;overflow:hidden;'));
+  assert.ok(html.includes('.tier-feature-table__body-scroll{max-height:72vh;overflow:auto;overscroll-behavior:contain;'));
+  assert.ok(html.includes('.tier-feature-table-wrap .tier-feature-table{width:100%;min-width:86rem;table-layout:fixed;border:0;border-radius:0;border-collapse:separate;border-spacing:0;overflow:visible;'));
+  assert.ok(html.includes('.tier-feature-table--header thead th{vertical-align:top;text-align:center;'));
+  assert.ok(html.includes('.tier-feature-table--header thead th:first-child{position:sticky;left:0;z-index:2;width:14rem;min-width:14rem;'));
+  assert.ok(html.includes('.prose-card .tier-feature-table__body-scroll .tier-feature-table tbody th:first-child,.prose-card .tier-feature-table__body-scroll .tier-feature-table tbody td:first-child{width:14rem;min-width:14rem;position:sticky;left:0;z-index:3;'));
+  assert.ok(html.includes('header.scrollLeft=body.scrollLeft;'));
+  assert.ok(html.includes('--tier-feature-sticky-top'));
   assert.ok(html.includes('.tier-feature-table__tier-label{display:grid;justify-items:center;align-content:center;gap:.22rem;width:100%;min-height:3.3rem;}'));
   assert.ok(html.includes('.tier-feature-table__tier-prefix{display:block;font-size:.82rem;font-weight:800;line-height:1.2;text-align:center;'));
   assert.ok(html.includes('.tier-feature-table__detail{max-width:100%;font-size:.78rem;'));
