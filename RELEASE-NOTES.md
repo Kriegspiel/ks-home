@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.3.28
+
+- **Levels**: align the split pricing matrix header and body columns with a
+  shared column model.
+
 ## ks-home v. 1.3.27
 
 - **Levels**: split the pricing matrix into a frozen header pane and a

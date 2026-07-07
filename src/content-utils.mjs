@@ -343,6 +343,9 @@ function renderTierFeatureTable(headerCells, rows) {
     if (["t5", "t6"].includes(tierCodeClass)) classes.push("tier-feature-table__tier-column--unavailable");
     return classes.join(" ");
   });
+  const colgroupHtml = `<colgroup><col class="tier-feature-table__feature-col" />${tierColumnClasses.slice(1)
+    .map((classes) => `<col class="${["tier-feature-table__tier-col", classes].filter(Boolean).join(" ")}" />`)
+    .join("")}</colgroup>`;
   const headHtml = `<thead><tr>${normalizedHeaders.map((cell, index) => {
     if (index === 0) return `<th scope="col">${inlineMarkdown(cell)}</th>`;
     const tier = parseTierHeader(cell);
@@ -358,7 +361,7 @@ function renderTierFeatureTable(headerCells, rows) {
   const bodyRows = rows
     .map((cells) => `<tr>${renderMergedTierFeatureRow(normalize(cells), tierColumnClasses)}</tr>`)
     .join("");
-  return `<div class="table-wrap tier-feature-table-wrap" data-tier-feature-table><div class="tier-feature-table__frozen-header" data-tier-feature-table-header><table class="tier-feature-table tier-feature-table--header">${headHtml}</table></div><div class="tier-feature-table__body-scroll" data-tier-feature-table-body tabindex="0" role="region" aria-label="Feature availability by tier"><table class="tier-feature-table tier-feature-table--body"><tbody>${bodyRows}</tbody></table></div></div>`;
+  return `<div class="table-wrap tier-feature-table-wrap" data-tier-feature-table style="--tier-feature-tier-count:${Math.max(1, columnCount - 1)};"><div class="tier-feature-table__frozen-header" data-tier-feature-table-header><table class="tier-feature-table tier-feature-table--header">${colgroupHtml}${headHtml}</table></div><div class="tier-feature-table__body-scroll" data-tier-feature-table-body tabindex="0" role="region" aria-label="Feature availability by tier"><table class="tier-feature-table tier-feature-table--body">${colgroupHtml}<tbody>${bodyRows}</tbody></table></div></div>`;
 }
 
 function renderMergedTierFeatureRow(cells, tierColumnClasses) {

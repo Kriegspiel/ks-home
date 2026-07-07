@@ -170,9 +170,12 @@ test('site markdown pages include tier feature matrix styles', () => {
   assert.ok(html.includes('.tier-feature-table__frozen-header{position:sticky;top:var(--tier-feature-sticky-top,0px);z-index:9;overflow:hidden;'));
   assert.ok(html.includes('.tier-feature-table__body-scroll{max-height:72vh;overflow:auto;overscroll-behavior:contain;'));
   assert.ok(html.includes('.tier-feature-table-wrap .tier-feature-table{width:100%;min-width:86rem;table-layout:fixed;border:0;border-radius:0;border-collapse:separate;border-spacing:0;overflow:visible;'));
+  assert.ok(html.includes('.tier-feature-table__feature-col{width:14rem;}'));
+  assert.ok(html.includes('.tier-feature-table__tier-col{width:calc((100% - 14rem) / var(--tier-feature-tier-count,7));}'));
   assert.ok(html.includes('.tier-feature-table--header thead th{vertical-align:top;text-align:center;'));
-  assert.ok(html.includes('.tier-feature-table--header thead th:first-child{position:sticky;left:0;z-index:2;width:14rem;min-width:14rem;'));
+  assert.ok(html.includes('.prose-card .tier-feature-table-wrap .tier-feature-table--header thead th:first-child{position:sticky;left:0;z-index:2;width:14rem;min-width:14rem;'));
   assert.ok(html.includes('.prose-card .tier-feature-table__body-scroll .tier-feature-table tbody th:first-child,.prose-card .tier-feature-table__body-scroll .tier-feature-table tbody td:first-child{width:14rem;min-width:14rem;position:sticky;left:0;z-index:3;'));
+  assert.ok(html.includes('@media (max-width:700px){.tier-feature-table__feature-col{width:11rem;}.tier-feature-table__tier-col{width:calc((100% - 11rem) / var(--tier-feature-tier-count,7));}'));
   assert.ok(html.includes('header.scrollLeft=body.scrollLeft;'));
   assert.ok(html.includes('--tier-feature-sticky-top'));
   assert.ok(html.includes('.tier-feature-table__tier-label{display:grid;justify-items:center;align-content:center;gap:.22rem;width:100%;min-height:3.3rem;}'));
