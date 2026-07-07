@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.3.25
+
+- **Levels**: harden the pricing matrix frozen panes so the top row, first
+  column, and corner cell remain pinned during table scrolling.
+
 ## ks-home v. 1.3.24
 
 - **Levels**: freeze the pricing matrix header row and feature column while
