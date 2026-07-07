@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.3.23
+
+- **Levels**: center the `Tier` label on its own line in each pricing matrix
+  column header.
+
 ## ks-home v. 1.3.22
 
 - **Levels**: refresh the public site release for the renamed “Levels and
