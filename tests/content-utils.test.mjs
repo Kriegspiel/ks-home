@@ -225,11 +225,14 @@ test("markdownToHtml renders tier feature tables with availability marks", () =>
     "| Play T2 bots | No | No | OpenAI: [GPTNano](https://app.kriegspiel.org/user/llm_gptnano)<br>Anthropic: Claude Haiku 4.5 | GPT-5.5 Pro | GPT-5.5 Pro |"
   ].join("\n"));
 
-  assert.ok(html.includes('<div class="table-wrap tier-feature-table-wrap" data-tier-feature-table>'));
-  assert.ok(html.includes('<div class="tier-feature-table__frozen-header" data-tier-feature-table-header><table class="tier-feature-table tier-feature-table--header">'));
+  assert.ok(html.includes('<div class="table-wrap tier-feature-table-wrap" data-tier-feature-table style="--tier-feature-tier-count:5;">'));
+  assert.ok(html.includes('<colgroup><col class="tier-feature-table__feature-col" /><col class="tier-feature-table__tier-col tier-feature-table__tier-column tier-feature-table__tier-column--t0" />'));
+  assert.ok(html.includes('<col class="tier-feature-table__tier-col tier-feature-table__tier-column tier-feature-table__tier-column--t5 tier-feature-table__tier-column--unavailable" />'));
+  assert.equal((html.match(/<colgroup>/g) || []).length, 2);
+  assert.ok(html.includes('<div class="tier-feature-table__frozen-header" data-tier-feature-table-header><table class="tier-feature-table tier-feature-table--header"><colgroup>'));
   assert.ok(html.includes('<thead><tr><th scope="col">Feature</th>'));
   assert.ok(html.includes('<th scope="col" class="tier-feature-table__tier-column tier-feature-table__tier-column--t0"><span class="tier-feature-table__heading"><span class="tier-feature-table__tier-label"><span class="tier-feature-table__tier-prefix">Tier</span><span class="tier-feature-table__number tier-feature-table__number--t0">T0</span></span><span class="tier-feature-table__name">Guest</span>'));
-  assert.ok(html.includes('</tr></thead></table></div><div class="tier-feature-table__body-scroll" data-tier-feature-table-body tabindex="0" role="region" aria-label="Feature availability by tier"><table class="tier-feature-table tier-feature-table--body"><tbody>'));
+  assert.ok(html.includes('</tr></thead></table></div><div class="tier-feature-table__body-scroll" data-tier-feature-table-body tabindex="0" role="region" aria-label="Feature availability by tier"><table class="tier-feature-table tier-feature-table--body"><colgroup>'));
   assert.ok(html.includes('<span class="tier-feature-table__number tier-feature-table__number--t2">T2</span>'));
   assert.ok(html.includes('<th scope="col" class="tier-feature-table__tier-column tier-feature-table__tier-column--t5 tier-feature-table__tier-column--unavailable">'));
   assert.ok(html.includes('<td class="tier-feature-table__tier-column tier-feature-table__tier-column--t1"><span class="tier-feature-table__mark tier-feature-table__mark--yes">Yes</span></td>'));
