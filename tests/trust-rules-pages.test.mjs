@@ -168,7 +168,7 @@ test('site markdown pages include tier feature matrix styles', () => {
   assert.ok(html.includes('.tier-feature-table-wrap{overflow:visible;border:1px solid var(--border);'));
   assert.ok(html.includes('isolation:isolate;position:relative;'));
   assert.ok(html.includes('.tier-feature-table__frozen-header{position:sticky;top:var(--tier-feature-sticky-top,0px);z-index:9;overflow:hidden;'));
-  assert.ok(html.includes('.tier-feature-table__body-scroll{max-height:72vh;overflow:auto;overscroll-behavior:contain;'));
+  assert.ok(html.includes('.tier-feature-table__body-scroll{overflow-x:auto;overflow-y:visible;overscroll-behavior-x:contain;'));
   assert.ok(html.includes('.tier-feature-table-wrap .tier-feature-table{width:100%;min-width:86rem;table-layout:fixed;border:0;border-radius:0;border-collapse:separate;border-spacing:0;overflow:visible;'));
   assert.ok(html.includes('.tier-feature-table__feature-col{width:14rem;}'));
   assert.ok(html.includes('.tier-feature-table__tier-col{width:calc((100% - 14rem) / var(--tier-feature-tier-count,7));}'));
