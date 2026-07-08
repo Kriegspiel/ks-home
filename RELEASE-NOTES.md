@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.3.29
+
+- **Levels**: let the page handle vertical scrolling for the pricing matrix
+  while keeping the tier header frozen.
+
 ## ks-home v. 1.3.28
 
 - **Levels**: align the split pricing matrix header and body columns with a
