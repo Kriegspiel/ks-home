@@ -2,7 +2,7 @@
 set -euo pipefail
 
 BASE_URL="${BASE_URL:-}"
-ROUTES="/,/leaderboard,/blog,/changelog,/rules,/playing,/levels"
+ROUTES="/,/leaderboard,/blog,/changelog,/rules,/playing"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in

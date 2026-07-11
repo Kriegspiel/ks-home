@@ -474,15 +474,12 @@ export function renderRedirectPage({ fromPath, toPath, title = 'Redirecting…',
 
 export function renderSiteMarkdownPage(entry, footerEntry = null) {
   const versionStamp = entry.metadata.slug === 'about' ? `<p class="page-meta-stamp">Version ${esc(PACKAGE_VERSION)}</p>` : '';
-  const isLevelsPage = entry.metadata.slug === 'levels';
-  const sectionClass = isLevelsPage ? 'content-section content-section--wide' : 'content-section';
-  const articleClass = isLevelsPage ? 'prose-card prose-card--wide' : 'prose-card';
   return renderShell({
     footerEntry,
     title: `Kriegspiel — ${entry.metadata.title}`,
     description: entry.metadata.summary,
     canonicalPath: `/${entry.metadata.slug}`,
-    main: `<section class="${sectionClass}"><article class="${articleClass}"><h1>${esc(entry.metadata.title)}</h1>${entry.bodyHtml}${versionStamp}</article></section>`
+    main: `<section class="content-section"><article class="prose-card"><h1>${esc(entry.metadata.title)}</h1>${entry.bodyHtml}${versionStamp}</article></section>`
   });
 }
 
