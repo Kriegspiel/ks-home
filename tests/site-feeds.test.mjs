@@ -83,6 +83,7 @@ test("sitemap includes static, content, and player routes with lastmod", () => {
   const sitemap = renderSitemap(routes);
   assert.ok(sitemap.includes("<loc>https://kriegspiel.org/</loc><lastmod>2026-03-27</lastmod>"));
   assert.ok(sitemap.includes("<loc>https://kriegspiel.org/playing</loc><lastmod>2026-07-05</lastmod>"));
+  assert.ok(sitemap.includes("<loc>https://kriegspiel.org/subscription</loc><lastmod>2026-05-24</lastmod>"));
   assert.ok(!sitemap.includes("<loc>https://kriegspiel.org/levels</loc>"));
   assert.ok(sitemap.includes("<loc>https://kriegspiel.org/rules/berkeley</loc><lastmod>2026-04-01</lastmod>"));
   assert.ok(sitemap.includes("<loc>https://kriegspiel.org/players/refereefox</loc><lastmod>2026-05-24</lastmod>"));

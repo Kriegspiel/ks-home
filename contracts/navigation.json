@@ -13,6 +13,10 @@
       "href": "/rules"
     },
     {
+      "label": "Subscription",
+      "href": "/subscription"
+    },
+    {
       "label": "Play",
       "href": "https://app.kriegspiel.org/"
     }

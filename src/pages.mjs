@@ -11,9 +11,12 @@ const SOCIAL_CARD_ALT = 'Kriegspiel hidden-information chess online.';
 const FEED_TITLE = 'Kriegspiel Updates';
 const RSS_FEED_URL = absUrl('/feed.xml');
 const ATOM_FEED_URL = absUrl('/atom.xml');
+const APP_ORIGIN = 'https://app.kriegspiel.org';
+const APP_PLAY_URL = `${APP_ORIGIN}/`;
 
 function esc(v = '') { return String(v).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;'); }
 function absUrl(path = '/') { return `${SITE_URL}${path}`; }
+function appUrl(path = '/') { return `${APP_ORIGIN}${path.startsWith('/') ? path : `/${path}`}`; }
 const THEME_TOGGLE_SCRIPT = `<script>(function(){var STORAGE_KEY="kriegspiel-theme";var root=document.documentElement;function readStoredTheme(){try{var value=window.localStorage.getItem(STORAGE_KEY);return value==="light"||value==="dark"?value:null;}catch(error){return null;}}function preferredTheme(){var stored=readStoredTheme();if(stored)return stored;return "light";}function applyTheme(theme){root.setAttribute("data-theme",theme);if(document.body){document.body.setAttribute("data-theme",theme);}var metaThemeColor=document.querySelector('meta[name="theme-color"]');if(metaThemeColor){metaThemeColor.setAttribute("content",theme==="dark"?"#100d0a":"#f7efe3");}var button=document.querySelector("[data-theme-toggle]");if(button){var nextTheme=theme==="dark"?"light":"dark";button.setAttribute("aria-pressed",String(theme==="dark"));button.setAttribute("aria-label","Toggle color theme");button.removeAttribute("title");button.setAttribute("data-next-theme",nextTheme);}}function storeTheme(theme){try{window.localStorage.setItem(STORAGE_KEY,theme);}catch(error){}}function toggleTheme(){var current=root.getAttribute("data-theme")||preferredTheme();var next=current==="dark"?"light":"dark";storeTheme(next);applyTheme(next);}root.setAttribute("data-theme",preferredTheme());document.addEventListener("DOMContentLoaded",function(){applyTheme(root.getAttribute("data-theme")||preferredTheme());var button=document.querySelector("[data-theme-toggle]");if(button){button.addEventListener("click",toggleTheme);}});})();</script>`;
 const ATTRIBUTION_SCRIPT = `<script src="/attribution.js?v=${PACKAGE_VERSION}" defer></script>`;
 const TIER_FEATURE_TABLE_SCRIPT = `<script>(function(){function syncStickyTop(){var siteHeader=document.querySelector(".site-header");var height=siteHeader?Math.ceil(siteHeader.getBoundingClientRect().height):0;document.documentElement.style.setProperty("--tier-feature-sticky-top",height+"px");}function initTierFeatureTables(){syncStickyTop();document.querySelectorAll("[data-tier-feature-table]").forEach(function(root){var header=root.querySelector("[data-tier-feature-table-header]");var body=root.querySelector("[data-tier-feature-table-body]");if(!header||!body)return;var sync=function(){header.scrollLeft=body.scrollLeft;};body.addEventListener("scroll",sync,{passive:true});sync();});window.addEventListener("resize",syncStickyTop,{passive:true});}if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",initTierFeatureTables,{once:true});}else{initTierFeatureTables();}})();</script>`;
@@ -56,7 +59,7 @@ function renderFooterLink([href, label]) {
 
 function renderFooter(footerEntry) {
   const fallbackGroups = [
-    { title: 'Game', links: [['https://app.kriegspiel.org/', 'Play online'], ['/playing', 'Playing guide'], ['/leaderboard', 'Leaderboard']] },
+    { title: 'Game', links: [[APP_PLAY_URL, 'Play online'], ['/playing', 'Playing guide'], ['/leaderboard', 'Leaderboard']] },
     { title: 'Rules', links: [['/rules/berkeley', 'Berkeley'], ['/rules/cincinnati', 'Cincinnati'], ['/rules/wild16', 'Wild 16'], ['/rules/rand', 'RAND'], ['/rules/english', 'English'], ['/rules/crazykrieg', 'CrazyKrieg'], ['/rules/comparison/', 'Comparison']] },
     { title: 'Communication', links: [['/blog', 'Blog'], ['/changelog', 'Changelog'], ['/feed.xml', 'RSS'], ['/about', 'About']] },
     { title: 'Development', links: [['https://api.kriegspiel.org/docs', 'API docs'], ['https://github.com/Kriegspiel', 'GitHub']] },
@@ -250,8 +253,8 @@ function renderStatsGrid(stats = {}) {
 }
 
 export function renderShell({ title, description, main, activeNav = '/', canonicalPath = '/', structuredData = null, ogType = 'website', footerEntry = null }) {
-  const playHref = 'https://app.kriegspiel.org/';
-  const nav = [['/leaderboard', 'Leaderboard'], ['/blog', 'Blog'], ['/rules', 'Rules'], [playHref, 'Play']];
+  const playHref = APP_PLAY_URL;
+  const nav = [['/leaderboard', 'Leaderboard'], ['/blog', 'Blog'], ['/rules', 'Rules'], ['/subscription', 'Subscription'], [playHref, 'Play']];
   const navHtml = nav.map(([href, label]) => {
     const playClass = href === playHref ? ' site-header__play button-link button-link--primary' : '';
     return `<a class="site-nav__link${playClass}" href="${href}" ${activeNav === href ? 'aria-current="page"' : ''}>${label}</a>`;
@@ -468,6 +471,128 @@ export function renderRulesComparisonPage(entries, footerEntry = null) {
   return renderShell({ footerEntry, title: 'Kriegspiel — Rules Comparison', description: 'Quick comparison between the published Berkeley, Cincinnati, Wild 16, RAND, English, CrazyKrieg, and Dutch rulesets.', activeNav: '/rules', canonicalPath: '/rules/comparison/', structuredData: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Kriegspiel Rules Comparison', url: absUrl('/rules/comparison/') }, main: `${fullRulesButtonGridStyles}<section class="content-section"><div class="section-heading"><h1>Rules comparison</h1><p>A quick side-by-side before you dive into the full rule text.</p></div><div class="table-wrap"><table><caption>Published ruleset comparison</caption><thead><tr><th>Topic</th><th><a class="text-link" href="/rules/berkeley">Berkeley</a></th><th><a class="text-link" href="/rules/cincinnati">Cincinnati</a></th><th><a class="text-link" href="/rules/wild16">Wild 16</a></th><th><a class="text-link" href="/rules/rand">RAND</a></th><th><a class="text-link" href="/rules/english">English</a></th><th><a class="text-link" href="/rules/crazykrieg">CrazyKrieg</a></th><th><a class="text-link" href="/rules/dutch">Dutch</a></th></tr></thead><tbody>${comparisonRows}</tbody></table></div><aside class="cta-panel rules-comparison-callout"><div><h2>Read the full rules</h2><p>Use the detailed rules pages when you want the complete wording and examples.</p></div><div class="cta-panel__actions rules-comparison-callout__actions"><a class="button-link button-link--secondary" href="/rules/berkeley">Berkeley rules</a><a class="button-link button-link--secondary" href="/rules/cincinnati">Cincinnati rules</a><a class="button-link button-link--secondary" href="/rules/wild16">Wild 16 rules</a><a class="button-link button-link--secondary" href="/rules/rand">RAND rules</a><a class="button-link button-link--secondary" href="/rules/english">English rules</a><a class="button-link button-link--secondary" href="/rules/crazykrieg">CrazyKrieg rules</a><a class="button-link button-link--secondary" href="/rules/dutch">Dutch rules</a></div></aside></section>` });
 }
 
+const PUBLIC_SUBSCRIPTION_TIERS = [
+  { code: 'T0', name: 'Guest', price: 'Free' },
+  { code: 'T1', name: 'Casual', price: 'Free' },
+  { code: 'T2', name: 'Club', price: { monthly: '$10/mo', yearly: '$100/yr' } },
+  { code: 'T3', name: 'Strong', price: { monthly: '$20/mo', yearly: '$200/yr' } },
+  { code: 'T4', name: 'Expert', price: { monthly: '$50/mo', yearly: '$500/yr' } },
+  { code: 'T5', name: 'Master', price: 'Not available yet', future: true },
+  { code: 'T6', name: 'Elite', price: 'Not available yet', future: true },
+];
+const PUBLIC_SUBSCRIPTION_LOWER_TIER_NOTE = { type: 'note', text: 'Lower-tier bots included.' };
+const PUBLIC_SUBSCRIPTION_T0_BOTS = [
+  ['T0-level bots', [['Random Bot', '/user/randobot'], ['Random Any', '/user/randobotany']]],
+];
+const PUBLIC_SUBSCRIPTION_T1_BOTS = [
+  ['T1-level bots', [['Darkboard MCTS', '/user/darkboardmcts'], ['Simple Heuristics Bot', '/user/simpleheuristics'], ['Stockfish Wild 16', '/user/stockfishwild']]],
+];
+const PUBLIC_SUBSCRIPTION_T2_BOTS = [
+  ['T2 OpenAI', [['GPTNano', '/user/llm_gptnano'], ['GPT-OSS', '/user/llm_gptoss120b']]],
+  ['T2 Anthropic', [['Claude Haiku', '/user/llm_haiku']]],
+  ['T2 DeepSeek', [['V4 Flash', '/user/llm_deepseekv4_flash']]],
+  ['T2 Gemini', [['2.5 Flash-Lite', '/user/llm_gemini25_lite'], ['3.1 Flash-Lite', '/user/llm_gemini31_lite']]],
+  ['T2 Llama', [['3.1 8B', '/user/llm_llama31_8b'], ['4 Scout', '/user/llm_llama4_scout'], ['4 Maverick', '/user/llm_llama4_maverick']]],
+  ['T2 Mistral', [['Small 3.2', '/user/llm_mistral_small32']]],
+  ['T2 Gemma', [['3 4B', '/user/llm_gemma3_4b'], ['3 27B', '/user/llm_gemma3_27b'], ['4 31B', '/user/llm_gemma4_31b']]],
+  ['T2 GLM', [['4.7 Flash', '/user/llm_glm47_flash'], ['4.5 Air', '/user/llm_glm45_air']]],
+  ['T2 Nemotron', [['Nano', '/user/llm_nemotron_nano'], ['Super', '/user/llm_nemotron_super']]],
+  ['T2 Kimi', [['K2.5', '/user/llm_kimi_k25']]],
+  ['T2 Hermes', [['4 70B', '/user/llm_hermes4_70b']]],
+  ['T2 Phi', [['4', '/user/llm_phi4']]],
+];
+const PUBLIC_SUBSCRIPTION_T3_BOTS = [
+  ['T3 OpenAI', ['GPT-5.5']],
+  ['T3 Anthropic', ['Claude Sonnet 5']],
+  ['T3 Gemini', ['2.5 Flash']],
+  ['T3 Mistral', [['Large 3', '/user/llm_mistral_large3']]],
+  ['T3 Nemotron', [['Ultra', '/user/llm_nemotron_ultra']]],
+  ['T3 Qwen', [['3.6 Flash', '/user/llm_qwen36_flash'], 'Plus']],
+  ['T3 Kimi', ['K2 Thinking']],
+  ['T3 Hermes', ['3 70B']],
+];
+const PUBLIC_SUBSCRIPTION_T4_BOTS = [
+  ['T4 Anthropic', [['Claude Opus 4.8', '/user/llm_opus48']]],
+  ['T4 DeepSeek', [['V4 Pro', '/user/bot_deepseekv4_pro']]],
+  ['T4 Gemini', [['3.1 Pro Preview', '/user/llm_gemini31_pro_preview']]],
+  ['T4 GLM', [['5.2', '/user/llm_glm52']]],
+  ['T4 Kimi', [['K2.7 Code', '/user/llm_kimi_k27_code']]],
+  ['T4 Hermes', [['4 405B', '/user/llm_hermes4_405b']]],
+];
+const PUBLIC_SUBSCRIPTION_T5_BOTS = [
+  ['T5 OpenAI', ['GPT-5.5 Pro']],
+  ['T5 Qwen', ['3.7 Max']],
+];
+function publicSubscriptionWithLowerTierBots(groups) { return [PUBLIC_SUBSCRIPTION_LOWER_TIER_NOTE, ...groups]; }
+const PUBLIC_SUBSCRIPTION_PLAY_BOTS_BY_TIER = [
+  PUBLIC_SUBSCRIPTION_T0_BOTS,
+  publicSubscriptionWithLowerTierBots(PUBLIC_SUBSCRIPTION_T1_BOTS),
+  publicSubscriptionWithLowerTierBots(PUBLIC_SUBSCRIPTION_T2_BOTS),
+  publicSubscriptionWithLowerTierBots(PUBLIC_SUBSCRIPTION_T3_BOTS),
+  publicSubscriptionWithLowerTierBots(PUBLIC_SUBSCRIPTION_T4_BOTS),
+  publicSubscriptionWithLowerTierBots(PUBLIC_SUBSCRIPTION_T5_BOTS),
+  publicSubscriptionWithLowerTierBots([]),
+];
+const PUBLIC_SUBSCRIPTION_FEATURES = [
+  { name: 'Play human games', values: ['Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes'] },
+  { name: 'Completed-game review', values: ['Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes'] },
+  { name: 'Rating history', values: ['Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes'] },
+  { name: 'Play bots', values: PUBLIC_SUBSCRIPTION_PLAY_BOTS_BY_TIER },
+  { name: 'Persistent player name', values: ['No', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes'] },
+];
+
+function renderSubscriptionPrice(price) {
+  if (typeof price === 'string') return `<span class="tier-feature-table__detail">${esc(price)}</span>`;
+  return `<span class="tier-feature-table__detail subscription-tier-price subscription-tier-price--stacked"><span>${esc(price.monthly)}</span><span>${esc(price.yearly)}</span></span>`;
+}
+
+function renderSubscriptionBotItem(item, index, items) {
+  const label = Array.isArray(item) ? item[0] : item;
+  const href = Array.isArray(item) ? item[1] : '';
+  const labelHtml = href ? `<a href="${esc(appUrl(href))}">${esc(label)}</a>` : esc(label);
+  return `<li>${labelHtml}${index < items.length - 1 ? ';' : ''}</li>`;
+}
+
+function renderSubscriptionBotList(groups = []) {
+  return `<div class="subscription-bot-list">${groups.map((group) => {
+    if (group?.type === 'note') return `<p class="subscription-bot-list__note">${esc(group.text)}</p>`;
+    const [label, items = []] = group;
+    return `<div class="subscription-bot-list__group"><strong>${esc(label)}:</strong><ul>${items.map((item, index) => renderSubscriptionBotItem(item, index, items)).join('')}</ul></div>`;
+  }).join('')}</div>`;
+}
+
+function renderSubscriptionFeatureValue(value) {
+  if (Array.isArray(value)) return renderSubscriptionBotList(value);
+  const marker = String(value).toLowerCase() === 'yes' ? 'yes' : 'no';
+  return `<span class="tier-feature-table__mark tier-feature-table__mark--${marker}">${esc(value)}</span>`;
+}
+
+export function renderSubscriptionPage(footerEntry = null) {
+  const colgroup = `<col class="tier-feature-table__feature-col" />${PUBLIC_SUBSCRIPTION_TIERS.map(() => '<col class="tier-feature-table__tier-col" />').join('')}`;
+  const headerCells = PUBLIC_SUBSCRIPTION_TIERS.map((tier) => {
+    const futureClass = tier.future ? ' tier-feature-table__tier-column--unavailable subscription-tier-column--future' : '';
+    return `<th class="tier-feature-table__tier-col${futureClass}" scope="col"><span class="tier-feature-table__heading"><span class="tier-feature-table__tier-prefix">Tier</span><span class="tier-feature-table__number tier-feature-table__number--${esc(tier.code.toLowerCase())}">${esc(tier.code)}</span><span class="tier-feature-table__name">${esc(tier.name)}</span>${renderSubscriptionPrice(tier.price)}</span></th>`;
+  }).join('');
+  const bodyRows = PUBLIC_SUBSCRIPTION_FEATURES.map((feature) => {
+    const cells = feature.values.map((value, index) => {
+      const tier = PUBLIC_SUBSCRIPTION_TIERS[index];
+      const futureClass = tier?.future ? ' subscription-tier-column--future' : '';
+      const textClass = Array.isArray(value) ? ' tier-feature-table__cell-text' : '';
+      return `<td class="tier-feature-table__tier-col${futureClass}${textClass}">${renderSubscriptionFeatureValue(value)}</td>`;
+    }).join('');
+    return `<tr><th class="tier-feature-table__feature-col" scope="row">${esc(feature.name)}</th>${cells}</tr>`;
+  }).join('');
+  return renderShell({
+    footerEntry,
+    title: 'Kriegspiel — Subscription',
+    description: 'Kriegspiel levels, free play, and optional subscriptions.',
+    activeNav: '/subscription',
+    canonicalPath: '/subscription',
+    structuredData: { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Kriegspiel Subscription', url: absUrl('/subscription') },
+    main: `<style>${subscriptionPublicStyles()}</style><section class="content-section content-section--wide subscription-public-page"><div class="section-heading subscription-public-heading"><h1>Subscription</h1><p>Start free, play the core game, and graduate to stronger bot tiers whenever you want more challenge.</p></div><aside class="subscription-public-invite" aria-label="Start free"><div><p class="subscription-public-invite__eyebrow">Free level first</p><h2>Create a profile and start playing.</h2><p>The free Casual level already includes human games, completed-game review, rating history, and simple bots. Paid tiers are optional upgrades for stronger bots and project support.</p></div><div class="subscription-public-invite__actions"><a class="button-link button-link--primary" href="${esc(appUrl('/auth/register'))}">Create free profile</a><a class="button-link button-link--secondary" href="${esc(APP_PLAY_URL)}">Start playing</a></div></aside><article class="prose-card prose-card--wide subscription-tier-card" aria-labelledby="subscription-tier-table-title"><h2 id="subscription-tier-table-title">Kriegspiel levels</h2><div class="tier-feature-table-wrap subscription-tier-table-wrap" data-tier-feature-table style="--tier-feature-tier-count:${PUBLIC_SUBSCRIPTION_TIERS.length};"><div class="tier-feature-table__frozen-header" data-tier-feature-table-header><table class="tier-feature-table tier-feature-table--header subscription-tier-table"><colgroup>${colgroup}</colgroup><thead><tr><th class="tier-feature-table__feature-col" scope="col">Feature</th>${headerCells}</tr></thead></table></div><div class="tier-feature-table__body-scroll" data-tier-feature-table-body><table class="tier-feature-table tier-feature-table--body subscription-tier-table"><colgroup>${colgroup}</colgroup><tbody>${bodyRows}</tbody></table></div></div></article><section class="subscription-support-note" aria-labelledby="subscription-support-note-title"><h2 id="subscription-support-note-title">Why subscriptions help</h2><p>Kriegspiel.org is built so everyone can enjoy the full experience and pleasure of the game without needing a paid plan. The free T1 level covers almost everything most players need to play, review, and keep improving.</p><p>Paid tiers exist because stronger bots use paid AI tokens, and they bring more challenge, variety, and joy to the game. A subscription helps cover those costs while supporting the project and keeping Kriegspiel welcoming for everyone.</p></section></section>`
+  });
+}
+
 export function renderRedirectPage({ fromPath, toPath, title = 'Redirecting…', footerEntry = null }) {
   return renderShell({ footerEntry, title: `Kriegspiel — ${title}`, description: `Redirecting from ${fromPath} to ${toPath}.`, canonicalPath: toPath, main: `<section class="content-section"><article class="prose-card"><h1>${title}</h1><p>This page moved to <a class="text-link" href="${toPath}">${toPath}</a>.</p></article></section>` }).replace('</head>', `<meta http-equiv="refresh" content="0; url=${toPath}" /></head>`);
 }
@@ -484,6 +609,42 @@ export function renderSiteMarkdownPage(entry, footerEntry = null) {
 }
 
 export const renderSimplePage = (title, footerEntry = null) => renderShell({ footerEntry, title: `Kriegspiel — ${title}`, description: `${title} page`, canonicalPath: '/404', main: `<section class="content-section"><article class="prose-card"><h1>${title}</h1><p>Generated by ks-home build.</p></article></section>` });
+
+function subscriptionPublicStyles() {
+  return [
+    `.subscription-public-page{display:grid;gap:1rem;}`,
+    `.subscription-public-heading{margin-bottom:0;}`,
+    `.subscription-public-invite{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:1rem;padding:1.2rem 1.3rem;border:1px solid rgba(121,82,0,.35);border-radius:var(--radius);background:linear-gradient(180deg,#fff3b0,#f7d66b);box-shadow:var(--shadow-soft);}`,
+    `.subscription-public-invite h2{margin-bottom:.35rem;color:#1f170f;}`,
+    `.subscription-public-invite p{color:#3e2b13;}`,
+    `.subscription-public-invite__eyebrow{margin:0 0 .35rem;font-size:.78rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#5a3e11;}`,
+    `.subscription-public-invite__actions{display:flex;flex-wrap:wrap;gap:.65rem;justify-content:flex-end;}`,
+    `.subscription-public-invite .button-link--primary{background:#1e1611;border-color:#1e1611;color:#fff;}`,
+    `.subscription-public-invite .button-link--secondary{background:rgba(255,248,240,.7);border-color:rgba(85,58,34,.3);color:#1e1611;}`,
+    `.subscription-tier-card{display:grid;gap:1rem;}`,
+    `.subscription-tier-card h2{margin:0;}`,
+    `.subscription-tier-table-wrap{margin-top:0;}`,
+    `.subscription-tier-table .tier-feature-table__heading{min-height:7.2rem;}`,
+    `.subscription-tier-table .tier-feature-table__feature-col{text-align:left;}`,
+    `.subscription-tier-price--stacked{display:grid;gap:.08rem;}`,
+    `.subscription-tier-column--future{background:color-mix(in srgb,var(--surface-alt) 84%,#8a8580);}`,
+    `.subscription-bot-list{display:grid;gap:.5rem;font-size:.84rem;line-height:1.35;}`,
+    `.subscription-bot-list__note{margin:0;font-weight:800;color:var(--text);}`,
+    `.subscription-bot-list__group{display:grid;gap:.12rem;}`,
+    `.subscription-bot-list__group strong{font-weight:800;}`,
+    `.subscription-bot-list ul{display:grid;gap:.05rem;margin:0;padding:0;list-style:none;}`,
+    `.subscription-bot-list li{margin:0;color:var(--muted);}`,
+    `.subscription-bot-list a{font-weight:700;text-decoration-thickness:1px;text-underline-offset:.16em;}`,
+    `.subscription-support-note{padding:1.2rem 1.3rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-soft);}`,
+    `.subscription-support-note h2{font-size:1.05rem;margin:0 0 .55rem;letter-spacing:0;}`,
+    `.subscription-support-note p{max-width:72rem;}`,
+    `html[data-theme="dark"] .subscription-public-invite{background:linear-gradient(180deg,#5b430b,#3a2a08);border-color:rgba(247,214,107,.55);}`,
+    `html[data-theme="dark"] .subscription-public-invite h2,html[data-theme="dark"] .subscription-public-invite p,html[data-theme="dark"] .subscription-public-invite__eyebrow{color:#fff4c2;}`,
+    `html[data-theme="dark"] .subscription-public-invite .button-link--primary{background:#f4ede4;border-color:#f4ede4;color:#100d0a;}`,
+    `html[data-theme="dark"] .subscription-public-invite .button-link--secondary{background:rgba(28,23,18,.82);border-color:rgba(244,237,228,.28);color:#f4ede4;}`,
+    `@media (max-width:900px){.subscription-public-invite{grid-template-columns:1fr;}.subscription-public-invite__actions{justify-content:flex-start;}.subscription-tier-table .tier-feature-table__heading{min-height:6.6rem;}}`
+  ].join('');
+}
 
 function proseTableOverflowStyles() { return `.prose-card .table-wrap code{white-space:normal;overflow-wrap:anywhere;word-break:break-word;}@media (min-width:701px){.prose-card .table-wrap th:first-child,.prose-card .table-wrap td:first-child{width:26%;min-width:12rem;}}`; }
 
