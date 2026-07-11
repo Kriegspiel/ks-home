@@ -6,7 +6,7 @@ import { execSync } from "node:child_process";
 execSync("node scripts/build.mjs", { stdio: "pipe" });
 
 const arg = process.argv.find((a) => a.startsWith("--routes="));
-const routes = (arg ? arg.split("=")[1] : "/,/leaderboard,/rules,/playing").split(",");
+const routes = (arg ? arg.split("=")[1] : "/,/leaderboard,/rules,/subscription,/playing").split(",");
 for (const route of routes) {
   const rel = route === "/" ? "index.html" : `${route.replace(/^\//, "")}/index.html`;
   assert.ok(fs.existsSync(path.join(process.cwd(), "dist", rel)), `missing route ${route}`);

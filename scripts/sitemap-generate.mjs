@@ -29,6 +29,7 @@ if (process.argv.includes("--check")) {
   assert.ok(xml.includes("https://kriegspiel.org/blog"));
   assert.ok(xml.includes("https://kriegspiel.org/changelog"));
   assert.ok(xml.includes("https://kriegspiel.org/rules/berkeley"));
+  assert.ok(xml.includes("https://kriegspiel.org/subscription"));
   assert.ok(xml.includes("<lastmod>"));
 }
 console.log("sitemap generated");

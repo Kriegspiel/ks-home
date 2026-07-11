@@ -1,0 +1,43 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+
+import { renderSubscriptionPage } from '../src/pages.mjs';
+
+test('public subscription page invites free signup and omits app billing state', () => {
+  const html = renderSubscriptionPage();
+
+  assert.ok(html.includes('Kriegspiel — Subscription'));
+  assert.ok(html.includes('<h1>Subscription</h1>'));
+  assert.ok(html.includes('Create a profile and start playing.'));
+  assert.ok(html.includes('The free Casual level already includes human games, completed-game review, rating history, and simple bots.'));
+  assert.ok(html.includes('href="https://app.kriegspiel.org/auth/register"'));
+  assert.ok(html.includes('Create free profile'));
+  assert.ok(html.includes('Why subscriptions help'));
+  assert.ok(html.includes('Paid tiers exist because stronger bots use paid AI tokens, and they bring more challenge, variety, and joy to the game.'));
+  assert.ok(html.includes('>T0</span>'));
+  assert.ok(html.includes('>Guest</span>'));
+  assert.ok(html.includes('>T1</span>'));
+  assert.ok(html.includes('>Casual</span>'));
+  assert.ok(html.includes('>T2</span>'));
+  assert.ok(html.includes('>Club</span>'));
+  assert.ok(html.includes('$10/mo'));
+  assert.ok(html.includes('$100/yr'));
+  assert.ok(html.includes('>T4</span>'));
+  assert.ok(html.includes('>Expert</span>'));
+  assert.ok(html.includes('Random Any'));
+  assert.ok(html.includes('GPTNano'));
+  assert.ok(html.includes('Claude Haiku'));
+  assert.ok(html.includes('T3 Mistral'));
+  assert.ok(html.includes('Large 3'));
+  assert.ok(html.includes('Lower-tier bots included.'));
+  assert.ok(!html.includes('llm_mistral_nemo'));
+  assert.ok(!html.includes('>Nemo</a>'));
+  assert.ok(html.includes('Persistent player name'));
+  assert.ok(html.includes('aria-current="page">Subscription</a>'));
+  assert.ok(!html.includes('Manage billing'));
+  assert.ok(!html.includes('Open payment form'));
+  assert.ok(!html.includes('Selected'));
+  assert.ok(!html.includes('Current level'));
+  assert.ok(!html.includes('Current tier'));
+  assert.ok(!html.includes('Bot availability'));
+});

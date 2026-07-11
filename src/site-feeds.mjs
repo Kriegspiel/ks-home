@@ -52,6 +52,7 @@ export function buildSitemapRoutes({
     { path: "/changelog", lastmod: latestEntryDate(changelogEntries) },
     { path: "/rules", lastmod: latestEntryDate(rulesEntries) },
     { path: "/rules/comparison", lastmod: latestEntryDate(rulesEntries) },
+    { path: "/subscription", lastmod: generatedAt },
     { path: "/privacy", lastmod: siteEntries.privacy?.metadata?.updatedAt },
     { path: "/terms", lastmod: siteEntries.terms?.metadata?.updatedAt },
     { path: "/about", lastmod: siteEntries.about?.metadata?.updatedAt },
