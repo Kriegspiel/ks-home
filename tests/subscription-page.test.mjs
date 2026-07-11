@@ -1,76 +1,29 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { renderSubscriptionPage } from '../src/pages.mjs';
+import { renderRedirectPage } from '../src/pages.mjs';
 
-test('public subscription page invites free signup and omits app billing state', () => {
-  const html = renderSubscriptionPage();
+test('public subscription route redirects to the canonical app subscription page', () => {
+  const html = renderRedirectPage({
+    fromPath: '/subscription',
+    toPath: 'https://app.kriegspiel.org/subscription',
+    title: 'Subscription moved',
+  });
 
-  assert.ok(html.includes('Kriegspiel — Subscription'));
-  assert.ok(html.includes('<h1>Subscription</h1>'));
-  assert.ok(html.includes('.subscription-tier-table-wrap .tier-feature-table{min-width:60rem;}'));
-  assert.ok(html.includes('.subscription-tier-table-wrap .tier-feature-table__feature-col{width:9.5rem;}'));
-  assert.ok(html.includes('@media (max-width:900px){.subscription-public-invite{grid-template-columns:1fr;}.subscription-public-invite__actions{justify-content:flex-start;}.subscription-tier-table-wrap .tier-feature-table{min-width:54rem;}'));
-  assert.ok(html.includes('Create a profile and start playing.'));
-  assert.ok(html.includes('The free Casual level already includes human games, completed-game review, rating history, and simple bots.'));
-  assert.ok(html.includes('href="https://app.kriegspiel.org/auth/register"'));
-  assert.ok(html.includes('Create free profile'));
-  assert.ok(html.includes('Why subscriptions help'));
-  assert.ok(html.includes('Paid tiers exist because stronger bots use paid AI tokens, and they bring more challenge, variety, and joy to the game.'));
-  assert.ok(html.includes('>T0</span>'));
-  assert.ok(html.includes('>Guest</span>'));
-  assert.ok(html.includes('>T1</span>'));
-  assert.ok(html.includes('>Casual</span>'));
-  assert.ok(html.includes('>T2</span>'));
-  assert.ok(html.includes('>Club</span>'));
-  assert.ok(html.includes('$10/mo'));
-  assert.ok(html.includes('$100/yr'));
-  assert.ok(html.includes('>T4</span>'));
-  assert.ok(html.includes('>Expert</span>'));
-  assert.ok(html.includes('Random Any'));
-  assert.ok(html.includes('GPTNano'));
-  assert.ok(html.includes('Claude Haiku'));
-  assert.ok(html.includes('T2 Llama'));
-  assert.ok(html.includes('4 Maverick'));
-  assert.ok(html.includes('/user/llm_llama4_maverick'));
-  assert.ok(!html.includes('/user/llm_llama31_8b'));
-  assert.ok(!html.includes('/user/llm_llama4_scout'));
-  assert.ok(!html.includes('openrouter_llama31_8b'));
-  assert.ok(!html.includes('3.1 8B'));
-  assert.ok(!html.includes('4 Scout'));
-  assert.ok(html.includes('T2 Gemma'));
-  assert.ok(html.includes('4 31B'));
-  assert.ok(html.includes('/user/llm_gemma4_31b'));
-  assert.ok(!html.includes('/user/llm_gemma3_4b'));
-  assert.ok(!html.includes('/user/llm_gemma3_27b'));
-  assert.ok(!html.includes('3 4B'));
-  assert.ok(!html.includes('3 27B'));
-  assert.ok(!html.includes('T2 Gemini'));
-  assert.ok(!html.includes('/user/llm_gemini25_lite'));
-  assert.ok(!html.includes('/user/openrouter_gemini25_lite'));
-  assert.ok(!html.includes('2.5 Flash-Lite'));
-  assert.ok(!html.includes('2.5 Flash'));
-  assert.ok(!html.includes('/user/llm_nemotron_nano'));
-  assert.ok(!html.includes('>Nano</a>'));
-  assert.ok(html.includes('/user/llm_nemotron_super'));
-  assert.ok(html.includes('>Super</a>'));
-  assert.ok(html.includes('T3 Gemini'));
-  assert.ok(html.includes('3.1 Flash-Lite'));
-  assert.ok(html.includes('/user/llm_gemini31_lite'));
-  assert.ok(html.includes('T3 Mistral'));
-  assert.ok(html.includes('Large 3'));
-  assert.ok(html.includes('Lower-tier bots included.'));
-  assert.ok(!html.includes('llm_mistral_nemo'));
-  assert.ok(!html.includes('>Nemo</a>'));
-  assert.ok(html.includes('Persistent player name'));
-  const navHtml = html.match(/<nav class="site-nav" aria-label="Primary">([\s\S]*?)<\/nav>/)?.[1] || '';
-  assert.ok(!navHtml.includes('>Subscription</a>'));
-  const gameFooterHtml = html.match(/<section class="footer__group" aria-label="Game">([\s\S]*?)<\/section>/)?.[1] || '';
-  assert.ok(gameFooterHtml.includes('<a class="footer__link" href="/subscription">Subscription</a>'));
+  assert.ok(html.includes('Kriegspiel — Subscription moved'));
+  assert.ok(html.includes('<meta http-equiv="refresh" content="0; url=https://app.kriegspiel.org/subscription" />'));
+  assert.ok(html.includes('<link rel="canonical" href="https://app.kriegspiel.org/subscription" />'));
+  assert.ok(html.includes('This page moved to <a class="text-link" href="https://app.kriegspiel.org/subscription">https://app.kriegspiel.org/subscription</a>.'));
+  assert.ok(!html.includes('Kriegspiel levels'));
+  assert.ok(!html.includes('Create free profile'));
   assert.ok(!html.includes('Manage billing'));
   assert.ok(!html.includes('Open payment form'));
   assert.ok(!html.includes('Selected'));
   assert.ok(!html.includes('Current level'));
   assert.ok(!html.includes('Current tier'));
   assert.ok(!html.includes('Bot availability'));
+  const navHtml = html.match(/<nav class="site-nav" aria-label="Primary">([\s\S]*?)<\/nav>/)?.[1] || '';
+  assert.ok(!navHtml.includes('>Subscription</a>'));
+  const gameFooterHtml = html.match(/<section class="footer__group" aria-label="Game">([\s\S]*?)<\/section>/)?.[1] || '';
+  assert.ok(gameFooterHtml.includes('<a class="footer__link" href="/subscription">Subscription</a>'));
 });

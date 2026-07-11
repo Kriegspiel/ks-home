@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { getContentRoot, loadCollection, loadSingletonEntry } from '../src/content-utils.mjs';
-import { renderHomePage, renderLeaderboardPage, renderPublicProfilePage, renderSimplePage, renderBlogIndex, renderBlogDetail, renderBlogArchive, renderChangelogIndex, renderChangelogDetail, renderRulesPage, renderRuleDetailPage, renderRulesComparisonPage, renderSubscriptionPage, renderRedirectPage, renderSiteMarkdownPage } from '../src/pages.mjs';
+import { renderHomePage, renderLeaderboardPage, renderPublicProfilePage, renderSimplePage, renderBlogIndex, renderBlogDetail, renderBlogArchive, renderChangelogIndex, renderChangelogDetail, renderRulesPage, renderRuleDetailPage, renderRulesComparisonPage, renderRedirectPage, renderSiteMarkdownPage } from '../src/pages.mjs';
 import { buildSitemapRoutes, buildUpdateFeedEntries, renderAtomFeed, renderRssFeed, renderSitemap } from '../src/site-feeds.mjs';
 
 const dist = path.resolve(process.cwd(), 'dist');
@@ -95,7 +95,7 @@ writePage(path.join(dist, 'blog/archive/index.html'), renderBlogArchive(blogEntr
 writePage(path.join(dist, 'changelog/index.html'), renderChangelogIndex(changelogEntries, footerEntry));
 writePage(path.join(dist, 'rules/index.html'), renderRulesPage(rulesEntries, changelogEntries, footerEntry));
 writePage(path.join(dist, 'rules/comparison/index.html'), renderRulesComparisonPage(rulesEntries, footerEntry));
-writePage(path.join(dist, 'subscription/index.html'), renderSubscriptionPage(footerEntry));
+writePage(path.join(dist, 'subscription/index.html'), renderRedirectPage({ fromPath: '/subscription', toPath: 'https://app.kriegspiel.org/subscription', title: 'Subscription moved', footerEntry }));
 writePage(path.join(dist, 'privacy/index.html'), renderSiteMarkdownPage(privacyEntry, footerEntry));
 writePage(path.join(dist, 'terms/index.html'), renderSiteMarkdownPage(termsEntry, footerEntry));
 writePage(path.join(dist, 'about/index.html'), renderSiteMarkdownPage(aboutEntry, footerEntry));

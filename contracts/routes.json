@@ -35,6 +35,12 @@
       "reason": "Canonical Wild16 rules route dropped the hyphen to match product naming"
     },
     {
+      "from": "/subscription",
+      "to": "https://app.kriegspiel.org/subscription",
+      "status": 308,
+      "reason": "Subscription tiers are canonical in the app so logged-in and public visitors use one page"
+    },
+    {
       "from": "/rules/old",
       "to": null,
       "status": 410,
