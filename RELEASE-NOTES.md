@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.4.2
+
+- **Subscription**: make the public tier matrix more compact so the levels fit
+  the viewport more comfortably.
+
 ## ks-home v. 1.4.1
 
 - **Subscription**: hide Nemotron Nano from the visible public tier matrix while
