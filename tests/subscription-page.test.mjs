@@ -56,7 +56,10 @@ test('public subscription page invites free signup and omits app billing state',
   assert.ok(!html.includes('llm_mistral_nemo'));
   assert.ok(!html.includes('>Nemo</a>'));
   assert.ok(html.includes('Persistent player name'));
-  assert.ok(html.includes('aria-current="page">Subscription</a>'));
+  const navHtml = html.match(/<nav class="site-nav" aria-label="Primary">([\s\S]*?)<\/nav>/)?.[1] || '';
+  assert.ok(!navHtml.includes('>Subscription</a>'));
+  const gameFooterHtml = html.match(/<section class="footer__group" aria-label="Game">([\s\S]*?)<\/section>/)?.[1] || '';
+  assert.ok(gameFooterHtml.includes('<a class="footer__link" href="/subscription">Subscription</a>'));
   assert.ok(!html.includes('Manage billing'));
   assert.ok(!html.includes('Open payment form'));
   assert.ok(!html.includes('Selected'));

@@ -59,7 +59,7 @@ function renderFooterLink([href, label]) {
 
 function renderFooter(footerEntry) {
   const fallbackGroups = [
-    { title: 'Game', links: [[APP_PLAY_URL, 'Play online'], ['/playing', 'Playing guide'], ['/leaderboard', 'Leaderboard']] },
+    { title: 'Game', links: [[APP_PLAY_URL, 'Play online'], ['/playing', 'Playing guide'], ['/subscription', 'Subscription'], ['/leaderboard', 'Leaderboard']] },
     { title: 'Rules', links: [['/rules/berkeley', 'Berkeley'], ['/rules/cincinnati', 'Cincinnati'], ['/rules/wild16', 'Wild 16'], ['/rules/rand', 'RAND'], ['/rules/english', 'English'], ['/rules/crazykrieg', 'CrazyKrieg'], ['/rules/comparison/', 'Comparison']] },
     { title: 'Communication', links: [['/blog', 'Blog'], ['/changelog', 'Changelog'], ['/feed.xml', 'RSS'], ['/about', 'About']] },
     { title: 'Development', links: [['https://api.kriegspiel.org/docs', 'API docs'], ['https://github.com/Kriegspiel', 'GitHub']] },
@@ -254,7 +254,7 @@ function renderStatsGrid(stats = {}) {
 
 export function renderShell({ title, description, main, activeNav = '/', canonicalPath = '/', structuredData = null, ogType = 'website', footerEntry = null }) {
   const playHref = APP_PLAY_URL;
-  const nav = [['/leaderboard', 'Leaderboard'], ['/blog', 'Blog'], ['/rules', 'Rules'], ['/subscription', 'Subscription'], [playHref, 'Play']];
+  const nav = [['/leaderboard', 'Leaderboard'], ['/blog', 'Blog'], ['/rules', 'Rules'], [playHref, 'Play']];
   const navHtml = nav.map(([href, label]) => {
     const playClass = href === playHref ? ' site-header__play button-link button-link--primary' : '';
     return `<a class="site-nav__link${playClass}" href="${href}" ${activeNav === href ? 'aria-current="page"' : ''}>${label}</a>`;

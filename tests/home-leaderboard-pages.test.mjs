@@ -130,6 +130,7 @@ test("leaderboard page includes resilient state containers, telemetry hooks, and
   assert.ok(navHtml.includes('>Blog</a>'));
   assert.ok(navHtml.includes('>Rules</a>'));
   assert.ok(navHtml.includes('>Play</a>'));
+  assert.ok(!navHtml.includes('>Subscription</a>'));
   assert.ok(html.includes('>Rules</h2>'));
   assert.ok(html.includes('>Communication</h2>'));
   assert.ok(html.includes('X.com (@kriegspiel_org)'));
