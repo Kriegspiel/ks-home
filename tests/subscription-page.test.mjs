@@ -42,6 +42,14 @@ test('public subscription page invites free signup and omits app billing state',
   assert.ok(!html.includes('/user/llm_gemma3_27b'));
   assert.ok(!html.includes('3 4B'));
   assert.ok(!html.includes('3 27B'));
+  assert.ok(!html.includes('T2 Gemini'));
+  assert.ok(!html.includes('/user/llm_gemini25_lite'));
+  assert.ok(!html.includes('/user/openrouter_gemini25_lite'));
+  assert.ok(!html.includes('2.5 Flash-Lite'));
+  assert.ok(!html.includes('2.5 Flash'));
+  assert.ok(html.includes('T3 Gemini'));
+  assert.ok(html.includes('3.1 Flash-Lite'));
+  assert.ok(html.includes('/user/llm_gemini31_lite'));
   assert.ok(html.includes('T3 Mistral'));
   assert.ok(html.includes('Large 3'));
   assert.ok(html.includes('Lower-tier bots included.'));
