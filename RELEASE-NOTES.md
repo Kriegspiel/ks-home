@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.4.3
+
+- **Subscription**: redirect the public `/subscription` URL to the canonical
+  app subscription page and remove the duplicate page from the sitemap.
+
 ## ks-home v. 1.4.2
 
 - **Subscription**: make the public tier matrix more compact so the levels fit

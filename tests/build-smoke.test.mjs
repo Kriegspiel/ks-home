@@ -23,7 +23,7 @@ test('build emits required public pages', () => {
   assert.ok(feed.includes('<rss version="2.0"'));
   assert.ok(atom.includes('<feed xmlns="http://www.w3.org/2005/Atom"'));
   assert.ok(sitemap.includes('https://kriegspiel.org/rules/berkeley'));
-  assert.ok(sitemap.includes('https://kriegspiel.org/subscription'));
+  assert.ok(!sitemap.includes('https://kriegspiel.org/subscription'));
   assert.ok(sitemap.includes('https://kriegspiel.org/playing'));
   assert.ok(!sitemap.includes('https://kriegspiel.org/levels'));
   assert.ok(sitemap.includes('<lastmod>'));

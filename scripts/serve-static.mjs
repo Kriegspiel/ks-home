@@ -19,6 +19,11 @@ const MIME_TYPES = new Map([
   [".ico", "image/x-icon"]
 ]);
 
+const REDIRECTS = new Map([
+  ["/subscription", "https://app.kriegspiel.org/subscription"],
+  ["/subscription/", "https://app.kriegspiel.org/subscription"]
+]);
+
 const args = new Map();
 for (let i = 2; i < process.argv.length; i += 1) {
   const arg = process.argv[i];
@@ -54,6 +59,17 @@ const server = http.createServer((req, res) => {
     const url = new URL(req.url || "/", `http://${req.headers.host || "localhost"}`);
     let pathname = decodeURIComponent(url.pathname);
     if (pathname.includes("\0")) throw new Error("invalid path");
+
+    const redirectLocation = REDIRECTS.get(pathname);
+    if (redirectLocation) {
+      res.writeHead(308, {
+        Location: redirectLocation,
+        "Cache-Control": "public, max-age=300",
+        "Content-Type": "text/plain; charset=utf-8"
+      });
+      res.end(method === "HEAD" ? undefined : `Permanent Redirect: ${redirectLocation}\n`);
+      return;
+    }
 
     let filePath = resolvePath(pathname);
     if (!filePath) {
