@@ -55,6 +55,7 @@ test("renderShell falls back canonical paths and footer variants", () => {
   assert.ok(!emptyFooterHtml.includes("filter:brightness(1.08);z-index:4"));
   assert.ok(!emptyFooterHtml.includes(".fen-board__grid .fen-board__square:focus-visible{outline:2px solid var(--text);outline-offset:-2px;z-index:5;}"));
   assert.ok(emptyFooterHtml.includes('aria-current="page">Play</a>'));
+  assert.ok(!emptyFooterHtml.includes(">Subscription</a>"));
   assert.ok(!emptyFooterHtml.includes(">Rules</h2>"));
 
   const fallbackFooterHtml = renderShell({
@@ -63,7 +64,8 @@ test("renderShell falls back canonical paths and footer variants", () => {
     main: "<p>hello</p>",
   });
   assert.ok(fallbackFooterHtml.includes(">Game</h2>"));
-  assert.ok(fallbackFooterHtml.includes('<a class="footer__link" href="/playing">Playing guide</a>'));
+  const gameFooter = footerGroupHtml(fallbackFooterHtml, "Game");
+  assert.ok(gameFooter.includes('<a class="footer__link footer__link--external" href="https://app.kriegspiel.org/" target="_blank" rel="noreferrer noopener">Play online</a></li><li><a class="footer__link" href="/playing">Playing guide</a></li><li><a class="footer__link" href="/subscription">Subscription</a></li><li><a class="footer__link" href="/leaderboard">Leaderboard</a>'));
   assert.ok(fallbackFooterHtml.includes(">Rules</h2>"));
   assert.ok(!fallbackFooterHtml.includes('<a href="/rules/dutch">Dutch</a>'));
   assert.ok(fallbackFooterHtml.includes(">Communication</h2>"));
