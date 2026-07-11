@@ -8,6 +8,9 @@ test('public subscription page invites free signup and omits app billing state',
 
   assert.ok(html.includes('Kriegspiel — Subscription'));
   assert.ok(html.includes('<h1>Subscription</h1>'));
+  assert.ok(html.includes('.subscription-tier-table-wrap .tier-feature-table{min-width:60rem;}'));
+  assert.ok(html.includes('.subscription-tier-table-wrap .tier-feature-table__feature-col{width:9.5rem;}'));
+  assert.ok(html.includes('@media (max-width:900px){.subscription-public-invite{grid-template-columns:1fr;}.subscription-public-invite__actions{justify-content:flex-start;}.subscription-tier-table-wrap .tier-feature-table{min-width:54rem;}'));
   assert.ok(html.includes('Create a profile and start playing.'));
   assert.ok(html.includes('The free Casual level already includes human games, completed-game review, rating history, and simple bots.'));
   assert.ok(html.includes('href="https://app.kriegspiel.org/auth/register"'));
