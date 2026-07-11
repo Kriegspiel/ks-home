@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.3.34
+
+- **Subscription**: show Gemini 3.1 Flash-Lite as the visible T3 Gemini model
+  and remove Gemini 2.5 variants from the public tier matrix.
+
 ## ks-home v. 1.3.33
 
 - **Subscription**: keep only Llama 4 Maverick and Gemma 4 31B visible in the
