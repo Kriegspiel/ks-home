@@ -35,7 +35,8 @@ test('rules landing page shows implemented and reference rules plus comparison l
   assert.ok(html.includes('Historical composition note for the Dutch capture convention'));
   assert.ok(html.includes('/rules/comparison/'));
   assert.equal((html.match(/Implemented online/g) || []).length, 6);
-  assert.equal((html.match(/Historical reference: not playable online/g) || []).length, 1);
+  assert.equal((html.match(/Historical reference: not playable online yet/g) || []).length, 1);
+  assert.ok(html.includes('.rules-tile__meta li{justify-content:center;padding:.48rem .82rem;text-align:center;line-height:1.25;}'));
   assert.ok(!html.includes('RAND rules'));
   assert.ok(!html.includes('Planned ruleset'));
   assert.ok(!html.includes('Placeholder'));
