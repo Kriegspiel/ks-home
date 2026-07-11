@@ -160,11 +160,11 @@ test('site markdown pages keep wrapped tables as scrollable tables on narrow scr
 
 test('site markdown pages include tier feature matrix styles', () => {
   const html = renderSiteMarkdownPage({
-    metadata: { title: 'Levels and pricing', summary: 'Levels page', slug: 'levels' },
+    metadata: { title: 'Pricing matrix', summary: 'Pricing table page', slug: 'pricing-matrix' },
     bodyHtml: '<div class="table-wrap tier-feature-table-wrap" data-tier-feature-table><div class="tier-feature-table__frozen-header" data-tier-feature-table-header></div><div class="tier-feature-table__body-scroll" data-tier-feature-table-body></div></div>'
   });
 
-  assert.ok(html.includes('<section class="content-section content-section--wide"><article class="prose-card prose-card--wide">'));
+  assert.ok(html.includes('<section class="content-section"><article class="prose-card">'));
   assert.ok(html.includes('.content-section--wide{width:100%;}'));
   assert.ok(html.includes('.tier-feature-table-wrap{overflow:visible;border:1px solid var(--border);'));
   assert.ok(html.includes('isolation:isolate;position:relative;'));
