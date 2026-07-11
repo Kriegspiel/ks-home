@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.3.30
+
+- **Rules**: soften the Dutch status label to “not playable online yet” and
+  center status-pill text with more breathing room.
+
 ## ks-home v. 1.3.29
 
 - **Levels**: let the page handle vertical scrolling for the pricing matrix
