@@ -5,6 +5,13 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.4.5
+
+- **Subscription Catalog**: keep the static-site subscription renderer aligned
+  with the app catalog for GPT-5.6 Sol/Terra/Luna, Grok 4.5,
+  Gemini 3.5 Flash, Qwen 3.7 Plus, DeepSeek V3.2, MiniMax M3, and
+  Mistral Medium 3.5.
+
 ## ks-home v. 1.4.4
 
 - **Changelog and Feeds**: render the public version `1.4.0` release note and
