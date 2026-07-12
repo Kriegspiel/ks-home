@@ -526,7 +526,7 @@ const PUBLIC_SUBSCRIPTION_T4_BOTS = [
   ['T4 Hermes', [['4 405B', '/user/llm_hermes4_405b']]],
 ];
 const PUBLIC_SUBSCRIPTION_T5_BOTS = [
-  ['T5 OpenAI', [['GPT-5.6 Sol', '/user/llm_gpt56_sol', 'no'], ['GPT-5.5', '/user/llm_gpt55', 'no'], ['GPT-5.5 Pro', '/user/llm_gpt55_pro', 'medium']]],
+  ['T5 OpenAI', [['GPT-5.6 Sol', '/user/llm_gpt56_sol'], ['GPT-5.5', '/user/llm_gpt55'], 'GPT-5.5 Pro']],
   ['T5 xAI', [['Grok 4.5', '/user/llm_grok45']]],
   ['T5 Qwen', ['3.7 Max']],
 ];
@@ -556,9 +556,7 @@ function renderSubscriptionPrice(price) {
 function renderSubscriptionBotItem(item, index, items) {
   const label = Array.isArray(item) ? item[0] : item;
   const href = Array.isArray(item) ? item[1] : '';
-  const reasoning = Array.isArray(item) ? item[2] : '';
-  const displayLabel = reasoning ? `${label} (reasoning: ${reasoning})` : label;
-  const labelHtml = href ? `<a href="${esc(appUrl(href))}">${esc(displayLabel)}</a>` : esc(displayLabel);
+  const labelHtml = href ? `<a href="${esc(appUrl(href))}">${esc(label)}</a>` : esc(label);
   return `<li>${labelHtml}${index < items.length - 1 ? ';' : ''}</li>`;
 }
 

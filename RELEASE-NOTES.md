@@ -5,11 +5,6 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
-## ks-home v. 1.4.7
-
-- **Subscription Catalog**: keep the legacy static subscription renderer
-  aligned with app bot links and OpenAI reasoning labels for GPT-5.5 Pro.
-
 ## ks-home v. 1.4.6
 
 - **Subscription Catalog**: move OpenAI GPT-5.5 and xAI Grok 4.5 from T3
