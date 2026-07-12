@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { renderRedirectPage } from '../src/pages.mjs';
+import { renderRedirectPage, renderSubscriptionPage } from '../src/pages.mjs';
 
 test('public subscription route redirects to the canonical app subscription page', () => {
   const html = renderRedirectPage({
@@ -26,4 +26,12 @@ test('public subscription route redirects to the canonical app subscription page
   assert.ok(!navHtml.includes('>Subscription</a>'));
   const gameFooterHtml = html.match(/<section class="footer__group" aria-label="Game">([\s\S]*?)<\/section>/)?.[1] || '';
   assert.ok(gameFooterHtml.includes('<a class="footer__link" href="/subscription">Subscription</a>'));
+});
+
+test('static subscription renderer includes OpenAI reasoning labels', () => {
+  const html = renderSubscriptionPage();
+
+  assert.ok(html.includes('<a href="https://app.kriegspiel.org/user/llm_gpt56_sol">GPT-5.6 Sol (reasoning: no)</a>'));
+  assert.ok(html.includes('<a href="https://app.kriegspiel.org/user/llm_gpt55">GPT-5.5 (reasoning: no)</a>'));
+  assert.ok(html.includes('<a href="https://app.kriegspiel.org/user/llm_gpt55_pro">GPT-5.5 Pro (reasoning: medium)</a>'));
 });
