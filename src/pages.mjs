@@ -507,9 +507,8 @@ const PUBLIC_SUBSCRIPTION_T2_BOTS = [
   ['T2 Phi', [['4', '/user/llm_phi4']]],
 ];
 const PUBLIC_SUBSCRIPTION_T3_BOTS = [
-  ['T3 OpenAI', [['GPT-5.5', '/user/llm_gpt55'], ['GPT-5.6 Luna', '/user/llm_gpt56_luna']]],
+  ['T3 OpenAI', [['GPT-5.6 Luna', '/user/llm_gpt56_luna']]],
   ['T3 Anthropic', ['Claude Sonnet 5']],
-  ['T3 xAI', [['Grok 4.5', '/user/llm_grok45']]],
   ['T3 Gemini', [['3.1 Flash-Lite', '/user/llm_gemini31_lite'], ['3.5 Flash', '/user/llm_gemini35_flash']]],
   ['T3 Mistral', [['Large 3', '/user/llm_mistral_large3'], ['Medium 3.5', '/user/llm_mistral_medium35']]],
   ['T3 Nemotron', [['Ultra', '/user/llm_nemotron_ultra']]],
@@ -527,7 +526,8 @@ const PUBLIC_SUBSCRIPTION_T4_BOTS = [
   ['T4 Hermes', [['4 405B', '/user/llm_hermes4_405b']]],
 ];
 const PUBLIC_SUBSCRIPTION_T5_BOTS = [
-  ['T5 OpenAI', [['GPT-5.6 Sol', '/user/llm_gpt56_sol'], 'GPT-5.5 Pro']],
+  ['T5 OpenAI', [['GPT-5.6 Sol', '/user/llm_gpt56_sol'], ['GPT-5.5', '/user/llm_gpt55'], 'GPT-5.5 Pro']],
+  ['T5 xAI', [['Grok 4.5', '/user/llm_grok45']]],
   ['T5 Qwen', ['3.7 Max']],
 ];
 function publicSubscriptionWithLowerTierBots(groups) { return [PUBLIC_SUBSCRIPTION_LOWER_TIER_NOTE, ...groups]; }
