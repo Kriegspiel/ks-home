@@ -5,6 +5,11 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.4.4
+
+- **Changelog and Feeds**: render the public version `1.4.0` release note and
+  refresh the generated changelog, RSS, Atom, and sitemap outputs.
+
 ## ks-home v. 1.4.3
 
 - **Subscription**: redirect the public `/subscription` URL to the canonical
