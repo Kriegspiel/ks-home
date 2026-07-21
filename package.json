@@ -27,7 +27,7 @@
     "serve:prod": "node scripts/serve-static.mjs"
   },
   "devDependencies": {
-    "c8": "^10.1.3"
+    "c8": "^12.0.0"
   },
   "dependencies": {
     "highlight.js": "^11.11.1"
