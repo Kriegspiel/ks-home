@@ -66,6 +66,7 @@ test("home page keeps a simplified play-first layout with CTA telemetry", () => 
   for (const id of ["hero", "how-it-works", "cta"]) {
     assert.ok(html.includes(`id="${id}"`), `missing section ${id}`);
   }
+  assert.ok(html.includes('<section id="hero" class="hero-card hero-card--logo">'));
   assert.ok(!html.includes('id="key-features"'));
   assert.ok(!html.includes('id="trust-snippet"'));
   assert.ok(html.includes('data-telemetry-event="home_cta_click"'));
@@ -199,6 +200,7 @@ test("public profile page renders stats and elo history", () => {
   });
 
   assert.ok(html.includes("Player profile for @fil."));
+  assert.ok(!html.includes('class="hero-card hero-card--logo"'));
   assert.ok(html.includes(">Elo<"));
   assert.ok(html.includes(">Peak Elo<"));
   assert.ok(html.includes("Elo rating over time"));
