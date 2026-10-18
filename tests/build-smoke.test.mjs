@@ -11,6 +11,19 @@ test('build emits required public pages', () => {
   }
   assert.ok(!fs.existsSync(path.join(process.cwd(), 'dist', 'levels/index.html')), 'levels page should not be emitted');
   assert.ok(fs.existsSync(path.join(process.cwd(), 'dist', 'logo-theme-toggle.png')), 'missing hero/theme-toggle logo');
+  for (const [name, budget] of [['logo-theme-toggle-96.webp', 8192], ['logo-hero-1024.webp', 100000]]) {
+    const asset = fs.readFileSync(path.join(process.cwd(), 'dist', name));
+    assert.equal(asset.toString('ascii', 0, 4), 'RIFF');
+    assert.equal(asset.toString('ascii', 8, 12), 'WEBP');
+    assert.ok(asset.length < budget, `${name} exceeds its page-load byte budget`);
+  }
+  for (const route of ['index.html', 'rules/index.html', 'rules/comparison/index.html']) {
+    const html = fs.readFileSync(path.join(process.cwd(), 'dist', route), 'utf8');
+    assert.ok(html.includes('src="/logo-theme-toggle-96.webp" width="96" height="96"'));
+    assert.ok(html.includes('background:url("/logo-hero-1024.webp")'));
+    assert.ok(!html.includes('/logo-theme-toggle.png'), 'page still requests the oversized logo');
+  }
+
   assert.ok(fs.existsSync(path.join(process.cwd(), 'dist', 'social-card-20260511.png')), 'missing social-card-20260511.png');
   assert.ok(fs.existsSync(path.join(process.cwd(), 'dist', 'social/reddit/2026-05-ruleset-default/kriegspiel-ruleset-default-reddit.gif')), 'missing Reddit ruleset GIF');
   assert.ok(fs.existsSync(path.join(process.cwd(), 'dist', 'social/reddit/2026-05-ruleset-default/kriegspiel-ruleset-default-reddit.png')), 'missing Reddit ruleset PNG');

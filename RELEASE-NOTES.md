@@ -5,6 +5,10 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.4.11
+
+- Serve a 3.8 KB header logo and an 89 KB home hero watermark instead of loading the 1.45 MB original on every page.
+
 ## ks-home v. 1.4.6
 
 - **Subscription Catalog**: move OpenAI GPT-5.5 and xAI Grok 4.5 from T3
