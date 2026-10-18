@@ -62,6 +62,8 @@ const apiBase = process.env.KS_API_BASE ? process.env.KS_API_BASE.replace(/\/$/,
 fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
 copyStaticAsset('static/logo-theme-toggle.png', 'logo-theme-toggle.png');
+copyStaticAsset('static/logo-theme-toggle-96.webp', 'logo-theme-toggle-96.webp');
+copyStaticAsset('static/logo-hero-1024.webp', 'logo-hero-1024.webp');
 copyStaticAsset('static/social-card-20260511.png', 'social-card-20260511.png');
 copyStaticAsset('static/attribution.js', 'attribution.js');
 copyStaticAsset('static/fen-board.js', 'fen-board.js');
