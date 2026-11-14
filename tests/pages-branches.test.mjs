@@ -15,6 +15,24 @@ function footerGroupHtml(html, label) {
   return html.match(new RegExp(`<section class="footer__group" aria-label="${label}">[\\s\\S]*?</section>`))?.[0] ?? "";
 }
 
+test("shared link styling distinguishes page navigation from same-page actions", () => {
+  const html = renderShell({
+    title: "Link styles",
+    main: '<a href="/rules#berkeley">Page and section</a><a href="#section">Same page</a><button type="button">Action</button>',
+  });
+  assert.match(html, /a\[href\]:not\(\[href\^="#"\]\),\s*a\[href\]:not\(\[href\^="#"\]\):hover,\s*a\[href\]:not\(\[href\^="#"\]\):focus-visible\s*\{\s*text-decoration: underline;\s*text-underline-offset: \.16em;/);
+  assert.match(html, /a\[href\^="#"\], a\[href\^="#"\]:hover, a\[href\^="#"\]:focus-visible\s*\{\s*text-decoration: none;/);
+  assert.ok(html.includes('<a href="/rules#berkeley">Page and section</a>'));
+  assert.ok(html.includes('<a href="#section">Same page</a>'));
+  assert.ok(html.includes('<button type="button">Action</button>'));
+
+  const homeHtml = renderHomePage({});
+  const ctaHoverRule = homeHtml.match(/\.home-design \.ks-primary:hover\s*\{([^}]+)\}/)?.[1];
+  assert.ok(ctaHoverRule);
+  assert.doesNotMatch(ctaHoverRule, /text-decoration/);
+  assert.match(homeHtml, /<button[^>]*class="ks-board-toggle"/);
+});
+
 test("renderShell falls back canonical paths and footer variants", () => {
   const emptyFooterHtml = renderShell({
     title: "Demo shell",

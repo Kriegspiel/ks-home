@@ -10,7 +10,7 @@
   .home-design .ks-lede { color: var(--ks-muted); max-width: 370px; margin-top: 28px; font-size: 16px; line-height: 1.75; }
   .home-design .ks-actions { display: flex; flex-wrap: wrap; gap: 26px; align-items: center; margin-top: 32px; font-size: 14px; }
   .home-design .ks-primary { display: inline-flex; align-items: center; justify-content: center; gap: 18px; min-height: 50px; padding: 12px 23px; background: var(--ks-accent); color: var(--ks-on-accent); border: 1px solid var(--ks-accent); border-radius: 2px; font-weight: 500; }
-  .home-design .ks-primary:hover { opacity: .88; text-decoration: none; }
+  .home-design .ks-primary:hover { opacity: .88; }
   .home-design .ks-text-link { padding: 11px 0; }
   .home-design .ks-board-figure { position: relative; margin: 0; width: 100%; max-width: 474px; justify-self: end; color-scheme: light; }
   .home-design .ks-board { position: relative; display: grid; grid-template-columns: repeat(8,minmax(0,1fr)); grid-template-rows: repeat(8,minmax(0,1fr)); aspect-ratio: 1; border: 1px solid var(--ks-board-edge); background: var(--ks-square-light); }
