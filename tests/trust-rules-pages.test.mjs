@@ -150,7 +150,7 @@ test('site markdown pages keep wrapped tables as scrollable tables on narrow scr
     metadata: { title: 'Research', summary: 'Research page', slug: 'research' },
     bodyHtml: '<div class="table-wrap"><table><thead><tr><th>Year</th><th>Title</th></tr></thead><tbody><tr><td>1992</td><td>Mate with bishop and knight in kriegspiel</td></tr></tbody></table></div>'
   });
-  assert.ok(html.includes('.rules-comparison-table { min-width: 80rem; table-layout: fixed; }'));
+  assert.ok(html.includes('.rules-comparison-table { min-width: 64rem; table-layout: fixed; }'));
   assert.ok(!html.includes('table,thead,tbody,tr,th,td{display:block;}'), 'tables retain native row/header layout');
   assert.ok(html.includes('.table-wrap th, .table-wrap td { padding: .7rem .75rem; }'));
   assert.ok(html.includes('.prose-card .table-wrap th:first-child, .prose-card .table-wrap td:first-child { width: auto; min-width: 7rem; }'));
@@ -199,4 +199,15 @@ test('site markdown pages include tier feature matrix styles', () => {
   assert.ok(html.includes('width:2rem;min-width:2rem;height:2rem;padding:0;border-radius:0'));
   assert.ok(html.includes('.tier-feature-table__mark--yes'));
   assert.ok(html.includes('.tier-feature-table__mark--no'));
+});
+
+
+test('About version sits after the prose in its own spacing band', () => {
+  const entry = { metadata: { title: 'About', summary: 'About Kriegspiel', slug: 'about' }, bodyHtml: '<p>Our final paragraph.</p>' };
+  const html = renderSiteMarkdownPage(entry);
+  assert.ok(html.includes('class="page-shell page-shell--about"'));
+  assert.match(html, /<p>Our final paragraph\.<\/p><\/article><p class="page-meta-stamp page-meta-stamp--version">Version [^<]+<\/p><\/section>/);
+  const otherPage = renderSiteMarkdownPage({ ...entry, metadata: { ...entry.metadata, slug: 'playing' } });
+  assert.ok(!otherPage.includes('class="page-meta-stamp page-meta-stamp--version"'));
+  assert.ok(!otherPage.includes('class="page-shell page-shell--about"'));
 });

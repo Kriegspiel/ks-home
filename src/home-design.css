@@ -2,15 +2,6 @@
 .home-design { width: 100%; }
 .home-design h1, .home-design h2, .home-design h3, .home-design p { margin: 0; }
 .home-design [hidden] { display: none !important; }
-.home-design .ks-board-figure {
-  --ks-square-light: #f7fafc;
-  --ks-square-dark: #d9e4ed;
-  --ks-board-edge: #c2d0dc;
-  --ks-highlight: #bbcfdc;
-  --ks-board-bg: #fafcfe;
-  --ks-board-text: #18242f;
-  --ks-board-muted: #526576;
-}
 .home-design .ks-wrap { width: min(1180px, calc(100% - 96px)); margin: 0 auto; }
   .home-design .ks-arrow { display: inline-block; margin-left: 9px; }
   .home-design .ks-hero { padding: 84px 0 78px; display: grid; grid-template-columns: 1.12fr 1fr; gap: 52px; align-items: center; }
