@@ -12,6 +12,10 @@ version entries unless they ship a user-visible change.
   Retain 44px controls, responsive gutters, and mobile menu behavior.
 - **Anchor Positioning**: align the fallback heading offset with the thinner
   header; sticky table offsets continue to follow its measured height.
+- **Links**: underline navigation links throughout the website, including
+  header, footer, brand, prose, player, mail, and CTA links, with the same
+  treatment on hover and keyboard focus. Same-page fragment links and action
+  buttons retain their existing styling.
 
 ## ks-home v. 1.5.1
 
