@@ -62,8 +62,8 @@ test("renderShell falls back canonical paths and footer variants", () => {
   assert.ok(emptyFooterHtml.includes('<link rel="canonical" href="https://kriegspiel.org/" />'));
   assert.ok(emptyFooterHtml.includes('<link rel="alternate" type="application/rss+xml" title="Kriegspiel Updates RSS" href="https://kriegspiel.org/feed.xml" />'));
   assert.ok(emptyFooterHtml.includes('<link rel="alternate" type="application/atom+xml" title="Kriegspiel Updates Atom" href="https://kriegspiel.org/atom.xml" />'));
-  assert.ok(emptyFooterHtml.includes('<meta property="og:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
-  assert.ok(emptyFooterHtml.includes('<meta name="twitter:image" content="https://kriegspiel.org/social-card-20260511.png" />'));
+  assert.ok(emptyFooterHtml.includes('<meta property="og:image" content="https://kriegspiel.org/social-card-20261114.png" />'));
+  assert.ok(emptyFooterHtml.includes('<meta name="twitter:image" content="https://kriegspiel.org/social-card-20261114.png" />'));
   assert.ok(emptyFooterHtml.includes(`<script src="/fen-board.js?v=${PACKAGE_VERSION}" defer></script>`));
   assert.ok(emptyFooterHtml.includes(`<script src="/attribution.js?v=${PACKAGE_VERSION}" defer></script>`));
   assert.ok(emptyFooterHtml.includes("--square-capture-overlay:transparent"));

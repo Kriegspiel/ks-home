@@ -28,6 +28,26 @@ test('build emits required public pages', () => {
   }
 
   assert.ok(fs.existsSync(path.join(process.cwd(), 'dist', 'social-card-20260511.png')), 'missing social-card-20260511.png');
+  const socialImage = fs.readFileSync(path.join(process.cwd(), 'dist', 'social-card-20261114.png'));
+  assert.equal(socialImage.subarray(0, 8).toString('hex'), '89504e470d0a1a0a', 'social image must be a PNG');
+  assert.equal(socialImage.toString('ascii', 12, 16), 'IHDR');
+  assert.equal(socialImage.readUInt32BE(16), 1200);
+  assert.equal(socialImage.readUInt32BE(20), 630);
+  for (const route of ['index.html', 'rules/berkeley/index.html', 'blog/welcome/index.html']) {
+    const html = fs.readFileSync(path.join(process.cwd(), 'dist', route), 'utf8');
+    for (const attribute of ['property="og:image"', 'property="og:image:secure_url"', 'name="twitter:image"']) {
+      assert.ok(html.includes(`<meta ${attribute} content="https://kriegspiel.org/social-card-20261114.png"`), `${route}: missing current social image`);
+    }
+    for (const attribute of ['property="og:image:alt"', 'name="twitter:image:alt"']) {
+      assert.ok(html.includes(`<meta ${attribute} content="Kriegspiel. Chess. Beyond what you can see. A board showing only White’s pieces."`), `${route}: missing matching alt text`);
+    }
+    if (route.startsWith('blog/')) {
+      const structuredData = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(match => JSON.parse(match[1]));
+      const article = structuredData.find(item => item['@type'] === 'BlogPosting');
+      assert.ok(article, 'article structured data exists');
+      assert.equal(article.image, 'https://kriegspiel.org/social-card-20261114.png');
+    }
+  }
   assert.ok(fs.existsSync(path.join(process.cwd(), 'dist', 'social/reddit/2026-05-ruleset-default/kriegspiel-ruleset-default-reddit.gif')), 'missing Reddit ruleset GIF');
   assert.ok(fs.existsSync(path.join(process.cwd(), 'dist', 'social/reddit/2026-05-ruleset-default/kriegspiel-ruleset-default-reddit.png')), 'missing Reddit ruleset PNG');
   assert.ok(fs.existsSync(path.join(process.cwd(), 'dist', 'fen-board.js')), 'missing fen-board.js');

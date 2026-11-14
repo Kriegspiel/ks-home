@@ -5,6 +5,14 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.5.7
+
+- **Social Previews**: match shared link cards to the current homepage, using its
+  light palette, headline, logo, and hidden-piece board. Publish a new 1200 × 630
+  image URL for Open Graph, Twitter, and article structured data while retaining
+  the old image for existing shares. Keep editable SVG artwork and rendering
+  instructions alongside the PNG.
+
 ## ks-home v. 1.5.6
 
 - **Dark-theme Boards**: use a shared warm cream/brown palette for the homepage

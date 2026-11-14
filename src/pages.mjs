@@ -6,9 +6,9 @@ import { renderHomeDesign } from './home-design.mjs';
 
 const SITE_URL = 'https://kriegspiel.org';
 const PACKAGE_VERSION = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version;
-const SOCIAL_CARD_PATH = '/social-card-20260511.png';
+const SOCIAL_CARD_PATH = '/social-card-20261114.png';
 const SOCIAL_CARD_URL = absUrl(SOCIAL_CARD_PATH);
-const SOCIAL_CARD_ALT = 'Kriegspiel hidden-information chess online.';
+const SOCIAL_CARD_ALT = 'Kriegspiel. Chess. Beyond what you can see. A board showing only White’s pieces.';
 const FEED_TITLE = 'Kriegspiel Updates';
 const RSS_FEED_URL = absUrl('/feed.xml');
 const ATOM_FEED_URL = absUrl('/atom.xml');
