@@ -6,6 +6,7 @@ import {
   renderHomePage,
   renderLeaderboardPage,
   renderPublicProfilePage,
+  renderRulesComparisonPage,
   renderShell,
 } from "../src/pages.mjs";
 
@@ -15,7 +16,7 @@ function footerGroupHtml(html, label) {
   return html.match(new RegExp(`<section class="footer__group" aria-label="${label}">[\\s\\S]*?</section>`))?.[0] ?? "";
 }
 
-test("shared link styling keeps header and footer plain and body destinations underlined", () => {
+test("shared link styling keeps button actions and navigation plain and ordinary body links underlined", () => {
   const html = renderShell({
     title: "Link styles",
     main: '<a href="/rules#berkeley">Page and section</a><a href="#section">Same page</a><button type="button">Action</button>',
@@ -23,17 +24,29 @@ test("shared link styling keeps header and footer plain and body destinations un
   assert.match(html, /a\[href\]:not\(\[href\^="#"\]\),\s*a\[href\]:not\(\[href\^="#"\]\):hover,\s*a\[href\]:not\(\[href\^="#"\]\):focus-visible\s*\{\s*text-decoration: underline;\s*text-underline-offset: \.16em;/);
   assert.match(html, /a\[href\^="#"\], a\[href\^="#"\]:hover, a\[href\^="#"\]:focus-visible\s*\{\s*text-decoration: none;/);
   assert.match(html, /\.site-header a\[href\],\s*\.site-header a\[href\]:hover,\s*\.site-header a\[href\]:focus-visible,\s*\.site-footer a\[href\],\s*\.site-footer a\[href\]:hover,\s*\.site-footer a\[href\]:focus-visible\s*\{\s*text-decoration: none;/);
+  assert.match(html, /a\.button-link\[href\],\s*a\.button-link\[href\]:hover,\s*a\.button-link\[href\]:focus-visible,\s*a\.ks-primary\[href\],\s*a\.ks-primary\[href\]:hover,\s*a\.ks-primary\[href\]:focus-visible\s*\{\s*text-decoration: none;/);
+  assert.ok(html.indexOf('a.button-link[href]') > html.indexOf('a[href]:not([href^="#"])'), 'button-link exceptions follow the default link rule');
+  assert.match(html, /a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible\s*\{\s*outline: 2px solid var\(--text\); outline-offset: 5px;/);
   assert.match(html, /<header class="site-header">[\s\S]*?<a class="site-brand" href="\/" aria-label="Kriegspiel home">Kriegspiel<\/a>/);
   assert.match(html, /<footer class="site-footer">[\s\S]*?<a class="footer__brand" href="\/">Kriegspiel.org<\/a>/);
   assert.ok(html.includes('<a href="/rules#berkeley">Page and section</a>'));
   assert.ok(html.includes('<a href="#section">Same page</a>'));
   assert.ok(html.includes('<button type="button">Action</button>'));
 
-  const homeHtml = renderHomePage({});
+  const homeHtml = renderHomePage({ homeContent: {
+    heroPrimaryCtaHref: 'https://app.kriegspiel.org/',
+    heroSecondaryCtaHref: '/rules',
+  } });
+  assert.match(homeHtml, /<a class="ks-primary" href="https:\/\/app\.kriegspiel\.org\/"/);
+  assert.match(homeHtml, /<a class="ks-text-link" href="\/rules"/);
   const ctaHoverRule = homeHtml.match(/\.home-design \.ks-primary:hover\s*\{([^}]+)\}/)?.[1];
   assert.ok(ctaHoverRule);
   assert.doesNotMatch(ctaHoverRule, /text-decoration/);
   assert.match(homeHtml, /<button[^>]*class="ks-board-toggle"/);
+
+  const comparisonHtml = renderRulesComparisonPage({});
+  assert.match(comparisonHtml, /<a class="button-link button-link--secondary" href="\/rules\/berkeley">Berkeley rules<\/a>/);
+  assert.match(comparisonHtml, /<a class="text-link" href="\/rules\/berkeley">Berkeley<\/a>/);
 });
 
 test("renderShell falls back canonical paths and footer variants", () => {

@@ -5,6 +5,13 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.5.4
+
+- **Button Links**: remove underlines from homepage play buttons and shared
+  button-style navigation actions at rest, hover, and keyboard focus. Keep
+  ordinary body text links underlined, retain the header/footer exceptions,
+  and preserve link destinations and visible focus outlines.
+
 ## ks-home v. 1.5.3
 
 - **Navigation Links**: keep every header and footer link free of underlines
