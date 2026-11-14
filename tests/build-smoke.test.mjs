@@ -20,7 +20,10 @@ test('build emits required public pages', () => {
   for (const route of ['index.html', 'rules/index.html', 'rules/comparison/index.html']) {
     const html = fs.readFileSync(path.join(process.cwd(), 'dist', route), 'utf8');
     assert.ok(html.includes('src="/logo-theme-toggle-96.webp" width="96" height="96"'));
-    assert.ok(html.includes('background:url("/logo-hero-1024.webp")'));
+    assert.ok(!html.includes('background:url("/logo-hero-1024.webp")'), 'removed watermark must not be requested');
+    assert.ok(html.includes('/site-shell.js?v='));
+    assert.ok(html.includes('aria-controls="site-navigation"'));
+    assert.ok(html.includes('--bg: #fafcfe;'));
     assert.ok(!html.includes('/logo-theme-toggle.png'), 'page still requests the oversized logo');
   }
 

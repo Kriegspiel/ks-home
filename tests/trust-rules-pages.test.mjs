@@ -36,7 +36,7 @@ test('rules landing page shows implemented and reference rules plus comparison l
   assert.ok(html.includes('/rules/comparison/'));
   assert.equal((html.match(/Implemented online/g) || []).length, 6);
   assert.equal((html.match(/Historical reference: not playable online yet/g) || []).length, 1);
-  assert.ok(html.includes('.rules-tile__meta li{justify-content:center;padding:.48rem .82rem;text-align:center;line-height:1.25;}'));
+  assert.ok(html.includes('.rules-tile__meta li { justify-content: center; text-align: center; line-height: 1.25; }'));
   assert.ok(!html.includes('RAND rules'));
   assert.ok(!html.includes('Planned ruleset'));
   assert.ok(!html.includes('Placeholder'));
@@ -150,10 +150,10 @@ test('site markdown pages keep wrapped tables as scrollable tables on narrow scr
     metadata: { title: 'Research', summary: 'Research page', slug: 'research' },
     bodyHtml: '<div class="table-wrap"><table><thead><tr><th>Year</th><th>Title</th></tr></thead><tbody><tr><td>1992</td><td>Mate with bishop and knight in kriegspiel</td></tr></tbody></table></div>'
   });
-  assert.ok(html.includes('.table-wrap table{display:table;width:max-content;min-width:100%;table-layout:auto;}'));
-  assert.ok(html.includes('.table-wrap thead{display:table-header-group;}'));
-  assert.ok(html.includes('.table-wrap th,.table-wrap td{display:table-cell;padding:.7rem .75rem;}'));
-  assert.ok(html.includes('.prose-card .table-wrap th:first-child,.prose-card .table-wrap td:first-child{width:auto;min-width:7rem;}'));
+  assert.ok(html.includes('.rules-comparison-table { min-width: 80rem; table-layout: fixed; }'));
+  assert.ok(!html.includes('table,thead,tbody,tr,th,td{display:block;}'), 'tables retain native row/header layout');
+  assert.ok(html.includes('.table-wrap th, .table-wrap td { padding: .7rem .75rem; }'));
+  assert.ok(html.includes('.prose-card .table-wrap th:first-child, .prose-card .table-wrap td:first-child { width: auto; min-width: 7rem; }'));
   assert.ok(html.includes('.prose-card .table-wrap code{white-space:normal;overflow-wrap:anywhere;word-break:break-word;}'));
   assert.ok(html.includes('@media (min-width:701px){.prose-card .table-wrap th:first-child,.prose-card .table-wrap td:first-child{width:26%;min-width:12rem;}}'));
 });

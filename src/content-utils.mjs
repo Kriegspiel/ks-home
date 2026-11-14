@@ -70,15 +70,14 @@ const FEN_PIECE_ASSETS = {
 };
 
 export const HOME_REQUIRED_FIELDS = [
-  "eyebrow", "heroTitle", "heroLede",
+  "heroTitle", "heroTitleLine1", "heroTitleLine2", "heroTitleEmphasis", "heroLede",
   "heroPrimaryCtaLabel", "heroPrimaryCtaHref", "heroSecondaryCtaLabel", "heroSecondaryCtaHref",
-  "statsRulesLabel", "statsUpdatesLabel", "statsThirdLabel", "statsThirdValue",
-  "flowKicker", "flowTitle", "flowIntro",
+  "boardRevealLabel", "boardHideLabel",
+  "flowTitle", "flowIntro",
   "flowStep1Title", "flowStep1Body", "flowStep2Title", "flowStep2Body", "flowStep3Title", "flowStep3Body",
-  "featuresKicker", "featuresTitle", "featuresIntro",
-  "feature1Title", "feature1Body", "feature2Title", "feature2Body", "feature3Title", "feature3Body",
-  "ctaKicker", "ctaTitle", "ctaBody", "ctaPrimaryLabel", "ctaPrimaryHref", "ctaSecondaryLabel", "ctaSecondaryHref",
-  "trustKicker", "trustTitle", "trustRulesTitle", "trustRulesBodyTemplate", "trustUpdatesTitle", "trustUpdatesBodyTemplate"
+  "communityLabelLine1", "communityLabelLine2", "communityInviteTitle", "communityInviteBody",
+  "communityInviteCtaLabel", "communityInviteCtaHref",
+  "ctaTitle", "ctaBody", "ctaPrimaryLabel", "ctaPrimaryHref"
 ];
 
 export function parseFrontmatter(raw) {
