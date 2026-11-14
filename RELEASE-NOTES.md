@@ -5,9 +5,70 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.5.1
+
+- **Boards**: use the homepage's fixed cool board colors and Cburnett piece
+  proportions on article/problem diagrams in both themes. Flatten board frames
+  and controls while retaining phantom pieces, move history, and solution
+  disclosures.
+- **Page Layout**: let prose use the shared page width, narrow and shade the
+  rules-comparison feature column, and center the About version stamp between
+  the final paragraph and footer divider.
+- **Navigation**: give the header Play link a compact dark button treatment.
+
+Implementation: [PR #219](https://github.com/Kriegspiel/ks-home/pull/219).
+
+## ks-home v. 1.5.0
+
+- **Shared Design**: apply the approved typography, spacing, cool light theme,
+  warm dark theme, flat surfaces, and controls with 2px corners across the main
+  website's public pages.
+- **Navigation**: keep a thinner header visible while scrolling, provide a
+  responsive Menu control with keyboard dismissal, and preserve the selected
+  theme across pages.
+- **Homepage**: replace the previous hero with the approved chessboard layout,
+  unnumbered introduction steps, Saturday meetup strip, and closing play
+  invitation. Reveal a random legal pair of Black replies to White's fixed
+  e4 and Nf3 directly on the board, without repeating the previous placement;
+  keep board and piece colors unchanged between themes.
+- **Content and Accessibility**: retain content from `ks-content`, responsive
+  tables and code blocks, and native solution disclosures; add shared visible
+  keyboard focus styles.
+
+Implementation: [PR #218](https://github.com/Kriegspiel/ks-home/pull/218).
+
 ## ks-home v. 1.4.11
 
 - Serve a 3.8 KB header logo and an 89 KB home hero watermark instead of loading the 1.45 MB original on every page.
+
+## ks-home v. 1.4.10
+
+- **Homepage**: shift the decorative logo watermark slightly to the right.
+  [PR #216](https://github.com/Kriegspiel/ks-home/pull/216).
+
+## ks-home v. 1.4.9
+
+- **Homepage**: enlarge and crop the decorative logo watermark within the
+  hero. [PR #215](https://github.com/Kriegspiel/ks-home/pull/215).
+
+## ks-home v. 1.4.8
+
+- **Homepage**: replace the decorative hero circle with a faint Kriegspiel
+  logo. [PR #213](https://github.com/Kriegspiel/ks-home/pull/213).
+
+## ks-home v. 1.4.7
+
+- **Build Tooling**: upgrade coverage tooling to `c8` 12 and declare Node.js
+  `>=24.18.0` for the static-site package.
+  [PR #212](https://github.com/Kriegspiel/ks-home/pull/212).
+
+Version history: an earlier `1.4.7` bump on 2026-07-12 introduced a static
+GPT-5.5 Pro reasoning-label change in
+[PR #209](https://github.com/Kriegspiel/ks-home/pull/209). It was reverted to
+`1.4.6` the same day in
+[PR #210](https://github.com/Kriegspiel/ks-home/pull/210). The version number
+was reused for the tooling update on 2026-07-25; the reverted catalog change
+is not part of that update.
 
 ## ks-home v. 1.4.6
 
@@ -113,6 +174,48 @@ version entries unless they ship a user-visible change.
 - **Levels**: refresh the public site release for the renamed “Levels and
   pricing” page.
 
+## ks-home v. 1.3.21
+
+- **Content Tables**: render explicit `<br>` line breaks in inline Markdown,
+  allowing provider lists to wrap onto separate lines.
+  [PR #188](https://github.com/Kriegspiel/ks-home/pull/188).
+
+## ks-home v. 1.3.20
+
+- **Levels**: brighten the tier badge corner treatment.
+  [PR #187](https://github.com/Kriegspiel/ks-home/pull/187).
+
+## ks-home v. 1.3.19
+
+- **Levels**: keep Yes, No, and dash availability cells separate while
+  retaining merged cells for identical descriptive text.
+  [PR #186](https://github.com/Kriegspiel/ks-home/pull/186).
+
+## ks-home v. 1.3.18
+
+- **Levels**: merge adjacent identical tier-matrix cells using column spans.
+  [PR #185](https://github.com/Kriegspiel/ks-home/pull/185).
+
+## ks-home v. 1.3.17
+
+- **Levels**: distinguish long descriptive matrix cells from compact
+  availability marks so bot lists can wrap and remain readable.
+  [PR #184](https://github.com/Kriegspiel/ks-home/pull/184).
+
+## ks-home v. 1.3.16
+
+- **Levels**: refresh the site for the `ks-content` update that replaces
+  language-model ply-limit rows with T2–T5 bot access rows and adds bot profile
+  links. [Site PR #183](https://github.com/Kriegspiel/ks-home/pull/183),
+  [content PR #159](https://github.com/Kriegspiel/ks-content/pull/159).
+
+## ks-home v. 1.3.15
+
+- **Levels**: refresh the site after removing the redundant “Play
+  language-model bots” availability row from `ks-content`.
+  [Site PR #182](https://github.com/Kriegspiel/ks-home/pull/182),
+  [content PR #158](https://github.com/Kriegspiel/ks-content/pull/158).
+
 ## ks-home v. 1.3.14
 
 - **Homepage**: include the canonical UTC meetup time in the Saturday games
@@ -190,10 +293,28 @@ version entries unless they ship a user-visible change.
 - **Levels**: style the public levels page as a tier feature matrix with
   tiered access columns and explicit Yes/No availability marks.
 
+## ks-home v. 1.2.30
+
+- **Site Routes**: add the public `/levels` route to static generation,
+  navigation, sitemap, and route validation.
+  [PR #164](https://github.com/Kriegspiel/ks-home/pull/164).
+
 ## ks-home v. 1.2.29
 
 - **Playing Guide**: add a short platform play guide at `/playing` and link it
   from the Game footer column.
+
+## ks-home v. 1.2.28
+
+- **Footer**: remove external-link arrow icons while retaining new-tab
+  behavior and `noopener noreferrer` on external links.
+  [PR #162](https://github.com/Kriegspiel/ks-home/pull/162).
+
+## ks-home v. 1.2.27
+
+- **Footer**: mark external links with arrows and open them in a new tab
+  with `noopener noreferrer`; group GitHub with API documentation under
+  Development. [PR #161](https://github.com/Kriegspiel/ks-home/pull/161).
 
 ## ks-home v. 1.2.26
 
@@ -228,6 +349,18 @@ version entries unless they ship a user-visible change.
 - **Footer Rules Links**: remove the incomplete Dutch ruleset from the public
   footer while keeping the full rules page and comparison material available.
 
+## ks-home v. 1.2.20
+
+- **Static Assets**: include the Reddit promotional GIF and PNG in the
+  generated static asset catalog.
+  [PR #152](https://github.com/Kriegspiel/ks-home/pull/152).
+
+## ks-home v. 1.2.19
+
+- **Content Source**: use `Kriegspiel/ks-content` as the canonical website
+  content repository in CI, build configuration, source contracts, and static
+  refresh tooling. [PR #151](https://github.com/Kriegspiel/ks-home/pull/151).
+
 ## ks-home v. 1.2.18
 
 - **English Rules**: clarify that English en-passant captures are announced
@@ -239,6 +372,12 @@ version entries unless they ship a user-visible change.
 - **Rules**: add Dutch as a historical/composition reference, clearly marked as
   not playable online, and include it in the rules index, footer, and
   comparison page.
+
+## ks-home v. 1.2.16
+
+- **Footer**: place RSS before About in the Communication links and correct
+  the fallback About destination to `/about`.
+  [PR #148](https://github.com/Kriegspiel/ks-home/pull/148).
 
 ## ks-home v. 1.2.15
 
@@ -316,6 +455,36 @@ version entries unless they ship a user-visible change.
 - **Problem Boards**: aligned interactive blog/problem-board movement styling with
   the live app board semantics, including selected squares, last-move squares,
   drop targets, and phantom-piece visual classes.
+
+## ks-home v. 1.2.1
+
+- **Problem Boards**: replace the persistent Move/Erase/Phantom controls
+  with a context menu for phantom pieces, keep Reset, and highlight the last
+  move. [PR #132](https://github.com/Kriegspiel/ks-home/pull/132).
+
+## ks-home v. 1.2.0
+
+- **Problem Boards**: make FEN diagrams interactive scratch boards with
+  click/drag piece movement, phantom pieces, erase controls, and Reset.
+  [PR #131](https://github.com/Kriegspiel/ks-home/pull/131).
+
+## ks-home v. 1.1.1
+
+- **Blog Spoilers**: render paragraphs beginning with `Solution:` inside a
+  collapsed “Show solution” disclosure.
+  [PR #130](https://github.com/Kriegspiel/ks-home/pull/130).
+
+## ks-home v. 1.1.0
+
+- **Static Site Version**: promote the package to `1.1.0` after FEN diagram
+  support; this version bump contains no additional runtime changes.
+  [PR #129](https://github.com/Kriegspiel/ks-home/pull/129).
+
+## ks-home v. 1.0.50
+
+- **Blog Diagrams**: render FEN positions as chessboards with coordinates,
+  side-to-move labels, and bundled Cburnett SVG pieces.
+  [PR #128](https://github.com/Kriegspiel/ks-home/pull/128).
 
 ## ks-home v. 1.0.49
 
