@@ -5,6 +5,13 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.5.6
+
+- **Dark-theme Boards**: use a shared warm cream/brown palette for the homepage
+  board and article diagrams, including matching borders, highlights, coordinates,
+  and the homepage reveal prompt/fog. Keep the cool light-theme palette, piece
+  artwork, reveal behavior, and article-board movement controls unchanged.
+
 ## ks-home v. 1.5.5
 
 - **Article Boards**: show pieces following the pointer during mouse and touch

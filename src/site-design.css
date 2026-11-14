@@ -25,7 +25,7 @@
   --radius-sm: 2px;
   --page-width: 1180px;
   --content-width: var(--page-width);
-  /* Chessboard colors are shared by the homepage and article diagrams in both themes. */
+  /* Shared homepage/article palette: cool in light mode, warm in dark mode. */
   --ks-square-light: #f7fafc;
   --ks-square-dark: #d9e4ed;
   --ks-board-edge: #c2d0dc;
@@ -45,6 +45,13 @@
 }
 html[data-theme="dark"] {
   color-scheme: dark;
+  --ks-square-light: #dac5a6;
+  --ks-square-dark: #a47c59;
+  --ks-board-edge: #8c6849;
+  --ks-highlight: #c5ae78;
+  --ks-board-bg: #dac5a6;
+  --ks-board-text: #241b13;
+  --ks-board-muted: #241b13;
   --bg: #100d0a;
   --bg-soft: #16110d;
   --surface: #1c1712;
