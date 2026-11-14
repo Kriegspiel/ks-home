@@ -5,6 +5,12 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.5.3
+
+- **Header Branding**: keep the Kriegspiel wordmark free of underlines at rest,
+  hover, and keyboard focus, while preserving its home link and visible focus
+  outline. Footer branding and all other destination links stay underlined.
+
 ## ks-home v. 1.5.2
 
 - **Navigation**: reduce the shared sticky header to a 48px content row plus
