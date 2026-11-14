@@ -34,6 +34,7 @@
   var activeMenuDiagram = null;
   var phantomMenu = null;
   var lazyObserver = null;
+  var activePointerDiagram = null;
   var DRAG_START_DISTANCE = 4;
   var HISTORY_LIMIT = 200;
 
@@ -43,6 +44,9 @@
     document.addEventListener("keydown", handleDocumentKeydown);
     window.addEventListener("resize", closeActiveMenu);
     window.addEventListener("scroll", closeActiveMenu, true);
+    window.addEventListener("resize", cancelActivePointerDrag);
+    window.addEventListener("scroll", cancelActivePointerDrag, true);
+    window.addEventListener("blur", cancelActivePointerDrag);
   }
 
   function scheduleDiagramInit(diagram) {
@@ -112,6 +116,7 @@
     diagram.addEventListener("pointermove", handlePointerMove);
     diagram.addEventListener("pointerup", handlePointerUp);
     diagram.addEventListener("pointercancel", handlePointerCancel);
+    diagram.addEventListener("lostpointercapture", handlePointerCancel);
     initializeHistory(diagram);
   }
 
@@ -121,7 +126,10 @@
   }
 
   function handleDocumentKeydown(event) {
-    if (event.key === "Escape") closeActiveMenu();
+    if (event.key === "Escape") {
+      closeActiveMenu();
+      cancelActivePointerDrag();
+    }
   }
 
   function handleSquareClick(diagram, square, event) {
@@ -155,6 +163,7 @@
   function handleSquareContextMenu(diagram, square, event) {
     event.preventDefault();
     event.stopPropagation();
+    cancelPointerDrag(diagram);
     clearSelection(diagram);
 
     if (square.dataset.phantomPiece) {
@@ -174,7 +183,7 @@
   }
 
   function handlePointerDown(event) {
-    if (event.button !== 0) return;
+    if (event.button !== 0 || event.isPrimary === false || activePointerDiagram) return;
     var pieceNode = event.target.closest("[data-fen-piece]");
     var square = event.target.closest("[data-fen-square]");
     var diagram = event.currentTarget;
@@ -193,6 +202,7 @@
 
     closeActiveMenu();
     diagram.fenPointerDrag = pointerDrag;
+    activePointerDiagram = diagram;
     if (diagram.setPointerCapture) {
       try {
         diagram.setPointerCapture(event.pointerId);
@@ -218,13 +228,30 @@
         clearPointerDrag(diagram, event.pointerId);
         return;
       }
+      var sourcePiece = findPieceNode(sourceSquare, pointerDrag.kind);
+      if (!sourcePiece) {
+        clearPointerDrag(diagram, event.pointerId);
+        return;
+      }
       pointerDrag.started = true;
       diagram.dataset.fenDragging = "true";
       selectSquare(diagram, sourceSquare, pointerDrag.kind);
+      var pieceRect = sourcePiece.getBoundingClientRect();
+      var preview = createPiece(sourcePiece.dataset.fenPiece, pointerDrag.kind);
+      preview.classList.add("fen-drag-preview");
+      preview.setAttribute("aria-hidden", "true");
+      preview.style.width = pieceRect.width + "px";
+      preview.style.height = pieceRect.height + "px";
+      preview.querySelector("img").loading = "eager";
+      pointerDrag.preview = preview;
+      pointerDrag.sourcePiece = sourcePiece;
+      sourcePiece.dataset.fenDragSource = "true";
+      document.body.appendChild(preview);
     }
 
+    positionDragPreview(pointerDrag, event);
     var square = squareFromPoint(diagram, event.clientX, event.clientY, pointerDrag.boardRect);
-    if (!square) {
+    if (!square || square.dataset.square === pointerDrag.square) {
       clearDragTargets(diagram);
       return;
     }
@@ -262,9 +289,23 @@
     var diagram = event.currentTarget;
     var pointerDrag = diagram.fenPointerDrag;
     if (!pointerDrag || pointerDrag.pointerId !== event.pointerId) return;
-    clearDragTargets(diagram);
+    cancelPointerDrag(diagram);
+  }
+
+  function cancelActivePointerDrag() {
+    if (activePointerDiagram) cancelPointerDrag(activePointerDiagram);
+  }
+
+  function cancelPointerDrag(diagram) {
+    var pointerDrag = diagram.fenPointerDrag;
+    if (!pointerDrag) return;
+    if (pointerDrag.started) suppressNextClick(diagram);
     clearSelection(diagram);
-    clearPointerDrag(diagram, event.pointerId);
+    clearPointerDrag(diagram, pointerDrag.pointerId);
+  }
+
+  function positionDragPreview(pointerDrag, event) {
+    pointerDrag.preview.style.transform = "translate3d(" + event.clientX + "px, " + event.clientY + "px, 0) translate(-50%, -50%)";
   }
 
   function movePiece(diagram, fromSquareName, toSquareName, kind) {
@@ -311,6 +352,7 @@
   }
 
   function resetDiagram(diagram) {
+    cancelPointerDrag(diagram);
     diagram.querySelectorAll("[data-fen-square]").forEach(function (square) {
       square.dataset.piece = square.dataset.initialPiece || "";
       square.dataset.phantomPiece = "";
@@ -348,6 +390,7 @@
   }
 
   function stepHistory(diagram, delta) {
+    cancelPointerDrag(diagram);
     if (!diagram.fenHistory || !diagram.fenHistory.length) initializeHistory(diagram);
     var index = Number.isFinite(diagram.fenHistoryIndex) ? diagram.fenHistoryIndex : 0;
     var nextIndex = index + delta;
@@ -589,6 +632,13 @@
   }
 
   function clearPointerDrag(diagram, pointerId) {
+    var pointerDrag = diagram.fenPointerDrag;
+    delete diagram.fenPointerDrag;
+    delete diagram.dataset.fenDragging;
+    if (activePointerDiagram === diagram) activePointerDiagram = null;
+    if (pointerDrag && pointerDrag.preview) pointerDrag.preview.remove();
+    if (pointerDrag && pointerDrag.sourcePiece) delete pointerDrag.sourcePiece.dataset.fenDragSource;
+    clearDragTargets(diagram);
     if (diagram.releasePointerCapture) {
       try {
         diagram.releasePointerCapture(pointerId);
@@ -596,8 +646,6 @@
         // Release can fail after pointer cancellation; cleanup should continue.
       }
     }
-    delete diagram.fenPointerDrag;
-    delete diagram.dataset.fenDragging;
   }
 
   function suppressNextClick(diagram) {

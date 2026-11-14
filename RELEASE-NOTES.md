@@ -5,6 +5,13 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.5.5
+
+- **Article Boards**: show pieces following the pointer during mouse and touch
+  drags, with the source hidden until the drop or cancellation. Preserve freeform
+  moves, captures, off-board removal, and undo/redo/reset behavior; cancelling a
+  drag restores the source without changing the position.
+
 ## ks-home v. 1.5.4
 
 - **Button Links**: remove underlines from homepage play buttons and shared
