@@ -54,7 +54,7 @@ test("renderShell falls back canonical paths and footer variants", () => {
   assert.ok(emptyFooterHtml.includes(".fen-board__square.square--suggested,.fen-board__square[data-fen-drag-over=\"true\"]{--square-ring-suggested:inset 0 0 0 .16rem rgba(34,197,94,.78);}"));
   assert.ok(!emptyFooterHtml.includes("filter:brightness(1.08);z-index:4"));
   assert.ok(!emptyFooterHtml.includes(".fen-board__grid .fen-board__square:focus-visible{outline:2px solid var(--text);outline-offset:-2px;z-index:5;}"));
-  assert.ok(emptyFooterHtml.includes('aria-current="page">Play</a>'));
+  assert.ok(emptyFooterHtml.includes('aria-current="page">Play <span aria-hidden="true">↗</span></a>'));
   assert.ok(!emptyFooterHtml.includes(">Subscription</a>"));
   assert.ok(!emptyFooterHtml.includes(">Rules</h2>"));
 
@@ -124,7 +124,8 @@ test("home page falls back when content is sparse or missing metadata wrappers",
   });
 
   assert.ok(sparseHomeHtml.includes("Play hidden-information chess online with trusted referee semantics."));
-  assert.ok(sparseHomeHtml.includes('class="hero-card__eyebrow" hidden'));
+  assert.ok(sparseHomeHtml.includes('<h1 id="ks-hero-title">Play now</h1>'));
+  assert.ok(!sparseHomeHtml.includes('class="hero-card__eyebrow"'));
 
   const missingHomeHtml = renderHomePage({});
   assert.ok(missingHomeHtml.includes("<title>Kriegspiel — Home</title>"));

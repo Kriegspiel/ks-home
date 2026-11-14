@@ -196,7 +196,9 @@ test("content helpers cover preview drafts, missing collections, env roots, and 
         draft: false,
       },
     });
-    assert.ok(homeIssues.some((issue) => issue.includes("missing required field eyebrow")));
+    assert.ok(homeIssues.some((issue) => issue.includes("missing required field boardRevealLabel")));
+    assert.ok(homeIssues.some((issue) => issue.includes("missing required field communityInviteBody")));
+    assert.ok(!homeIssues.some((issue) => issue.includes("missing required field eyebrow")));
 
     assert.throws(
       () => loadSingletonEntry(tempRoot, "site", "missing-page"),

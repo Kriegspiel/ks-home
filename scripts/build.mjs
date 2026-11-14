@@ -67,6 +67,8 @@ copyStaticAsset('static/logo-hero-1024.webp', 'logo-hero-1024.webp');
 copyStaticAsset('static/social-card-20260511.png', 'social-card-20260511.png');
 copyStaticAsset('static/attribution.js', 'attribution.js');
 copyStaticAsset('static/fen-board.js', 'fen-board.js');
+copyStaticAsset('static/site-shell.js', 'site-shell.js');
+copyStaticAsset('static/home-board.js', 'home-board.js');
 for (const asset of CHESS_PIECE_ASSETS) copyStaticAsset(`static/chess/cburnett/${asset}`, `chess/cburnett/${asset}`);
 copyStaticTree('static/social', 'social');
 copyContentAsset('binary/logo/favicon.ico', 'favicon.ico');

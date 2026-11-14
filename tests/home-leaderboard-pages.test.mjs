@@ -5,108 +5,65 @@ import { normalizeLeaderboardPayload, sortEntries, trendMarker } from "../src/le
 
 const homeContent = {
   summary: "Homepage summary",
-  eyebrow: "",
-  heroTitle: "Play Hidden-Information Chess Online",
-  heroLede: "Simple, fun, and ready when you are. Jump into a game in your browser where you know your pieces, not your opponent’s board.",
+  heroTitle: "Chess. Beyond what you can see.",
+  heroTitleLine1: "Chess.",
+  heroTitleLine2: "Beyond what",
+  heroTitleEmphasis: "you can see.",
+  heroLede: "Your pieces are visible. Your opponent’s are a mystery.",
   heroPrimaryCtaLabel: "Play now",
   heroPrimaryCtaHref: "https://app.kriegspiel.org/",
   heroSecondaryCtaLabel: "Learn the rules",
   heroSecondaryCtaHref: "/rules",
-  statsRulesLabel: "Play style",
-  statsUpdatesLabel: "Turns",
-  statsThirdLabel: "Start",
-  statsThirdValue: "Right now",
-  flowKicker: "Flow",
-  flowTitle: "Start in under a minute",
-  flowIntro: "No brochure tour. Just the basics you need before you click play.",
-  flowStep1Title: "Join a game",
-  flowStep1Body: "Open it in your browser and get matched without fuss.",
-  flowStep2Title: "Make your move",
-  flowStep2Body: "The referee handles what each player is allowed to know.",
-  flowStep3Title: "Stay in the mystery",
-  flowStep3Body: "Every turn keeps the tension that makes Kriegspiel fun.",
-  communityGamesTitle: "Total games played as of now.",
-  communityGamesFallbackValue: "27000",
-  communityInviteTitle: "Saturday games meetup",
-  communityInviteUtcTime: "15:00",
-  communityInviteCtaLabel: "Play human games",
+  flowTitle: "The rules change. The instinct stays.",
+  flowIntro: "A little uncertainty. A whole new game.",
+  flowStep1Title: "Take your side.",
+  flowStep1Body: "Join a game in your browser.",
+  flowStep2Title: "Trust the referee.",
+  flowStep2Body: "Try a move.",
+  flowStep3Title: "Think beyond the board.",
+  flowStep3Body: "Follow the clues.",
+  communityLabelLine1: "Across the board.",
+  communityLabelLine2: "Around the world.",
+  communityInviteTitle: "Make Saturday a game day.",
+  communityInviteBody: "Our weekly human games meetup · Saturdays, 15:00 UTC",
+  communityInviteCtaLabel: "Join a game",
   communityInviteCtaHref: "https://app.kriegspiel.org/",
-  featuresKicker: "Why it feels different",
-  featuresTitle: "Key features",
-  featuresIntro: "Closer to the app’s product language, still clearly a public-facing landing page.",
-  feature1Title: "Asymmetric information preserved",
-  feature1Body: "Fog of war is the point.",
-  feature2Title: "Fast async-friendly play",
-  feature2Body: "Built for players who want serious variant structure without clunky ceremony.",
-  feature3Title: "Variant-specific referee output",
-  feature3Body: "Rules, updates, and play surfaces now feel like they belong to the same family.",
-  ctaKicker: "Ready to play?",
-  ctaTitle: "Ready to play?",
-  ctaBody: "Jump in now, or read the rules first if you want a quick primer before your first game.",
-  ctaPrimaryLabel: "Play now",
+  ctaTitle: "Your next move is a mystery.",
+  ctaBody: "There’s only one way to find out.",
+  ctaPrimaryLabel: "Let’s play",
   ctaPrimaryHref: "https://app.kriegspiel.org/",
-  ctaSecondaryLabel: "Read rules",
-  ctaSecondaryHref: "/rules",
-  trustKicker: "Trust snapshot",
-  trustTitle: "One quick note",
-  trustRulesTitle: "",
-  trustRulesBodyTemplate: "",
-  trustUpdatesTitle: "Shipped updates",
-  trustUpdatesBodyTemplate: "{{blogCount}} public updates are already live."
 };
 
-test("home page keeps a simplified play-first layout with CTA telemetry", () => {
+test("home page presents the approved open sections and preserves CTA telemetry", () => {
   const html = renderHomePage({
     rulesCount: 2,
     blogCount: 3,
-    homeContent,
+    homeContent: { metadata: homeContent },
     lobbyStats: { completed_total: 21012 },
     generatedAt: "2026-07-06T00:00:00.000Z",
   });
   for (const id of ["hero", "how-it-works", "cta"]) {
     assert.ok(html.includes(`id="${id}"`), `missing section ${id}`);
   }
-  assert.ok(html.includes('<section id="hero" class="hero-card hero-card--logo">'));
-  assert.ok(!html.includes('id="key-features"'));
-  assert.ok(!html.includes('id="trust-snippet"'));
+  assert.ok(html.includes('<section id="hero" class="ks-wrap ks-hero"'));
   assert.ok(html.includes('data-telemetry-event="home_cta_click"'));
-  assert.ok(html.includes('>Play now<'));
-  assert.ok(html.includes('Play Hidden-Information Chess Online'));
-  assert.ok(!html.includes('published rulesets'));
-  assert.ok(html.includes('hidden'));
-  assert.ok(html.includes('class="hero-card__eyebrow" hidden'));
-  assert.ok(!html.includes('class="hero-card__eyebrow">Kriegspiel.org<'));
-  assert.ok(!html.includes('3 public updates are already live.'));
-  assert.ok(html.includes('aria-label="21k+ games played"'));
-  assert.ok(html.includes('<span class="home-stat-card__count">21k+</span>'));
-  assert.ok(html.includes('<br class="home-stat-card__break" />'));
-  assert.ok(html.includes('<span class="home-stat-card__label">games played</span>'));
-  assert.ok(html.includes('home-stat-card__value{display:block;'));
-  assert.ok(html.includes('home-stat-card__count{display:inline-block;font-size:2.15rem;'));
-  assert.ok(!html.includes('21K plus games played'));
-  assert.ok(html.includes('Total games played as of now.'));
-  assert.ok(!html.includes('Rounded down to the nearest thousand and refreshed weekly.'));
-  assert.ok(html.includes('Saturday games meetup: 15:00 UTC'));
-  assert.ok(!html.includes('Join the weekly human-vs-human meetup at 15:00 UTC.'));
-  assert.ok(html.includes('China 23:00 CST; Central Europe 17:00 CEST; UK 16:00 BST; U.S. Pacific 08:00 PDT.'));
-  assert.ok(!html.includes('summer /'));
-  assert.ok(!html.includes('winter'));
-  assert.ok(html.includes('home-rendezvous-card'));
-  assert.ok(html.includes('>Play human games</a>'));
+  assert.ok(html.includes('>Play now <span aria-hidden="true">↗</span></a>'));
+  assert.ok(html.includes('Chess.<br>Beyond what<br> <em>you can see.</em>'));
+  assert.ok(html.includes('<ol class="ks-steps"><li><h3>Take your side.</h3>'));
+  assert.ok(html.includes('Make Saturday a game day.'));
+  assert.ok(html.includes('Our weekly human games meetup · Saturdays, 15:00 UTC'));
+  assert.ok(html.includes('>Join a game <span'));
+  assert.ok(html.includes('>Let’s play <span'));
+  for (const removed of ['class="hero-card__eyebrow"', 'class="ks-number"', 'class="home-stat-card"', 'class="ks-board-top"', 'class="ks-board-caption"', 'class="ks-board-demo"']) {
+    assert.ok(!html.includes(removed), `removed prototype element returned: ${removed}`);
+  }
 });
 
-test("home page derives current meetup time zones for winter refreshes", () => {
-  const html = renderHomePage({
-    rulesCount: 2,
-    blogCount: 3,
-    homeContent,
-    lobbyStats: { completed_total: 21012 },
-    generatedAt: "2026-12-07T00:00:00.000Z",
-  });
-
-  assert.ok(html.includes('China 23:00 CST; Central Europe 16:00 CET; UK 15:00 GMT; U.S. Pacific 07:00 PST.'));
-  assert.ok(!html.includes('CEST summer'));
-  assert.ok(!html.includes('PDT summer'));
+test("home page uses canonical meetup copy independently of snapshot time and stats", () => {
+  const summer = renderHomePage({ homeContent, lobbyStats: { completed_total: 21012 }, generatedAt: "2026-07-06T00:00:00.000Z" });
+  const winter = renderHomePage({ homeContent, lobbyStats: { completed_total: 44000 }, generatedAt: "2026-12-07T00:00:00.000Z" });
+  assert.equal(summer, winter);
+  assert.ok(winter.includes(homeContent.communityInviteBody));
 });
 
 test("leaderboard page includes resilient state containers, telemetry hooks, and shared play CTA", () => {
@@ -119,26 +76,26 @@ test("leaderboard page includes resilient state containers, telemetry hooks, and
   assert.ok(html.includes('site-header__play'));
   assert.ok(html.includes('button-link--primary'));
   assert.ok(html.includes('href="https://app.kriegspiel.org/"'));
-  assert.ok(html.includes('>Play</a>'));
+  assert.ok(html.includes('>Play <span aria-hidden="true">↗</span></a>'));
   assert.ok(!html.includes('href="/players/a"'));
   assert.ok(html.includes('Top human players by overall rating'));
   assert.ok(html.includes('Overall rating'));
   assert.ok(!html.includes('Trend'));
-  const navHtml = html.match(/<nav class="site-nav" aria-label="Primary">([\s\S]*?)<\/nav>/)?.[1] || '';
+  const navHtml = html.match(/<nav class="site-nav"[^>]*aria-label="Primary">([\s\S]*?)<\/nav>/)?.[1] || '';
   assert.ok(!navHtml.includes('>Home</a>'));
   assert.ok(!navHtml.includes('>Changelog</a>'));
   assert.ok(navHtml.includes('>Leaderboard</a>'));
   assert.ok(navHtml.includes('>Blog</a>'));
   assert.ok(navHtml.includes('>Rules</a>'));
-  assert.ok(navHtml.includes('>Play</a>'));
+  assert.ok(navHtml.includes('>Play <span aria-hidden="true">↗</span></a>'));
   assert.ok(!navHtml.includes('>Subscription</a>'));
   assert.ok(html.includes('>Rules</h2>'));
   assert.ok(html.includes('>Communication</h2>'));
   assert.ok(html.includes('X.com (@kriegspiel_org)'));
   assert.ok(html.includes('https://app.kriegspiel.org/leaderboard'));
-  assert.ok(html.includes('.table-wrap thead{display:table-header-group;}'));
-  assert.ok(html.includes('.table-wrap th,.table-wrap td{display:table-cell;padding:.7rem .75rem;}'));
-  assert.ok(html.includes('.leaderboard-table th:nth-child(2),.leaderboard-table td:nth-child(2){min-width:10rem;}'));
+  assert.ok(!html.includes('table,thead,tbody,tr,th,td{display:block;}'));
+  assert.ok(html.includes('.table-wrap th, .table-wrap td { padding: .7rem .75rem; }'));
+  assert.ok(html.includes('.leaderboard-table th:nth-child(2), .leaderboard-table td:nth-child(2) { min-width: 10rem; }'));
 });
 
 test("normalize payload handles malformed, invalid players, and stale states", () => {

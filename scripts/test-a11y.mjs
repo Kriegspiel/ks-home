@@ -11,7 +11,7 @@ for (const route of routes) {
   const rel = route === "/" ? "index.html" : `${route.replace(/^\//, "")}/index.html`;
   const html = fs.readFileSync(path.join(process.cwd(), "dist", rel), "utf8");
   assert.ok(/<main>/.test(html), `${route} missing main landmark`);
-  assert.ok(/<h1>/.test(html), `${route} missing h1`);
+  assert.ok(/<h1(?:\s|>)/.test(html), `${route} missing h1`);
   assert.ok(/aria-label=\"Primary\"/.test(html), `${route} missing nav aria label`);
 }
 console.log(`a11y smoke ok: ${routes.length} routes`);
