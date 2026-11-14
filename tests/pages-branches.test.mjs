@@ -34,7 +34,7 @@ test("renderShell falls back canonical paths and footer variants", () => {
   assert.ok(emptyFooterHtml.includes(`<script src="/attribution.js?v=${PACKAGE_VERSION}" defer></script>`));
   assert.ok(emptyFooterHtml.includes("--square-capture-overlay:transparent"));
   assert.ok(emptyFooterHtml.includes("var(--square-ring-capture),var(--square-ring-illegal),var(--square-ring-suggested)"));
-  assert.ok(emptyFooterHtml.includes(".fen-board{width:22rem;max-width:100%;user-select:none;-webkit-user-select:none;}"));
+  assert.ok(emptyFooterHtml.includes(".fen-board{width:22rem;max-width:100%;user-select:none;-webkit-user-select:none;color-scheme:light;}"));
   assert.ok(emptyFooterHtml.includes(".fen-board{flex:0 1 auto;min-width:0;}"));
   assert.ok(emptyFooterHtml.includes("@media (max-width:640px){.fen-board{width:30rem;max-width:100%;}"));
   assert.ok(emptyFooterHtml.includes("@media (max-width:640px){.fen-diagram__workspace{gap:.45rem;}.fen-board{width:30rem;max-width:100%;flex:0 1 auto;}"));
@@ -42,8 +42,8 @@ test("renderShell falls back canonical paths and footer variants", () => {
   assert.ok(emptyFooterHtml.includes(".fen-board-tools .fen-board-tools__button:disabled{opacity:.46;cursor:not-allowed;"));
   assert.ok(emptyFooterHtml.includes("grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));"));
   assert.ok(emptyFooterHtml.includes(".fen-board__square{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;min-height:0;width:100%;height:100%;}"));
-  assert.ok(emptyFooterHtml.includes(".fen-board__coord--file{right:.28rem;bottom:.34rem;}"));
-  assert.ok(emptyFooterHtml.includes(".fen-board__coord{font-size:.52rem;}.fen-board__coord--file{bottom:.32rem;}"));
+  assert.ok(emptyFooterHtml.includes(".fen-board__coord--file{right:4px;bottom:3px;}"));
+  assert.ok(emptyFooterHtml.includes(".fen-board__coord{font-size:10px;}.fen-board__coord--file{right:2px;bottom:2px;}"));
   assert.ok(emptyFooterHtml.includes(".fen-board__square.square--highlighted"));
   assert.ok(emptyFooterHtml.includes(".fen-board__square.square--suggested"));
   assert.ok(emptyFooterHtml.includes("touch-action:none;-webkit-tap-highlight-color:transparent;transition:filter .12s ease;"));

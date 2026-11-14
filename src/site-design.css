@@ -24,7 +24,15 @@
   --radius: 2px;
   --radius-sm: 2px;
   --page-width: 1180px;
-  --content-width: 56rem;
+  --content-width: var(--page-width);
+  /* Chessboard colors are shared by the homepage and article diagrams in both themes. */
+  --ks-square-light: #f7fafc;
+  --ks-square-dark: #d9e4ed;
+  --ks-board-edge: #c2d0dc;
+  --ks-highlight: #bbcfdc;
+  --ks-board-bg: #fafcfe;
+  --ks-board-text: #18242f;
+  --ks-board-muted: #526576;
   --ks-bg: var(--bg);
   --ks-soft: var(--bg-soft);
   --ks-surface: var(--surface);
@@ -94,6 +102,7 @@ pre code { display: block; padding: 0; background: transparent; white-space: pre
 .site-nav { margin-left: auto; display: flex; align-items: center; gap: 28px; font-size: 14px; }
 .site-nav__link { display: inline-flex; align-items: center; min-height: 44px; }
 .site-nav__link[aria-current="page"] { font-weight: 600; }
+.site-header__play { justify-content: center; gap: 6px; padding: 0 14px; border: 1px solid var(--border-strong); border-radius: 2px; background: #18242f; color: #fafcfe; font-weight: 500; }
 .site-menu { display: none; border: 0; padding: 0 8px; min-height: 44px; background: transparent; }
 .page-shell { padding: 64px 0 72px; }
 .page-shell > :first-child { margin-top: 0; }
@@ -154,8 +163,8 @@ dd { margin: .35rem 0 0; font-size: 1.45rem; font-weight: 500; letter-spacing: -
 .table-wrap { max-width: 100%; overflow-x: auto; margin-top: 1rem; -webkit-overflow-scrolling: touch; }
 .table-wrap, pre { max-width: 100%; overscroll-behavior-x: contain; }
 table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); }
-.rules-comparison-table { min-width: 80rem; table-layout: fixed; }
-.rules-comparison-table tr > :first-child { width: 12rem; }
+.rules-comparison-table { min-width: 64rem; table-layout: fixed; }
+.rules-comparison-table tr > :first-child { width: 8rem; background: color-mix(in srgb, var(--surface-alt) 94%, var(--text)); }
 .prose-card .table-wrap table { table-layout: fixed; }
 .prose-card .table-wrap th:first-child, .prose-card .table-wrap td:first-child { width: 20%; min-width: 20%; }
 .leaderboard-table { min-width: 28rem; }
@@ -166,6 +175,8 @@ caption { padding: 1rem; text-align: left; font-weight: 600; color: var(--text);
 .status-banner, .status-error { margin-top: 1rem; padding: .85rem 1rem; border-radius: 2px; border: 1px solid var(--success-border); background: var(--success-bg); color: var(--success); }
 .status-error { border-color: var(--danger-border); background: var(--danger-bg); color: var(--danger); }
 .page-meta-stamp { margin: 1.35rem auto 0; text-align: center; font-size: 13px; color: var(--muted-soft); }
+.page-shell--about { padding-bottom: 0; }
+.page-meta-stamp--version { margin: 0; padding-block: 36px; }
 .site-footer { border-top: 1px solid var(--border); background: var(--bg); }
 .site-footer__inner { display: grid; gap: 14px; padding: 16px 0 20px; }
 .footer__meta, .footer__meta > div { display: grid; gap: 4px; }
@@ -191,6 +202,8 @@ caption { padding: 1rem; text-align: left; font-weight: 600; color: var(--text);
   .site-nav { order: 4; margin-left: 0; width: 100%; padding: 4px 0 18px; justify-content: space-between; gap: 12px; }
   .js .site-nav:not([data-open="true"]) { display: none; }
   .page-shell { padding: 40px 0 48px; }
+  .page-shell--about { padding-bottom: 0; }
+  .page-meta-stamp--version { padding-block: 24px; }
   .page-shell--home { width: 100%; padding: 0; }
   .content-section { margin-top: 36px; }
   .feature-grid--two, .feature-grid--three, .hero-card__stats { grid-template-columns: 1fr; gap: 24px; }
@@ -211,10 +224,9 @@ caption { padding: 1rem; text-align: left; font-weight: 600; color: var(--text);
 }
 @media (pointer: coarse) { .theme-toggle { min-width: 44px; min-height: 44px; } }
 
-/* Diagram frames follow the site; existing squares, pieces and move colors stay fixed. */
+/* Nested diagram containers must shrink to the shared content width on small screens. */
 .prose-card .fen-diagram, .prose-card .fen-diagram__workspace { min-width: 0; max-width: 100%; }
 .prose-card .fen-diagram__workspace { width: 100%; }
-.prose-card .fen-board__grid { border-radius: 2px; box-shadow: none; }
 
 /* Syntax colors remain semantic in both page themes. */
 pre code.hljs{background:transparent;color:var(--text);}
