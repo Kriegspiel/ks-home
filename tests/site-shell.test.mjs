@@ -24,7 +24,7 @@ function setup({ theme = null, denyStorage = false, missingControls = false } = 
   menu.setAttribute('aria-expanded', 'false');
   const nav = element('nav');
   const meta = element('meta');
-  const header = { getBoundingClientRect: () => ({ height: nav.dataset.open === 'true' ? 115.25 : 53 }) };
+  const header = { getBoundingClientRect: () => ({ height: nav.dataset.open === 'true' ? 115.25 : 49 }) };
   const nodes = new Map([
     ['[data-theme-toggle]', button], ['[data-menu-toggle]', menu],
     ['.site-nav', nav], ['.site-header', header], ['meta[name="theme-color"]', meta],
@@ -56,7 +56,7 @@ test('shared shell applies the initial theme to the body, browser chrome, and lo
     assert.equal(state.meta.getAttribute('content'), dark ? '#100d0a' : '#fafcfe');
     assert.equal(state.button.getAttribute('aria-pressed'), String(dark));
     assert.equal(state.button.getAttribute('aria-label'), `Switch to ${dark ? 'light' : 'dark'} theme`);
-    assert.equal(state.properties.get('--tier-feature-sticky-top'), '53px');
+    assert.equal(state.properties.get('--tier-feature-sticky-top'), '49px');
   }
 });
 
@@ -101,7 +101,7 @@ test('mobile menu keeps its label, visibility and sticky table offset in sync', 
   assert.equal(state.menu.getAttribute('aria-expanded'), 'false');
   assert.equal(state.menu.textContent, 'Menu');
   assert.equal(state.nav.dataset.open, 'false');
-  assert.equal(state.properties.get('--tier-feature-sticky-top'), '53px');
+  assert.equal(state.properties.get('--tier-feature-sticky-top'), '49px');
   state.fire('menu', 'click');
   state.fire('menu', 'click');
   assert.equal(state.nav.dataset.open, 'false', 'the menu button also closes navigation');
@@ -117,7 +117,7 @@ test('Escape closes an open menu and returns focus without hijacking unrelated k
   state.fire('document', 'keydown', { key: 'Escape' });
   assert.equal(state.nav.dataset.open, 'false');
   assert.equal(state.document.activeElement, state.menu);
-  assert.equal(state.properties.get('--tier-feature-sticky-top'), '53px');
+  assert.equal(state.properties.get('--tier-feature-sticky-top'), '49px');
 });
 
 test('resizing to desktop clears the mobile menu and resynchronizes header height', () => {
@@ -129,7 +129,7 @@ test('resizing to desktop clears the mobile menu and resynchronizes header heigh
   state.window.innerWidth = 761;
   state.fire('window', 'resize');
   assert.equal(state.nav.dataset.open, 'false');
-  assert.equal(state.properties.get('--tier-feature-sticky-top'), '53px');
+  assert.equal(state.properties.get('--tier-feature-sticky-top'), '49px');
 });
 
 test('shell enhancement tolerates pages without optional controls or metadata', () => {

@@ -5,6 +5,14 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.5.2
+
+- **Navigation**: reduce the shared sticky header to a 48px content row plus
+  its 1px divider on desktop and mobile, matching the app's header geometry.
+  Retain 44px controls, responsive gutters, and mobile menu behavior.
+- **Anchor Positioning**: align the fallback heading offset with the thinner
+  header; sticky table offsets continue to follow its measured height.
+
 ## ks-home v. 1.5.1
 
 - **Boards**: use the homepage's fixed cool board colors and Cburnett piece
