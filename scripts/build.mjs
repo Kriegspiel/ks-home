@@ -65,6 +65,7 @@ copyStaticAsset('static/logo-theme-toggle.png', 'logo-theme-toggle.png');
 copyStaticAsset('static/logo-theme-toggle-96.webp', 'logo-theme-toggle-96.webp');
 copyStaticAsset('static/logo-hero-1024.webp', 'logo-hero-1024.webp');
 copyStaticAsset('static/social-card-20260511.png', 'social-card-20260511.png');
+copyStaticAsset('static/social-card-20261114.png', 'social-card-20261114.png');
 copyStaticAsset('static/attribution.js', 'attribution.js');
 copyStaticAsset('static/fen-board.js', 'fen-board.js');
 copyStaticAsset('static/site-shell.js', 'site-shell.js');
