@@ -79,9 +79,12 @@ a[href]:not([href^="#"]):focus-visible {
 a[href^="#"], a[href^="#"]:hover, a[href^="#"]:focus-visible {
   text-decoration: none;
 }
-.site-header a.site-brand[href],
-.site-header a.site-brand[href]:hover,
-.site-header a.site-brand[href]:focus-visible {
+.site-header a[href],
+.site-header a[href]:hover,
+.site-header a[href]:focus-visible,
+.site-footer a[href],
+.site-footer a[href]:hover,
+.site-footer a[href]:focus-visible {
   text-decoration: none;
 }
 a:hover { opacity: .8; }

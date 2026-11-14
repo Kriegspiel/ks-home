@@ -15,17 +15,16 @@ function footerGroupHtml(html, label) {
   return html.match(new RegExp(`<section class="footer__group" aria-label="${label}">[\\s\\S]*?</section>`))?.[0] ?? "";
 }
 
-test("shared link styling distinguishes page navigation from same-page actions", () => {
+test("shared link styling keeps header and footer plain and body destinations underlined", () => {
   const html = renderShell({
     title: "Link styles",
     main: '<a href="/rules#berkeley">Page and section</a><a href="#section">Same page</a><button type="button">Action</button>',
   });
   assert.match(html, /a\[href\]:not\(\[href\^="#"\]\),\s*a\[href\]:not\(\[href\^="#"\]\):hover,\s*a\[href\]:not\(\[href\^="#"\]\):focus-visible\s*\{\s*text-decoration: underline;\s*text-underline-offset: \.16em;/);
   assert.match(html, /a\[href\^="#"\], a\[href\^="#"\]:hover, a\[href\^="#"\]:focus-visible\s*\{\s*text-decoration: none;/);
-  assert.match(html, /\.site-header a\.site-brand\[href\],\s*\.site-header a\.site-brand\[href\]:hover,\s*\.site-header a\.site-brand\[href\]:focus-visible\s*\{\s*text-decoration: none;/);
+  assert.match(html, /\.site-header a\[href\],\s*\.site-header a\[href\]:hover,\s*\.site-header a\[href\]:focus-visible,\s*\.site-footer a\[href\],\s*\.site-footer a\[href\]:hover,\s*\.site-footer a\[href\]:focus-visible\s*\{\s*text-decoration: none;/);
   assert.match(html, /<header class="site-header">[\s\S]*?<a class="site-brand" href="\/" aria-label="Kriegspiel home">Kriegspiel<\/a>/);
   assert.match(html, /<footer class="site-footer">[\s\S]*?<a class="footer__brand" href="\/">Kriegspiel.org<\/a>/);
-  assert.doesNotMatch(html, /\.footer__brand[^{}]*\{[^}]*text-decoration:\s*none/);
   assert.ok(html.includes('<a href="/rules#berkeley">Page and section</a>'));
   assert.ok(html.includes('<a href="#section">Same page</a>'));
   assert.ok(html.includes('<button type="button">Action</button>'));
