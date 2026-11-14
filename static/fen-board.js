@@ -196,6 +196,7 @@
       startX: event.clientX,
       startY: event.clientY,
       boardRect: readBoardRect(diagram),
+      captureTarget: square,
       started: false
     };
     if (!pointerDrag.square) return;
@@ -203,9 +204,11 @@
     closeActiveMenu();
     diagram.fenPointerDrag = pointerDrag;
     activePointerDiagram = diagram;
-    if (diagram.setPointerCapture) {
+    // Keep short native clicks targeted at the square, while drag events
+    // continue to bubble to the diagram even when the pointer moves outside it.
+    if (square.setPointerCapture) {
       try {
-        diagram.setPointerCapture(event.pointerId);
+        square.setPointerCapture(event.pointerId);
       } catch (error) {
         // Pointer capture can fail if the browser already ended the pointer.
       }
@@ -639,9 +642,10 @@
     if (pointerDrag && pointerDrag.preview) pointerDrag.preview.remove();
     if (pointerDrag && pointerDrag.sourcePiece) delete pointerDrag.sourcePiece.dataset.fenDragSource;
     clearDragTargets(diagram);
-    if (diagram.releasePointerCapture) {
+    var captureTarget = pointerDrag && pointerDrag.captureTarget;
+    if (captureTarget && captureTarget.releasePointerCapture) {
       try {
-        diagram.releasePointerCapture(pointerId);
+        captureTarget.releasePointerCapture(pointerId);
       } catch (error) {
         // Release can fail after pointer cancellation; cleanup should continue.
       }

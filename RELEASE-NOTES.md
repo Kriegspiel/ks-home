@@ -10,7 +10,8 @@ version entries unless they ship a user-visible change.
 - **Article Boards**: show pieces following the pointer during mouse and touch
   drags, with the source hidden until the drop or cancellation. Preserve freeform
   moves, captures, off-board removal, and undo/redo/reset behavior; cancelling a
-  drag restores the source without changing the position.
+  drag restores the source without changing the position. Keep pointer capture
+  on the source square so ordinary mouse clicks select and move pieces too.
 
 ## ks-home v. 1.5.4
 

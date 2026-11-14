@@ -64,6 +64,8 @@ class Element {
     if (this.capturedPointer !== id) return;
     this.capturedPointer = null;
     this.emit("lostpointercapture", { pointerId: id });
+    const diagram = this.closest("[data-fen-diagram]");
+    if (diagram && diagram !== this) diagram.emit("lostpointercapture", { pointerId: id, target: this });
   }
 }
 
@@ -134,10 +136,14 @@ test("small pointer movements retain click selection without a preview or a hist
   const view = fixture();
   const board = view.diagrams[0];
   board.down();
+  assert.equal(board.squares.get("e2").capturedPointer, 1, "the persistent source square owns capture so a native click reaches its handler");
+  assert.equal(board.diagram.capturedPointer, undefined);
+  const nativeClickTarget = board.diagram.fenPointerDrag.captureTarget;
   board.move("e2", { clientX: board.point("e2").clientX + 3 });
   assert.equal(view.previews().length, 0);
   board.up("e2");
-  board.squares.get("e2").emit("click", { target: board.piece("e2") });
+  assert.equal(nativeClickTarget.capturedPointer, null);
+  nativeClickTarget.emit("click");
   assert.equal(board.diagram.dataset.fenSelectedSquare, "e2");
   board.squares.get("e4").emit("click");
   assert.equal(board.squares.get("e4").dataset.piece, "P");
