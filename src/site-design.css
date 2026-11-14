@@ -87,6 +87,14 @@ a[href^="#"], a[href^="#"]:hover, a[href^="#"]:focus-visible {
 .site-footer a[href]:focus-visible {
   text-decoration: none;
 }
+a.button-link[href],
+a.button-link[href]:hover,
+a.button-link[href]:focus-visible,
+a.ks-primary[href],
+a.ks-primary[href]:hover,
+a.ks-primary[href]:focus-visible {
+  text-decoration: none;
+}
 a:hover { opacity: .8; }
 button, input { font: inherit; }
 button { color: inherit; cursor: pointer; }
