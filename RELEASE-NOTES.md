@@ -5,6 +5,13 @@ history. New runtime/site releases should add a section at the top when
 `package.json` changes version. Test-only and docs-only changes do not need
 version entries unless they ship a user-visible change.
 
+## ks-home v. 1.5.3
+
+- **Navigation Links**: keep every header and footer link free of underlines
+  at rest, hover, and keyboard focus, including branding and the header Play
+  action. Preserve visible focus outlines and underlines on destination links
+  in the page body, including prose, player, mail, and CTA links.
+
 ## ks-home v. 1.5.2
 
 - **Navigation**: reduce the shared sticky header to a 48px content row plus
